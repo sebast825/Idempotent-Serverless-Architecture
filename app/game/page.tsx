@@ -32,6 +32,13 @@ export default function GameDashboard() {
     newGuess[index] = null;
     setCurrentGuess(newGuess);
   };
+  const handleSubmitAttempt = () => {
+    const hasEmptyIndex = currentGuess.includes(null);
+    if (hasEmptyIndex) {
+      alert("Fill all the options")
+    }
+    console.log("validate");
+  };
   return (
     <div className="d-flex flex-column items-center gap-10 pt-5 mt-5">
       {/* 1. Active Guess Display */}
@@ -44,6 +51,7 @@ export default function GameDashboard() {
       <ColorPicker
         handleSelect={(e) => handleSelectColor(e)}
         currentGuess={currentGuess}
+        submit={handleSubmitAttempt}
       ></ColorPicker>
     </div>
   );
