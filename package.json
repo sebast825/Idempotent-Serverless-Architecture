@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.89.0",
     "bootstrap": "^5.3.8",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",

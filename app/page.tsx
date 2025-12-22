@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import LoginGoogle from "@/components/loginGoogle";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
           height={38}
           priority
         />
+        <LoginGoogle></LoginGoogle>
         <ol>
           <li>
             Get started by editing <code>app/page.tsx</code>.
