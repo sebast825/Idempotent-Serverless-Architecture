@@ -2,6 +2,9 @@ export const MASTERMIND_COLORS = ['RED', 'BLUE', 'GREEN', 'YELLOW', 'PURPLE', 'O
 
 export type MastermindColor = typeof MASTERMIND_COLORS[number];
 
+export type FeedbackStatus = 'MATCH' | 'COLOR_ONLY' | 'NONE';
+
+
 export interface responsePosition {
   position: number;
   val1: string | number;
@@ -9,3 +12,4 @@ export interface responsePosition {
   matchPosition: boolean;
   matchDifferentPosition: null | boolean;
 }
+

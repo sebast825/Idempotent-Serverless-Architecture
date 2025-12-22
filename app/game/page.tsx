@@ -1,16 +1,21 @@
 "use client";
 
+import AttemptRow from "@/components/game/attemptRow";
 import ColorPicker from "@/components/game/colorPicker";
-import { FeedbackIcons } from "@/components/game/FeedbackIcons";
 import GuessRow from "@/components/game/guessRow";
 import { generateSecretCode, validate } from "@/lib/game/engine";
-import { MastermindColor, responsePosition } from "@/lib/game/types";
-import { useEffect, useState } from "react";
+import { FeedbackStatus, MastermindColor } from "@/lib/game/types";
+import {  useState } from "react";
 
 export default function GameDashboard() {
   const [code, setCode] = useState<MastermindColor[]>(generateSecretCode());
-  const [icons, setIcons] = useState<(responsePosition | null)[]>([null]);
-
+  // Dentro de tu componente Game
+  const [history, setHistory] = useState<
+    {
+      guess: MastermindColor[];
+      results: FeedbackStatus[];
+    }[]
+  >([]);
   const [currentGuess, setCurrentGuess] = useState<(MastermindColor | null)[]>([
     null,
     null,
@@ -43,19 +48,30 @@ export default function GameDashboard() {
     //this force not to recibe nulls
     const finalGuess = currentGuess as MastermindColor[];
     console.log("validate");
-    var as = validate(code, finalGuess);
-    setIcons(as);
-    console.log(as);
+    var validationResults = validate(code, finalGuess);
+    setHistory([ ...history,{ guess: finalGuess, results: validationResults }]);
+
+    setCurrentGuess(Array(4).fill(null));
   };
 
   return (
     <div className="d-flex flex-column items-center gap-10 pt-5 mt-5">
+      <div className="game-history-container w-100 mt-4">
+        {history.map((attempt, index) => (
+          <AttemptRow
+            key={history.length - index} 
+            props={{
+              attemptGuess: attempt.guess,
+              results: attempt.results,
+            }}
+          />
+        ))}
+      </div>
       {/* 1. Active Guess Display */}
       <GuessRow
         currentGuess={currentGuess}
         handleRemoveColor={(e) => handleRemoveColor(e)}
       ></GuessRow>
-      {icons && icons.length > 0 && <FeedbackIcons results={icons} />}{" "}
       {/* 2. Color Selection Palette */}
       <ColorPicker
         handleSelect={(e) => handleSelectColor(e)}

@@ -1,13 +1,12 @@
-import { responsePosition } from "@/lib/game/types";
+import { FeedbackStatus} from "@/lib/game/types";
 
 interface FeedbackProps {
-  results: (responsePosition | null)[];
+  results: (FeedbackStatus | null)[];
 }
 export const FeedbackIcons = ({ results }: FeedbackProps) => {
   return (
     <div className="d-flex rounded shadow-lg p-2">
       {results.map((res, index) => {
-  
         const iconStyle = {
           fontSize: "1.8rem", 
           lineHeight: "1", 
@@ -16,7 +15,7 @@ export const FeedbackIcons = ({ results }: FeedbackProps) => {
           justifyContent: "center",
         };
 
-        if (res?.matchPosition) {
+        if (res == 'MATCH' ) {
           return (
             <span
               key={index}
@@ -28,8 +27,8 @@ export const FeedbackIcons = ({ results }: FeedbackProps) => {
             </span>
           );
         }
-        if (res?.matchDifferentPosition) {
-          return (
+        if (res == 'COLOR_ONLY' ) {
+              return (
             <span
               key={index}
               className="text-warning"

@@ -1,5 +1,9 @@
-import { MASTERMIND_COLORS, MastermindColor, responsePosition } from "./types";
-
+import {
+  FeedbackStatus,
+  MASTERMIND_COLORS,
+  MastermindColor,
+  responsePosition,
+} from "./types";
 
 export function generateSecretCode(): MastermindColor[] {
   // 1. Create an array of random indices using Crypto
@@ -12,12 +16,33 @@ export function generateSecretCode(): MastermindColor[] {
   );
 }
 
-export function validate(code : MastermindColor[], attempt: MastermindColor[]):responsePosition[] {
-var matchPosition =  matchValueAndPosition(code,attempt);
-return matchValueInOtherPositionWithouthMatch(matchPosition)
+export function validate(
+  code: MastermindColor[],
+  attempt: MastermindColor[]
+): FeedbackStatus[] {
+  var matchPosition = matchValueAndPosition(code, attempt);
+  var matchDifferentPosition =
+    matchValueInOtherPositionWithouthMatch(matchPosition);
+
+  return formatFeedback(matchDifferentPosition);
 }
 
-function matchValueAndPosition(code : MastermindColor[], attempt: MastermindColor[]):responsePosition[] {
+function formatFeedback(response: responsePosition[]): FeedbackStatus[] {
+  const formatResponse: FeedbackStatus[] = response.map((elem) => {
+    if (elem.matchPosition) {
+      return "MATCH";
+    }
+    if (elem.matchDifferentPosition) {
+      return "COLOR_ONLY";
+    }
+    return "NONE";
+  });
+  return formatResponse;
+}
+function matchValueAndPosition(
+  code: MastermindColor[],
+  attempt: MastermindColor[]
+): responsePosition[] {
   var rsta = attempt.map((elem, index) => {
     return createResponsePosition(
       index,
@@ -30,9 +55,9 @@ function matchValueAndPosition(code : MastermindColor[], attempt: MastermindColo
   return rsta;
 }
 
-
-function matchValueInOtherPositionWithouthMatch(response: responsePosition[]):responsePosition[] {
-
+function matchValueInOtherPositionWithouthMatch(
+  response: responsePosition[]
+): responsePosition[] {
   const unmatched = response.filter((r) => !r.matchPosition);
 
   unmatched.forEach((elem, index) => {
@@ -45,17 +70,15 @@ function matchValueInOtherPositionWithouthMatch(response: responsePosition[]):re
       });
     }
   });
-  const arra :any[]= []
-  response.forEach(elem =>{
-    if(elem.matchPosition){
-    arra.push(elem.matchPosition)
-
+  const arra: any[] = [];
+  response.forEach((elem) => {
+    if (elem.matchPosition) {
+      arra.push(elem.matchPosition);
     }
-     if(elem.matchDifferentPosition){
-          arra.push(elem.matchDifferentPosition)
-
+    if (elem.matchDifferentPosition) {
+      arra.push(elem.matchDifferentPosition);
     }
-  })
+  });
   return response;
 }
 function createResponsePosition(
