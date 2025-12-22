@@ -2,14 +2,18 @@
 
 import AttemptRow from "@/components/game/attemptRow";
 import ColorPicker from "@/components/game/colorPicker";
+import GameResultModal from "@/components/game/gameResultModal";
 import GuessRow from "@/components/game/guessRow";
 import { generateSecretCode, validate } from "@/lib/game/engine";
-import { FeedbackStatus, MastermindColor } from "@/lib/game/types";
-import {  useState } from "react";
+import { FeedbackStatus, GameStatus, MastermindColor } from "@/lib/game/types";
+import { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 
 export default function GameDashboard() {
   const [code, setCode] = useState<MastermindColor[]>(generateSecretCode());
+  const MAX_ATTEMPTS = 1;
   // Dentro de tu componente Game
+  const [status, setStatus] = useState<GameStatus>("PLAYING");
   const [history, setHistory] = useState<
     {
       guess: MastermindColor[];
@@ -48,36 +52,60 @@ export default function GameDashboard() {
     //this force not to recibe nulls
     const finalGuess = currentGuess as MastermindColor[];
     console.log("validate");
-    var validationResults = validate(code, finalGuess);
-    setHistory([ ...history,{ guess: finalGuess, results: validationResults }]);
-
-    setCurrentGuess(Array(4).fill(null));
+    var currentFeedback = validate(code, finalGuess);
+    setHistory([...history, { guess: finalGuess, results: currentFeedback }]);
+    console.log(history.length);
   };
+  useEffect(() => {
+    const lastAttempt = history.at(-1);
+    const hasWon = lastAttempt?.results.every((status) => status === "MATCH");
+    if (hasWon) {
+      setStatus("WON");
+    } else if (history.length >= MAX_ATTEMPTS) {
+      console.log(history.length);
+      setStatus("LOST");
+    } else {
+      setCurrentGuess(Array(4).fill(null));
+    }
+  }, [history]);
 
   return (
-    <div className="d-flex flex-column items-center gap-10 pt-5 mt-5">
-      <div className="game-history-container w-100 mt-4">
-        {history.map((attempt, index) => (
-          <AttemptRow
-            key={history.length - index} 
-            props={{
-              attemptGuess: attempt.guess,
-              results: attempt.results,
-            }}
-          />
-        ))}
+    <>
+      {status !== "PLAYING" && (
+        <GameResultModal
+          code={code}
+          btnPrimary={() => setStatus("PLAYING")}
+          btnSecondary={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          status={status}
+        />
+      )}
+
+      <div className="d-flex flex-column items-center gap-10 pt-5 mt-5">
+        <div className="game-history-container w-100 mt-4">
+          {history.map((attempt, index) => (
+            <AttemptRow
+              key={history.length - index}
+              props={{
+                attemptGuess: attempt.guess,
+                results: attempt.results,
+              }}
+            />
+          ))}
+        </div>
+        {/* 1. Active Guess Display */}
+        <GuessRow
+          currentGuess={currentGuess}
+          handleRemoveColor={(e) => handleRemoveColor(e)}
+        ></GuessRow>
+        {/* 2. Color Selection Palette */}
+        <ColorPicker
+          handleSelect={(e) => handleSelectColor(e)}
+          currentGuess={currentGuess}
+          submit={handleSubmitAttempt}
+        ></ColorPicker>
       </div>
-      {/* 1. Active Guess Display */}
-      <GuessRow
-        currentGuess={currentGuess}
-        handleRemoveColor={(e) => handleRemoveColor(e)}
-      ></GuessRow>
-      {/* 2. Color Selection Palette */}
-      <ColorPicker
-        handleSelect={(e) => handleSelectColor(e)}
-        currentGuess={currentGuess}
-        submit={handleSubmitAttempt}
-      ></ColorPicker>
-    </div>
+    </>
   );
 }

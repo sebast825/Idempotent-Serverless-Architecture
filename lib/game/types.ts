@@ -4,6 +4,7 @@ export type MastermindColor = typeof MASTERMIND_COLORS[number];
 
 export type FeedbackStatus = 'MATCH' | 'COLOR_ONLY' | 'NONE';
 
+export type GameStatus = 'PLAYING' | 'WON' | 'LOST';
 
 export interface responsePosition {
   position: number;
