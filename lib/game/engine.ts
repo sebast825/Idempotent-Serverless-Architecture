@@ -55,30 +55,29 @@ function matchValueAndPosition(
   return rsta;
 }
 
+
 function matchValueInOtherPositionWithouthMatch(
   response: responsePosition[]
 ): responsePosition[] {
-  const unmatched = response.filter((r) => !r.matchPosition);
+  // 1. Get colors from secret that didn't result in a MATCH
+  const availableInSecret = response
+    .filter((r) => !r.matchPosition)
+    .map((r) => r.val2);
 
-  unmatched.forEach((elem, index) => {
-    if (!elem.matchPosition) {
-      unmatched.slice(index + 1).forEach((elem2) => {
-        if (!elem2.matchPosition && elem2.val2 == elem.val1) {
-          elem.matchDifferentPosition = true;
-          elem2.matchDifferentPosition = true;
-        }
-      });
-    }
-  });
-  const arra: any[] = [];
+  // 2. Check elements that didn't MATCH position
   response.forEach((elem) => {
-    if (elem.matchPosition) {
-      arra.push(elem.matchPosition);
-    }
-    if (elem.matchDifferentPosition) {
-      arra.push(elem.matchDifferentPosition);
+    if (!elem.matchPosition) {
+      // Look for the color in the available pool
+      const indexInPool = availableInSecret.indexOf(elem.val1);
+
+      if (indexInPool !== -1) {
+        elem.matchDifferentPosition = true;
+        // 3. Remove used color from pool to avoid double counting
+        availableInSecret.splice(indexInPool, 1);
+      }
     }
   });
+
   return response;
 }
 function createResponsePosition(
