@@ -1,6 +1,7 @@
 "use client";
 
 import ColorPicker from "@/components/game/colorPicker";
+import GuessRow from "@/components/game/guessRow";
 import { generateSecretCode } from "@/lib/game/engine";
 import { MastermindColor } from "@/lib/game/types";
 import { useState } from "react";
@@ -8,7 +9,6 @@ import { useState } from "react";
 export default function GameDashboard() {
   console.log(generateSecretCode());
 
-  // Inside your GameBoard component
   const [currentGuess, setCurrentGuess] = useState<(MastermindColor | null)[]>([
     null,
     null,
@@ -33,26 +33,13 @@ export default function GameDashboard() {
     setCurrentGuess(newGuess);
   };
   return (
-    <div className="flex flex-col items-center gap-10 pt-5 mt-5">
+    <div className="d-flex flex-column items-center gap-10 pt-5 mt-5">
       {/* 1. Active Guess Display */}
-      <div className="flex gap-4 p-4 bg-slate-800 rounded-xl shadow-inner">
-        {currentGuess.map((color, index) => (
-          <button
-            key={index}
-            onClick={() => handleRemoveColor(index)}
-            className={`w-14 h-14 rounded-full border-2 border-slate-600 transition-all
-            ${
-              color
-                ? "scale-100 shadow-lg"
-                : "scale-90 opacity-50 border-dashed"
-            }
-          `}
-            style={{ backgroundColor: color?.toLowerCase() || "transparent" }}
-          >
-            {".   ."}{" "}
-          </button>
-        ))}
-      </div>
+      <GuessRow
+        currentGuess={currentGuess}
+        handleRemoveColor={(e) => handleRemoveColor(e)}
+      ></GuessRow>
+
       {/* 2. Color Selection Palette */}
       <ColorPicker
         handleSelect={(e) => handleSelectColor(e)}
