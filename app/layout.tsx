@@ -30,7 +30,7 @@ const { user } = await createClient();
 
 return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} mt-5`}>
         <NavBar user={user}></NavBar>
         {children}
       </body>
