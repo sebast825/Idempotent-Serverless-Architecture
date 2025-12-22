@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import { NavBar } from "@/components/navBar";
-import {createClient} from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import QueryProvider from "./providers/query-provider";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -25,14 +27,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { user } = await createClient();
 
-const { user } = await createClient();
-
-return (
+  return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} mt-5`}>
         <NavBar user={user}></NavBar>
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
