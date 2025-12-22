@@ -1,9 +1,9 @@
 "use client";
 
-import AttemptRow from "@/components/game/attemptRow";
-import ColorPicker from "@/components/game/colorPicker";
-import GameResultModal from "@/components/game/gameResultModal";
-import GuessRow from "@/components/game/guessRow";
+import AttemptRow from "@/app/game/components/attemptRow";
+import ColorPicker from "@/app/game/components/colorPicker";
+import GameResultModal from "@/app/game/components/gameResultModal";
+import GuessRow from "@/app/game/components/guessRow";
 import { useMastermind } from "./useMastermind";
 
 export default function GameDashboard() {
