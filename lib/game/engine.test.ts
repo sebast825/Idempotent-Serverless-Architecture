@@ -85,28 +85,48 @@ describe("Mastermind Engine - Critical Cases", () => {
     expect(result[1]).toBe("COLOR_ONLY");
   });
   test("should exhaust color supply in second pass", () => {
-  const secret: MastermindColor[] = ["RED", "RED", "BLUE", "YELLOW"];
-  const guess: MastermindColor[] = ["BLUE", "RED", "RED", "RED"];
+    const secret: MastermindColor[] = ["RED", "RED", "BLUE", "YELLOW"];
+    const guess: MastermindColor[] = ["BLUE", "RED", "RED", "RED"];
 
-  const result = validate(secret, guess);
+    const result = validate(secret, guess);
 
-  // guess[0] (BLUE) -> COLOR_ONLY
-  // guess[1] (RED) -> MATCH
-  // guess[2] (RED) -> COLOR_ONLY (only one RED left in secret)
-  // guess[3] (RED) -> NONE (no more REDs in secret)
-  
-  expect(result.filter(r => r === "MATCH").length).toBe(1);
-  expect(result.filter(r => r === "COLOR_ONLY").length).toBe(2);
-  expect(result.filter(r => r === "NONE").length).toBe(1);
-});
+    expect(result.filter((r) => r === "MATCH").length).toBe(1);
+    expect(result.filter((r) => r === "COLOR_ONLY").length).toBe(2);
+    expect(result.filter((r) => r === "NONE").length).toBe(1);
+  });
 
-test("should handle multiple swapped positions correctly", () => {
-  const secret: MastermindColor[] = ["RED", "BLUE", "GREEN", "YELLOW"];
-  const guess: MastermindColor[] = ["BLUE", "RED", "YELLOW", "GREEN"];
+  test("should handle multiple swapped positions correctly", () => {
+    const secret: MastermindColor[] = ["RED", "BLUE", "GREEN", "YELLOW"];
+    const guess: MastermindColor[] = ["BLUE", "RED", "YELLOW", "GREEN"];
 
-  const result = validate(secret, guess);
+    const result = validate(secret, guess);
 
-  // All should be COLOR_ONLY
-  expect(result.every(r => r === "COLOR_ONLY")).toBe(true);
-});
+    // All should be COLOR_ONLY
+    expect(result.every((r) => r === "COLOR_ONLY")).toBe(true);
+  });
+  test("should return a mix of MATCH, COLOR_ONLY and NONE for complex guesses", () => {
+    // Prepare
+    const secret: MastermindColor[] = ["RED", "BLUE", "RED", "YELLOW"];
+    const guess: MastermindColor[] = ["RED", "RED", "GREEN", "BLUE"];
+
+    // Act
+    const result = validate(secret, guess);
+
+    // Assert
+
+    expect(result).toEqual(["MATCH", "COLOR_ONLY", "NONE", "COLOR_ONLY"]);
+  });
+
+  test("should return all MATCH for a fully correct guess with repetitions", () => {
+    // Prepare
+    const secret: MastermindColor[] = ["GREEN", "GREEN", "YELLOW", "YELLOW"];
+    const guess: MastermindColor[] = ["GREEN", "GREEN", "YELLOW", "YELLOW"];
+
+    // Act
+    const result = validate(secret, guess);
+
+    // Assert
+    expect(result.every((r) => r === "MATCH")).toBe(true);
+  });
+
 });
