@@ -22,6 +22,7 @@ const {
     handleSubmitAttempt,
     resetGame,
     code,
+    isPending
   } = useMastermind();
   return (
     <>
@@ -58,6 +59,8 @@ const {
           handleSelect={(e) => handleSelectColor(e)}
           currentGuess={currentGuess}
           submit={()=>handleSubmitAttempt(id)}
+                    disableBtn={isPending}
+
         ></ColorPicker>
       </div>
     </>
