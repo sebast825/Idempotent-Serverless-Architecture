@@ -14,3 +14,8 @@ export interface responsePosition {
   matchDifferentPosition: null | boolean;
 }
 
+export interface AttemptResponse {
+  feedback: FeedbackStatus[];
+  gameStatus: GameStatus;
+  secretCode?: MastermindColor[];
+}
