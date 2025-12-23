@@ -23,7 +23,7 @@ const {
     resetGame,
     code,
     isPending
-  } = useMastermind();
+  } = useMastermind(id);
   return (
     <>
       {status !== "PLAYING" && (
