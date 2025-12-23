@@ -1,20 +1,13 @@
 "use client";
-import { generateSecretCode } from "@/lib/game/engine";
 import {
   MastermindColor,
   GameStatus,
   FeedbackStatus,
-  MASTERMIND_COLORS,
   AttemptResponse,
 } from "@/lib/game/types";
 import { useState } from "react";
-import { submitGuessAction } from "./actions";
-import { v4 as uuidv4 } from "uuid";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { v4 } from "uuid";
+
 import { useCurrentGuess } from "./useCurrentGuess";
 import { useMastermindApi } from "./useMastermindApi";
 
@@ -38,7 +31,7 @@ export function useMastermind(gameId: string) {
     if (currentGuess.includes(null)) return alert("Fill all the options");
 
     const finalGuess = currentGuess as MastermindColor[];
-    const submissionId = uuidv4();
+    const submissionId = v4();
     let responseAttempt: AttemptResponse = await submitAttempt(
       finalGuess,
       submissionId
@@ -48,15 +41,20 @@ export function useMastermind(gameId: string) {
       ...prev,
       { guess: finalGuess, results: responseAttempt.feedback },
     ]);
-    switch (responseAttempt.gameStatus) {
+    handleGameStatus(responseAttempt.gameStatus, responseAttempt.secretCode);
+  };
+  const handleGameStatus = (
+    status: GameStatus,
+    secretCode?: MastermindColor[]
+  ) => {
+    switch (status) {
       case "WON":
         setStatus("WON");
-        setSecretCode(responseAttempt.secretCode!);
+        setSecretCode(secretCode!);
         break;
       case "LOST":
-        console.log("entra en lost")
         setStatus("LOST");
-        setSecretCode(responseAttempt.secretCode!);
+        setSecretCode(secretCode!);
 
         break;
       default:
