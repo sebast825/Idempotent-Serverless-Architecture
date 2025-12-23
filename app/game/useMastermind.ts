@@ -15,6 +15,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useCurrentGuess } from "./useCurrentGuess";
 
 export function useMastermind() {
   const [code, setCode] = useState<MastermindColor[]>(generateSecretCode());
@@ -22,26 +23,14 @@ export function useMastermind() {
   const [history, setHistory] = useState<
     { guess: MastermindColor[]; results: FeedbackStatus[] }[]
   >([]);
-  const [currentGuess, setCurrentGuess] = useState<(MastermindColor | null)[]>(
-    Array(4).fill(null)
-  );
 
-  const handleSelectColor = (color: MastermindColor) => {
-    if (status !== "PLAYING") return;
-    const firstEmptyIndex = currentGuess.indexOf(null);
-    if (firstEmptyIndex !== -1) {
-      const newGuess = [...currentGuess];
-      newGuess[firstEmptyIndex] = color;
-      setCurrentGuess(newGuess);
-    }
-  };
+  const {
+    handleRemoveColor,
+    handleSelectColor,
+    currentGuess,
+    clearCurrentGuess,
+  } = useCurrentGuess();
 
-  const handleRemoveColor = (index: number) => {
-    if (status !== "PLAYING") return;
-    const newGuess = [...currentGuess];
-    newGuess[index] = null;
-    setCurrentGuess(newGuess);
-  };
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
@@ -56,7 +45,7 @@ export function useMastermind() {
       return await submitGuessAction(finalGuess, gameId, submissionId);
     },
     onSuccess: (_data, variables) => {
-      console.log(_data)
+      console.log(_data);
       queryClient.invalidateQueries({ queryKey: ["game", variables.gameId] });
     },
     onError: (error: any) => {
@@ -69,7 +58,6 @@ export function useMastermind() {
 
     const finalGuess = currentGuess as MastermindColor[];
     const submissionId = uuidv4();
-    
 
     mutate(
       { finalGuess, gameId, submissionId },
@@ -87,7 +75,7 @@ export function useMastermind() {
               setStatus("LOST");
               break;
             default:
-              setCurrentGuess(Array(4).fill(null));
+              clearCurrentGuess();
               break;
           }
         },
@@ -95,12 +83,11 @@ export function useMastermind() {
     );
   };
 
-  
   const resetGame = () => {
     setCode(generateSecretCode());
     setStatus("PLAYING");
     setHistory([]);
-    setCurrentGuess(Array(4).fill(null));
+    clearCurrentGuess();
   };
 
   return {
@@ -112,6 +99,6 @@ export function useMastermind() {
     handleSubmitAttempt,
     resetGame,
     code,
-    isPending
+    isPending,
   };
 }
