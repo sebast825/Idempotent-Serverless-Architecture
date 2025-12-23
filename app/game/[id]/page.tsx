@@ -5,9 +5,15 @@ import ColorPicker from "@/app/game/components/colorPicker";
 import GameResultModal from "@/app/game/components/gameResultModal";
 import GuessRow from "@/app/game/components/guessRow";
 import { useMastermind } from "../useMastermind";
+import { use } from "react";
 
-export default function GameDashboard() {
-  const {
+export default function GameDashboard({
+  params,
+}: {
+  params: Promise<{ id: string }>; 
+}) {
+  const { id } = use(params);
+const {
     status,
     history,
     currentGuess,
@@ -51,7 +57,7 @@ export default function GameDashboard() {
         <ColorPicker
           handleSelect={(e) => handleSelectColor(e)}
           currentGuess={currentGuess}
-          submit={handleSubmitAttempt}
+          submit={()=>handleSubmitAttempt(id)}
         ></ColorPicker>
       </div>
     </>

@@ -1,9 +1,12 @@
+"use client";
 import { generateSecretCode, validate } from "@/lib/game/engine";
 import { MastermindColor, GameStatus, FeedbackStatus } from "@/lib/game/types";
 import { useState } from "react";
+import { submitGuessAction } from "./actions";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export function useMastermind() {
-  const MAX_ATTEMPTS = 1;
   const [code, setCode] = useState<MastermindColor[]>(generateSecretCode());
   const [status, setStatus] = useState<GameStatus>("PLAYING");
   const [history, setHistory] = useState<
@@ -30,27 +33,34 @@ export function useMastermind() {
     setCurrentGuess(newGuess);
   };
 
-  const handleSubmitAttempt = () => {
+  const handleSubmitAttempt = async (gameId :string) => {
     if (currentGuess.includes(null)) return alert("Fill all the options");
 
     const finalGuess = currentGuess as MastermindColor[];
-    const currentFeedback = validate(code, finalGuess);
+    const submissionId = uuidv4(); 
+    console.log("arranca")
+    const attemptRepsonse = await submitGuessAction(
+      finalGuess,
+      gameId,
+      submissionId
+    );
+    console.log("termina")
 
     const newHistory = [
       ...history,
-      { guess: finalGuess, results: currentFeedback },
+      { guess: finalGuess, results: attemptRepsonse.feedback },
     ];
     setHistory(newHistory);
-
-    const hasWon = currentFeedback.every((s) => s === "MATCH");
-
-    if (hasWon) {
-      setStatus("WON");
-    } else if (newHistory.length >= MAX_ATTEMPTS) {
-      setStatus("LOST");
-    } else {
-      setCurrentGuess(Array(4).fill(null));
+      console.log(attemptRepsonse)
+    switch (attemptRepsonse.gameStatus) {
+      case "WON":
+        return setStatus("WON");
+      case "LOST":
+        return setStatus("LOST");
+      default:
+        setCurrentGuess(Array(4).fill(null));
     }
+ 
   };
 
   const resetGame = () => {
