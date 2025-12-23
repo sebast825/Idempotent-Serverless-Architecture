@@ -51,7 +51,6 @@ function matchValueAndPosition(
       elem == code[index]
     );
   });
-  console.log(rsta);
   return rsta;
 }
 
