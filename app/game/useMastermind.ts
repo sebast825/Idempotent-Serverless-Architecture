@@ -19,7 +19,9 @@ import { useCurrentGuess } from "./useCurrentGuess";
 import { useMastermindApi } from "./useMastermindApi";
 
 export function useMastermind(gameId: string) {
-  const [code, setCode] = useState<MastermindColor[]>(generateSecretCode());
+  const [secretCode, setSecretCode] = useState<(MastermindColor | null)[]>(
+    Array(4).fill(null)
+  );
   const [status, setStatus] = useState<GameStatus>("PLAYING");
   const [history, setHistory] = useState<
     { guess: MastermindColor[]; results: FeedbackStatus[] }[]
@@ -49,9 +51,13 @@ export function useMastermind(gameId: string) {
     switch (responseAttempt.gameStatus) {
       case "WON":
         setStatus("WON");
+        setSecretCode(responseAttempt.secretCode!);
         break;
       case "LOST":
+        console.log("entra en lost")
         setStatus("LOST");
+        setSecretCode(responseAttempt.secretCode!);
+
         break;
       default:
         clearCurrentGuess();
@@ -60,7 +66,6 @@ export function useMastermind(gameId: string) {
   };
 
   const resetGame = () => {
-    setCode(generateSecretCode());
     setStatus("PLAYING");
     setHistory([]);
     clearCurrentGuess();
@@ -74,7 +79,7 @@ export function useMastermind(gameId: string) {
     handleRemoveColor,
     handleSubmitAttempt,
     resetGame,
-    code,
     isPending,
+    secretCode,
   };
 }

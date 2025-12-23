@@ -21,14 +21,14 @@ const {
     handleRemoveColor,
     handleSubmitAttempt,
     resetGame,
-    code,
+    secretCode,
     isPending
   } = useMastermind(id);
   return (
     <>
       {status !== "PLAYING" && (
         <GameResultModal
-          code={code}
+          code={secretCode}
           btnPrimary={() => resetGame()}
           btnSecondary={function (): void {
             throw new Error("Function not implemented.");

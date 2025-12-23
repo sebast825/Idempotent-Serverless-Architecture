@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import GuessRow from "./guessRow";
 
 export interface propsGameResultModal {
-  code: MastermindColor[];
+  code: (MastermindColor | null)[];
   btnPrimary: () => void;
   btnSecondary: () => void;
   status: GameStatus;
