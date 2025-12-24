@@ -6,7 +6,8 @@ import {
   MastermindColor,
 } from "@/lib/game/types";
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Attempt, Prisma } from "@prisma/client";
+import { promises } from "dns";
 
 const MAX_ATTEMPTS = 2;
 
@@ -22,20 +23,10 @@ export async function submitGuessAction(
   gameId: string,
   attemptKey: string
 ): Promise<AttemptResponse> {
-  //search game for db
 
-  const game = await prisma.game.findUnique({
-    where: { id: gameId },
-    include: { challenge: true, attempts: true },
-  });
+  const game: GameWithRelations = await findGameOrThrow(gameId);
+  await ifAttemptNotExistThrow(game.attempts, attemptKey);
 
-  if (!game) throw new Error("Game not found");
-  //validate attemps is not  processed for idempotency
-  var attemptAlreadyProcesed = game.attempts.some(
-    (e) => e.submissionId == attemptKey
-  );
-
-  if (attemptAlreadyProcesed) throw new Error("Attempt already exist");
   //validate guessAttempt with the secret
   const currentFeedback = validate(
     game.challenge.secretCode as MastermindColor[],
@@ -82,6 +73,23 @@ function handleResponse(
   });
 }
 
+function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
+  //validate attemps is not  processed for idempotency
+  var attemptAlreadyProcesed = attempts.some(
+    (e) => e.submissionId == attemptKey
+  );
+
+  if (attemptAlreadyProcesed) throw new Error("Attempt already exist");
+}
+async function findGameOrThrow(gameId: string): Promise<GameWithRelations> {
+  const game = await prisma.game.findUnique({
+    where: { id: gameId },
+    include: { challenge: true, attempts: true },
+  });
+
+  if (!game) throw new Error("Game not found");
+  return game;
+}
 function isVictory(code: FeedbackStatus[]): boolean {
   let isVictory: boolean = code.every((e) => e == "MATCH");
   return isVictory;
