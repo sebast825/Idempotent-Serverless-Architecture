@@ -2,9 +2,10 @@ import { MastermindColor, AttemptResponse } from "@/lib/game/types";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { submitGuessAction } from "./actions";
 import { findExistingGame } from "../actions/gameActions";
-import Feedback from "react-bootstrap/esm/Feedback";
+import useToastit from "@/hooks/useToastit";
 
 export const useMastermindApi = (gameId: string) => {
+  const { error } = useToastit();
   const queryClient = useQueryClient();
   const { data: game } = useQuery({
     queryKey: ["game", gameId],
@@ -32,7 +33,7 @@ export const useMastermindApi = (gameId: string) => {
         const newAttempt = {
           guess: variables.finalGuess,
           results: _data.feedback,
-          submissionId: variables.submissionId
+          submissionId: variables.submissionId,
         };
         return {
           ...oldData,
@@ -41,9 +42,9 @@ export const useMastermindApi = (gameId: string) => {
         };
       });
     },
-    onError: (error: any) => {
-      console.error("Error al enviar intento:", error);
-      alert("An error happend.");
+    onError: (err: Error) => {
+      console.error("Error al enviar intento:", err.message);
+      error("An error happend");
     },
   });
   const submitAttempt = async (
