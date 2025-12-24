@@ -44,7 +44,7 @@ export function HistoryGamesTable() {
                   <td>options</td>
                   <td>
                     {game.completedAt
-                      ? game.completedAt.getDate.toString()
+                      ? game.completedAt.toLocaleDateString()
                       : "-"}
                   </td>
                 </tr>
