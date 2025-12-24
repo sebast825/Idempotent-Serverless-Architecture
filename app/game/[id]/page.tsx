@@ -8,6 +8,7 @@ import { useMastermind } from "../useMastermind";
 import { use, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
+import { useCreateChallengeAndGame } from "@/hooks/game/useCreateChallengeAndGame";
 
 export default function GameDashboard({
   params,
@@ -15,8 +16,11 @@ export default function GameDashboard({
   params: Promise<{ id: string }>;
 }) {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const { createChallengeAndGame, isPending: isPendingNewGame } =
+    useCreateChallengeAndGame();
   const { error } = useToastit();
   const { id } = use(params);
+
   const {
     status,
     history,
@@ -24,7 +28,6 @@ export default function GameDashboard({
     handleSelectColor,
     handleRemoveColor,
     handleSubmitAttempt,
-    resetGame,
     secretCode,
     isPending,
   } = useMastermind(id);
@@ -38,28 +41,36 @@ export default function GameDashboard({
       setShowModal(true);
     }
   };
+  const handleNewGame = async () => {
+    await createChallengeAndGame();
+    setShowModal(false);
+  };
   return (
     <>
       {showModal && (
         <GameResultModal
           code={secretCode}
-          btnPrimary={() => resetGame()}
+          btnPrimary={() => handleNewGame()}
+          btnPrimaryDisable={isPendingNewGame}
           onClose={() => setShowModal(false)}
           status={status}
         />
       )}
 
-      <div className="d-flex flex-column pt-5 " style={{ height: "100vh",
-         background: `
+      <div
+        className="d-flex flex-column pt-5 "
+        style={{
+          height: "100vh",
+          background: `
     linear-gradient(
         180deg,
         #1a4a7aff 0%,
         #2b5e91ff 35%,
         #126ecaff 100%
       )
-    `
-
-       }}>
+    `,
+        }}
+      >
         <div
           className="d-flex mt-auto flex-column  justify-content-center  items-center gap-10 py-2 flex-1"
           style={{ minHeight: 0 }}
@@ -67,19 +78,18 @@ export default function GameDashboard({
           {/* Contenedor para el historial con scroll */}
           <div
             className="d-flex justify-content-center  w-100 mt-4 rounded-4 overflow-auto flex-1"
-            style={{ minHeight: 0}}
+            style={{ minHeight: 0 }}
           >
-        
-            <div style={{minHeight:"max-content"}}>
-            {history.map((attempt, index) => (
-              <AttemptRow
-                key={history.length - index}
-                props={{
-                  attemptGuess: attempt.guess,
-                  results: attempt.results,
-                }}
-              />
-            ))}        
+            <div style={{ minHeight: "max-content" }}>
+              {history.map((attempt, index) => (
+                <AttemptRow
+                  key={history.length - index}
+                  props={{
+                    attemptGuess: attempt.guess,
+                    results: attempt.results,
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>

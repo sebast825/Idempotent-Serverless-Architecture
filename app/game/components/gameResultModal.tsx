@@ -5,12 +5,13 @@ import GuessRow from "./guessRow";
 export interface propsGameResultModal {
   code: (MastermindColor | null)[];
   btnPrimary: () => void;
+  btnPrimaryDisable: boolean;
   onClose: () => void;
   status: GameStatus;
 }
 
 export default function GameResultModal(props: propsGameResultModal) {
-  const { code, btnPrimary, onClose, status } = props;
+  const { code, btnPrimary, onClose, status ,btnPrimaryDisable} = props;
   return (
     <>
       <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg-opacity-50">
@@ -21,9 +22,9 @@ export default function GameResultModal(props: propsGameResultModal) {
             <h2 className="text-danger">Game Over 💀</h2>
           )}
           <p>The secret code is:</p>
-          <GuessRow currentGuess={code} handleRemoveColor={() => {}} />
+          <GuessRow currentGuess={code} handleRemoveColor={() => {}}/>
           <div className="d-flex gap-3 p-2">
-            <Button className="w-100" onClick={() => btnPrimary()}>
+            <Button className="w-100" onClick={() => btnPrimary()} disabled={btnPrimaryDisable}>
               Play Again
             </Button>
             <Button variant="secondary w-100" onClick={() => onClose()}>

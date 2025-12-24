@@ -1,17 +1,9 @@
 "use client";
-import {
-  MastermindColor,
-  GameStatus,
-  FeedbackStatus,
-  AttemptResponse,
-  GameWithAttempts,
-} from "@/lib/game/types";
+import { MastermindColor, GameStatus, AttemptResponse } from "@/lib/game/types";
 import { useState } from "react";
 import { v4 } from "uuid";
-
 import { useCurrentGuess } from "./useCurrentGuess";
 import { useMastermindApi } from "./useMastermindApi";
-import { Attempt } from "@prisma/client";
 
 export function useMastermind(gameId: string) {
   const [secretCode, setSecretCode] = useState<(MastermindColor | null)[]>(
@@ -25,7 +17,7 @@ export function useMastermind(gameId: string) {
     clearCurrentGuess,
   } = useCurrentGuess();
   const history = game?.attempts ?? [];
-  const status : GameStatus= game?.status as GameStatus ?? "PLAYING";
+  const status: GameStatus = (game?.status as GameStatus) ?? "PLAYING";
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
     const finalGuess = currentGuess as MastermindColor[];
@@ -34,7 +26,7 @@ export function useMastermind(gameId: string) {
       finalGuess,
       submissionId
     );
-
+    console.log(responseAttempt);
     handleGameStatus(responseAttempt.gameStatus, responseAttempt.secretCode);
     return responseAttempt;
   };
@@ -55,10 +47,6 @@ export function useMastermind(gameId: string) {
     }
   };
 
-  const resetGame = () => {
-    clearCurrentGuess();
-  };
-
   return {
     status,
     history,
@@ -66,7 +54,6 @@ export function useMastermind(gameId: string) {
     handleSelectColor,
     handleRemoveColor,
     handleSubmitAttempt,
-    resetGame,
     isPending,
     secretCode,
   };

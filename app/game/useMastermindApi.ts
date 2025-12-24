@@ -2,17 +2,17 @@ import { MastermindColor, AttemptResponse } from "@/lib/game/types";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { submitGuessAction } from "./actions";
 import { findExistingGame } from "../actions/gameActions";
+import Feedback from "react-bootstrap/esm/Feedback";
 
 export const useMastermindApi = (gameId: string) => {
-
   const queryClient = useQueryClient();
   const { data: game } = useQuery({
     queryKey: ["game", gameId],
     queryFn: () => findExistingGame(gameId),
     //avoid unnecesary refetchs
-    refetchOnWindowFocus:false,
-    staleTime:Infinity,
-    refetchOnReconnect:false
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    refetchOnReconnect: false,
   });
 
   const { mutateAsync, isPending } = useMutation({
@@ -25,8 +25,21 @@ export const useMastermindApi = (gameId: string) => {
     }): Promise<AttemptResponse> => {
       return await submitGuessAction(finalGuess, gameId, submissionId);
     },
-    onSuccess: (_data) => {
-      queryClient.invalidateQueries({ queryKey: ["game", gameId] });
+    onSuccess: (_data, variables) => {
+      queryClient.setQueryData(["game", gameId], (oldData: any) => {
+        if (!oldData) return oldData;
+
+        const newAttempt = {
+          guess: variables.finalGuess,
+          results: _data.feedback,
+          submissionId: variables.submissionId
+        };
+        return {
+          ...oldData,
+          status: _data.gameStatus,
+          attempts: [...oldData.attempts, newAttempt],
+        };
+      });
     },
     onError: (error: any) => {
       console.error("Error al enviar intento:", error);
