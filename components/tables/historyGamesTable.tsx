@@ -3,6 +3,7 @@ import { usePagination } from "../../hooks/usePagination";
 import PaginationBtns from "../paginationBtns";
 import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 export function HistoryGamesTable() {
   const { page, pageSize, goToPage } = usePagination();
@@ -41,7 +42,30 @@ export function HistoryGamesTable() {
                 >
                   <td>{index}</td>
                   <td>{game.status}</td>
-                  <td>options</td>
+                  <td>
+                    <div className="d-flex gap-2 justify-content-center">
+                      {game.status === "PLAYING" ? (
+                        <Link
+                          href={`/game/${game.id}`}
+                          className="btn btn-sm btn-outline-primary"
+                        >
+                          Continue
+                        </Link>
+                      ) : (
+                        <>
+                          <Link
+                            href={`/game/${game.id}/review`}
+                            className="btn btn-sm btn-outline-success"
+                          >
+                            Watch
+                          </Link>
+                          <button className="btn btn-sm btn-outline-info">
+                            Share
+                          </button>
+                        </>
+                      )}
+                    </div>{" "}
+                  </td>{" "}
                   <td>
                     {game.completedAt
                       ? game.completedAt.toLocaleDateString()
