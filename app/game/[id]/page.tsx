@@ -32,6 +32,7 @@ export default function GameDashboard({
     isPending,
   } = useMastermind(id);
   const onSubmit = async () => {
+    if (isPending || status !== "PLAYING") return;
     if (currentGuess.includes(null)) {
       error("You must choose 4 colors to make a guess");
       return;
@@ -106,7 +107,7 @@ export default function GameDashboard({
             handleSelect={(e) => handleSelectColor(e)}
             currentGuess={currentGuess}
             submit={() => onSubmit()}
-            disableBtn={isPending}
+            disableBtn={isPending || status !== "PLAYING"}
           ></ColorPicker>
         </div>
       </div>
