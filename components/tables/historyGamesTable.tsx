@@ -1,17 +1,29 @@
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { usePagination } from "../../hooks/usePagination";
 import PaginationBtns from "../paginationBtns";
 import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useModalStore } from "@/store/useModalStore";
+import { useRouter } from "next/navigation";
 
 export function HistoryGamesTable() {
+
+  const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const { data: historyGames } = useQuery({
     queryKey: ["gameHistory", page],
     queryFn: () => getPaginatedGamesByUser(page, pageSize),
   });
+
+  function handleContinueGame(gameId: string) {
+   
+    router.push(`/game/${gameId}`);
+     closeModal();
+  }
+
   return (
     <>
       <div className="w-100 ">
@@ -45,12 +57,13 @@ export function HistoryGamesTable() {
                   <td>
                     <div className="d-flex gap-2 justify-content-center">
                       {game.status === "PLAYING" ? (
-                        <Link
-                          href={`/game/${game.id}`}
-                          className="btn btn-sm btn-outline-primary"
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          onClick={() => handleContinueGame(game.id)}
                         >
                           Continue
-                        </Link>
+                        </Button>
                       ) : (
                         <>
                           <Link
@@ -64,8 +77,8 @@ export function HistoryGamesTable() {
                           </button>
                         </>
                       )}
-                    </div>{" "}
-                  </td>{" "}
+                    </div>
+                  </td>
                   <td>
                     {game.completedAt
                       ? game.completedAt.toLocaleDateString()
