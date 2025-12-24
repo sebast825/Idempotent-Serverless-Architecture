@@ -22,11 +22,13 @@ export default function Dashboard() {
   });
   return (
     <>
+    <div className="margin-top px-2">
       <Opening />
 
       <Button onClick={() => mutate()} disabled={isPending}>
         Start Game!
       </Button>
+      </div>
     </>
   );
 }

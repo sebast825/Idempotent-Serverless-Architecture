@@ -32,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} mt-5`}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NavBar user={user}></NavBar>
         <QueryProvider>{children}</QueryProvider>
           <ToastContainer

@@ -11,7 +11,7 @@ export default function ColorPicker(props: propsColorPicker) {
   const { handleSelect, currentGuess, submit,disableBtn } = props;
   return (
     <>
-      <div className="d-flex flex-column align-items-center justify-content-center w-100 gap-0 bg-dark p-2 py-4">
+      <div className="d-flex flex-column align-items-center justify-content-center w-100 gap-0 bg-dark p-2 py-4 bottom">
         {" "}
         <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest text-light">
           Select Color

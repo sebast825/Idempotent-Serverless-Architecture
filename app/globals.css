@@ -40,3 +40,10 @@ a {
     color-scheme: dark;
   }
 }
+.margin-top {
+  margin-top: 80px !important;
+
+  @media screen and (max-width: 600px) {
+    margin-top: 70px !important;
+  }
+}
