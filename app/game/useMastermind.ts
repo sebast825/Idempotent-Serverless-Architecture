@@ -27,8 +27,12 @@ export function useMastermind(gameId: string) {
     clearCurrentGuess,
   } = useCurrentGuess();
 
-  const handleSubmitAttempt = async () => {
-    if (currentGuess.includes(null)) return alert("Fill all the options");
+  const handleSubmitAttempt = async (): Promise<AttemptResponse | null> => {
+    if (currentGuess.includes(null)) {
+      alert("Fill all the options");
+
+      return null;
+    }
 
     const finalGuess = currentGuess as MastermindColor[];
     const submissionId = v4();
@@ -42,6 +46,7 @@ export function useMastermind(gameId: string) {
       { guess: finalGuess, results: responseAttempt.feedback },
     ]);
     handleGameStatus(responseAttempt.gameStatus, responseAttempt.secretCode);
+    return responseAttempt;
   };
   const handleGameStatus = (
     status: GameStatus,

@@ -5,15 +5,18 @@ import ColorPicker from "@/app/game/components/colorPicker";
 import GameResultModal from "@/app/game/components/gameResultModal";
 import GuessRow from "@/app/game/components/guessRow";
 import { useMastermind } from "../useMastermind";
-import { use } from "react";
+import { use, useState } from "react";
+import { ActionResult } from "next/dist/server/app-render/types";
+import { AttemptResponse } from "@/lib/game/types";
 
 export default function GameDashboard({
   params,
 }: {
-  params: Promise<{ id: string }>; 
+  params: Promise<{ id: string }>;
 }) {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const { id } = use(params);
-const {
+  const {
     status,
     history,
     currentGuess,
@@ -22,11 +25,18 @@ const {
     handleSubmitAttempt,
     resetGame,
     secretCode,
-    isPending
+    isPending,
   } = useMastermind(id);
+  
+  const onSubmit = async () => {
+    const rsta: AttemptResponse | null = await handleSubmitAttempt();
+    if (rsta != null && rsta.gameStatus != "PLAYING") {
+      setShowModal(true);
+    }
+  };
   return (
     <>
-      {status !== "PLAYING" && (
+      {showModal && (
         <GameResultModal
           code={secretCode}
           btnPrimary={() => resetGame()}
@@ -58,9 +68,8 @@ const {
         <ColorPicker
           handleSelect={(e) => handleSelectColor(e)}
           currentGuess={currentGuess}
-          submit={()=>handleSubmitAttempt()}
-                    disableBtn={isPending}
-
+          submit={() => onSubmit()}
+          disableBtn={isPending}
         ></ColorPicker>
       </div>
     </>
