@@ -49,16 +49,18 @@ export default function GameDashboard({
         />
       )}
 
-      <div className="d-flex flex-column pt-5" style={{ height: "100vh" }}>
+      <div className="d-flex flex-column pt-5 bg-info" style={{ height: "100vh" }}>
         <div
-          className="d-flex mt-auto flex-column items-center gap-10 py-2 flex-1"
+          className="d-flex mt-auto flex-column  justify-content-center  items-center gap-10 py-2 flex-1"
           style={{ minHeight: 0 }}
         >
           {/* Contenedor para el historial con scroll */}
           <div
-            className="game-history-container w-100 mt-4 overflow-auto flex-1"
-            style={{ minHeight: 0 }}
+            className="d-flex justify-content-center  w-100 mt-4 rounded-4 overflow-auto flex-1"
+            style={{ minHeight: 0}}
           >
+        
+            <div style={{minHeight:"max-content"}}>
             {history.map((attempt, index) => (
               <AttemptRow
                 key={history.length - index}
@@ -67,7 +69,8 @@ export default function GameDashboard({
                   results: attempt.results,
                 }}
               />
-            ))}
+            ))}        
+            </div>
           </div>
         </div>
 
