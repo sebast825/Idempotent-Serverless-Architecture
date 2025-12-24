@@ -23,6 +23,7 @@ export async function submitGuessAction(
   gameId: string,
   attemptKey: string
 ): Promise<AttemptResponse> {
+  
   const game: GameWithRelations = await findGameOrThrow(gameId);
   await ifAttemptNotExistThrow(game.attempts, attemptKey);
 
@@ -31,7 +32,22 @@ export async function submitGuessAction(
     game.challenge.secretCode as MastermindColor[],
     guessAttempt
   );
+  return persistAttemptAndResponse(
+    currentFeedback,
+    game,
+    gameId,
+    attemptKey,
+    guessAttempt
+  );
+}
 
+async function persistAttemptAndResponse(
+  currentFeedback: FeedbackStatus[],
+  game: GameWithRelations,
+  gameId: string,
+  attemptKey: string,
+  guessAttempt: MastermindColor[]
+) {
   const isVictoryState: boolean = isVictory(currentFeedback);
   const isLastAttempt: boolean = game.attempts.length + 1 >= MAX_ATTEMPTS;
   const isGameFinished: boolean = isVictoryState || isLastAttempt;
@@ -40,28 +56,28 @@ export async function submitGuessAction(
     : isLastAttempt
     ? "LOST"
     : "PLAYING";
- 
-    await prisma.$transaction(async (tx) => {
-      await tx.attempt.create({
+
+  await prisma.$transaction(async (tx) => {
+    await tx.attempt.create({
+      data: {
+        gameId: game.id,
+        submissionId: attemptKey,
+        guess: guessAttempt,
+        result: currentFeedback,
+      },
+    });
+    //only update is game is finished
+    if (isGameFinished) {
+      await tx.game.update({
+        where: { id: gameId },
         data: {
-          gameId: game.id,
-          submissionId: attemptKey,
-          guess: guessAttempt,
-          result: currentFeedback,
+          status: nextStatus,
+          completedAt: new Date(),
         },
       });
-      //only update is game is finished
-      if (isGameFinished) {
-        await tx.game.update({
-          where: { id: gameId },
-          data: {
-            status: nextStatus,
-            completedAt: new Date(),
-          },
-        });
-      }
-    });
- 
+    }
+  });
+
   var rsta: AttemptResponse = {
     feedback: currentFeedback,
     gameStatus: nextStatus,
@@ -71,8 +87,6 @@ export async function submitGuessAction(
   };
   return rsta;
 }
-
-
 function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
   //validate attemps is not  processed for idempotency
   var attemptAlreadyProcesed = attempts.some(
