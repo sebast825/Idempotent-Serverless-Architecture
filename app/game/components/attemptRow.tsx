@@ -10,7 +10,7 @@ export default function AttemptRow({ props }: { props: propsAttemptRow }) {
   const { attemptGuess, results } = props;
   return (
     <>
-      <div className="d-flex align-items-center justify-content-center w-100   p-1 bg-slate-800 rounded-xl shadow-inner">
+      <div className="d-flex align-items-center justify-content-center w-100 border-bottom border-light border-opacity-50  p-1 bg-slate-800 rounded-xl shadow-inner">
         {attemptGuess.map((color, index) => (
           <button
             key={index}

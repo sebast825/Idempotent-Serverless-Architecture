@@ -50,7 +50,11 @@ export default function GameDashboard({
       )}
 
       <div className="d-flex flex-column pt-5" style={{ height: "100vh" }}>
-        <div className="d-flex  flex-1" style={{ minHeight: 0 }}>
+        <div
+          className="d-flex mt-auto flex-column items-center gap-10 py-2 flex-1"
+          style={{ minHeight: 0 }}
+        >
+          {/* Contenedor para el historial con scroll */}
           <div
             className="game-history-container w-100 mt-4 overflow-auto flex-1"
             style={{ minHeight: 0 }}
@@ -66,8 +70,9 @@ export default function GameDashboard({
             ))}
           </div>
         </div>
+
         {/* 1. Active Guess Display */}
-        <div className="mt-auto w-100">
+        <div className=" w-100">
           <GuessRow
             currentGuess={currentGuess}
             handleRemoveColor={(e) => handleRemoveColor(e)}
