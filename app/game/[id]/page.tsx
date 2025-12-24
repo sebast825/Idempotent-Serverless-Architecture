@@ -6,15 +6,16 @@ import GameResultModal from "@/app/game/components/gameResultModal";
 import GuessRow from "@/app/game/components/guessRow";
 import { useMastermind } from "../useMastermind";
 import { use, useState } from "react";
-import { ActionResult } from "next/dist/server/app-render/types";
 import { AttemptResponse } from "@/lib/game/types";
+import useToastit from "@/hooks/useToastit";
 
 export default function GameDashboard({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const [showModal, setShowModal] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const { error } = useToastit();
   const { id } = use(params);
   const {
     status,
@@ -27,10 +28,13 @@ export default function GameDashboard({
     secretCode,
     isPending,
   } = useMastermind(id);
-
   const onSubmit = async () => {
-    const rsta: AttemptResponse | null = await handleSubmitAttempt();
-    if (rsta != null && rsta.gameStatus != "PLAYING") {
+    if (currentGuess.includes(null)) {
+      error("You must choose 4 colors to make a guess");
+      return;
+    }
+    const rsta: AttemptResponse = await handleSubmitAttempt();
+    if (rsta.gameStatus != "PLAYING") {
       setShowModal(true);
     }
   };
