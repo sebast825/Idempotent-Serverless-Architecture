@@ -5,12 +5,12 @@ import GuessRow from "./guessRow";
 export interface propsGameResultModal {
   code: (MastermindColor | null)[];
   btnPrimary: () => void;
-  btnSecondary: () => void;
+  onClose: () => void;
   status: GameStatus;
 }
 
 export default function GameResultModal(props: propsGameResultModal) {
-  const { code, btnPrimary, btnSecondary, status } = props;
+  const { code, btnPrimary, onClose, status } = props;
   return (
     <>
       <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg-opacity-50">
@@ -26,7 +26,7 @@ export default function GameResultModal(props: propsGameResultModal) {
             <Button className="w-100" onClick={() => btnPrimary()}>
               Play Again
             </Button>
-            <Button variant="secondary w-100" onClick={() => btnSecondary()}>
+            <Button variant="secondary w-100" onClick={() => onClose()}>
               Back
             </Button>
           </div>

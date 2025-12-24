@@ -14,7 +14,7 @@ export default function GameDashboard({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(true);
   const { id } = use(params);
   const {
     status,
@@ -27,7 +27,7 @@ export default function GameDashboard({
     secretCode,
     isPending,
   } = useMastermind(id);
-  
+
   const onSubmit = async () => {
     const rsta: AttemptResponse | null = await handleSubmitAttempt();
     if (rsta != null && rsta.gameStatus != "PLAYING") {
@@ -40,9 +40,7 @@ export default function GameDashboard({
         <GameResultModal
           code={secretCode}
           btnPrimary={() => resetGame()}
-          btnSecondary={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          onClose={() => setShowModal(false)}
           status={status}
         />
       )}
