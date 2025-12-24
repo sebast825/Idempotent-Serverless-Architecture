@@ -27,7 +27,7 @@ export function useMastermind(gameId: string) {
     clearCurrentGuess,
   } = useCurrentGuess();
 
-  const handleSubmitAttempt = async (gameId: string) => {
+  const handleSubmitAttempt = async () => {
     if (currentGuess.includes(null)) return alert("Fill all the options");
 
     const finalGuess = currentGuess as MastermindColor[];

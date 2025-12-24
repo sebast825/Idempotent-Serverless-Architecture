@@ -58,7 +58,7 @@ const {
         <ColorPicker
           handleSelect={(e) => handleSelectColor(e)}
           currentGuess={currentGuess}
-          submit={()=>handleSubmitAttempt(id)}
+          submit={()=>handleSubmitAttempt()}
                     disableBtn={isPending}
 
         ></ColorPicker>
