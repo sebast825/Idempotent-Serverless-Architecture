@@ -6,6 +6,7 @@ import { NavBar } from "@/components/navBar";
 import { createClient } from "@/lib/supabase/server";
 import QueryProvider from "./providers/query-provider";
 import { ToastContainer, Flip } from "react-toastify";
+import { ModalManager } from "@/components/modals/modalManager";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,8 +35,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NavBar user={user}></NavBar>
-        <QueryProvider>{children}</QueryProvider>
-          <ToastContainer
+        <QueryProvider>
+          {children}
+          <ModalManager />
+        </QueryProvider>
+
+        <ToastContainer
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}
