@@ -15,7 +15,7 @@ export default function GameResultModal(props: propsGameResultModal) {
   return (
     <>
       <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg-opacity-50">
-        <div className=" p-5 rounded-xl shadow-2xl text-center bg-light border rounded-2">
+        <div className=" p-4  p-md-5 rounded-xl shadow-2xl text-center bg-light border rounded-2">
           {status === "WON" ? (
             <h2 className="text-success">Victory! 🏆</h2>
           ) : (
