@@ -3,11 +3,11 @@ import { validate } from "@/lib/game/engine";
 import {
   AttemptResponse,
   FeedbackStatus,
+  GameStatus,
   MastermindColor,
 } from "@/lib/game/types";
 import prisma from "@/lib/prisma";
 import { Attempt, Prisma } from "@prisma/client";
-import { promises } from "dns";
 
 const MAX_ATTEMPTS = 2;
 
@@ -23,7 +23,6 @@ export async function submitGuessAction(
   gameId: string,
   attemptKey: string
 ): Promise<AttemptResponse> {
-
   const game: GameWithRelations = await findGameOrThrow(gameId);
   await ifAttemptNotExistThrow(game.attempts, attemptKey);
 
@@ -41,36 +40,24 @@ export async function submitGuessAction(
       result: currentFeedback,
     },
   });
+  const isVictoryState: boolean = isVictory(currentFeedback);
+  const isLastAttempt: boolean = game.attempts.length + 1 >= MAX_ATTEMPTS;
+  const isGameFinished: boolean = isVictoryState || isLastAttempt;
 
-  return handleResponse(game, currentFeedback);
-}
+  const nextStatus: GameStatus = isVictoryState
+    ? "WON"
+    : isLastAttempt
+    ? "LOST"
+    : "PLAYING";
 
-function handleResponse(
-  game: GameWithRelations,
-  currentFeedback: FeedbackStatus[]
-): AttemptResponse {
-  let response: AttemptResponse;
-
-  //return response and win
-  if (game.attempts.length > MAX_ATTEMPTS) {
-    return (response = {
-      feedback: currentFeedback,
-      gameStatus: "LOST",
-      secretCode: game.challenge.secretCode as MastermindColor[],
-    });
-  }
-  if (isVictory(currentFeedback)) {
-    return (response = {
-      feedback: currentFeedback,
-      gameStatus: "WON",
-      secretCode: game.challenge.secretCode as MastermindColor[],
-    });
-  }
-
-  return (response = {
+  var rsta: AttemptResponse = {
     feedback: currentFeedback,
-    gameStatus: "PLAYING",
-  });
+    gameStatus: nextStatus,
+    secretCode: isGameFinished
+      ? (game.challenge.secretCode as MastermindColor[])
+      : undefined,
+  };
+  return rsta;
 }
 
 function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
