@@ -8,7 +8,6 @@ import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
 
 export function HistoryGamesTable() {
-
   const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
@@ -19,11 +18,13 @@ export function HistoryGamesTable() {
   });
 
   function handleContinueGame(gameId: string) {
-   
     router.push(`/game/${gameId}`);
-     closeModal();
+    closeModal();
   }
-
+  function handleShowRepetition(gameId: string) {
+    router.push(`/game/${gameId}/review`);
+    closeModal();
+  }
   return (
     <>
       <div className="w-100 ">
@@ -66,12 +67,13 @@ export function HistoryGamesTable() {
                         </Button>
                       ) : (
                         <>
-                          <Link
-                            href={`/game/${game.id}/review`}
-                            className="btn btn-sm btn-outline-success"
+                          <Button
+                            onClick={() => handleShowRepetition(game.id)}
+                            variant="outline-success"
+                            size="sm"
                           >
                             Watch
-                          </Link>
+                          </Button>
                           <button className="btn btn-sm btn-outline-info">
                             Share
                           </button>
