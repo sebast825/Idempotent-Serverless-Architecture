@@ -14,7 +14,7 @@ export const NavBar = ({ user }: { user: User | null }) => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" fixed="top" className="shadow">
       <Nav className="w-100 px-4 d-flex justify-content-end  justify-content-md-center flex-row gap-3 gap-md-5">
-        <Nav.Link href="/">Home</Nav.Link>
+        <Nav.Link href="/dashboard">Dashboard</Nav.Link>
 
         {!user ? (
           <Nav.Link onClick={loginWithGoogle} disabled={isLoading}>
