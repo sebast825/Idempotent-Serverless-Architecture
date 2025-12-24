@@ -40,7 +40,6 @@ export default function GameDashboard({
   };
   return (
     <>
-  
       {showModal && (
         <GameResultModal
           code={secretCode}
@@ -50,33 +49,37 @@ export default function GameDashboard({
         />
       )}
 
-      <div className="d-flex flex-column items-center  gap-10 pt-5 min-vh-100">
-        <div className="game-history-container w-100 mt-4">
-          {history.map((attempt, index) => (
-            <AttemptRow
-              key={history.length - index}
-              props={{
-                attemptGuess: attempt.guess,
-                results: attempt.results,
-              }}
-            />
-          ))}
+      <div className="d-flex flex-column pt-5" style={{ height: "100vh" }}>
+        <div className="d-flex  flex-1" style={{ minHeight: 0 }}>
+          <div
+            className="game-history-container w-100 mt-4 overflow-auto flex-1"
+            style={{ minHeight: 0 }}
+          >
+            {history.map((attempt, index) => (
+              <AttemptRow
+                key={history.length - index}
+                props={{
+                  attemptGuess: attempt.guess,
+                  results: attempt.results,
+                }}
+              />
+            ))}
+          </div>
         </div>
         {/* 1. Active Guess Display */}
-                <div className="mt-auto w-100">
+        <div className="mt-auto w-100">
+          <GuessRow
+            currentGuess={currentGuess}
+            handleRemoveColor={(e) => handleRemoveColor(e)}
+          ></GuessRow>
+          {/* 2. Color Selection Palette */}
 
-        <GuessRow
-          currentGuess={currentGuess}
-          handleRemoveColor={(e) => handleRemoveColor(e)}
-        ></GuessRow>
-        {/* 2. Color Selection Palette */}
-
-        <ColorPicker
-          handleSelect={(e) => handleSelectColor(e)}
-          currentGuess={currentGuess}
-          submit={() => onSubmit()}
-          disableBtn={isPending}
-        ></ColorPicker>
+          <ColorPicker
+            handleSelect={(e) => handleSelectColor(e)}
+            currentGuess={currentGuess}
+            submit={() => onSubmit()}
+            disableBtn={isPending}
+          ></ColorPicker>
         </div>
       </div>
     </>
