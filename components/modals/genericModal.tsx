@@ -1,6 +1,9 @@
-import { HistoryGamesTable } from "../tables/historyGamesTable";
+interface ModalProps {
+  onClose: () => void;
+  children: React.ReactNode;
+}
 
-export function GameHistoryModal({ onClose }: { onClose: () => void }) {
+export function GenericModal({ onClose, children }: ModalProps) {
   return (
     <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg">
       <button
@@ -24,7 +27,7 @@ export function GameHistoryModal({ onClose }: { onClose: () => void }) {
           className=" overflow-y-auto mb-6 custom-scrollbar"
           style={{ maxHeight: "70vh" }}
         >
-          <HistoryGamesTable />
+          {children}
         </div>
       </div>
     </div>
