@@ -16,16 +16,14 @@ export function useMastermind(gameId: string) {
     Array(4).fill(null)
   );
   const [status, setStatus] = useState<GameStatus>("PLAYING");
-  const [history, setHistory] = useState<
-    { guess: MastermindColor[]; results: FeedbackStatus[] }[]
-  >([]);
-  const { submitAttempt, isPending } = useMastermindApi(gameId);
+  const { submitAttempt, isPending, game } = useMastermindApi(gameId);
   const {
     handleRemoveColor,
     handleSelectColor,
     currentGuess,
     clearCurrentGuess,
   } = useCurrentGuess();
+  const history = game?.attempts ?? [];
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
     const finalGuess = currentGuess as MastermindColor[];
@@ -35,10 +33,6 @@ export function useMastermind(gameId: string) {
       submissionId
     );
 
-    setHistory((prev) => [
-      ...prev,
-      { guess: finalGuess, results: responseAttempt.feedback },
-    ]);
     handleGameStatus(responseAttempt.gameStatus, responseAttempt.secretCode);
     return responseAttempt;
   };
@@ -64,7 +58,6 @@ export function useMastermind(gameId: string) {
 
   const resetGame = () => {
     setStatus("PLAYING");
-    setHistory([]);
     clearCurrentGuess();
   };
 

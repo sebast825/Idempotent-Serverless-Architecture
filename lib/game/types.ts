@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 export const MASTERMIND_COLORS = ['RED', 'BLUE', 'GREEN', 'YELLOW', 'PURPLE', 'ORANGE'] as const;
 
 export type MastermindColor = typeof MASTERMIND_COLORS[number];
@@ -13,6 +15,22 @@ export interface responsePosition {
   matchPosition: boolean;
   matchDifferentPosition: null | boolean;
 }
+
+export type GameWithAttempts = Omit<
+  Prisma.GameGetPayload<{
+    include: { attempts: true };
+  }>,
+  "attempts"
+> & {
+  attempts: {
+    id: string;
+    gameId: string;
+    submissionId: string;
+    guess: MastermindColor[];
+    results: FeedbackStatus[];
+    createdAt: Date;
+  }[];
+};
 
 export interface AttemptResponse {
   feedback: FeedbackStatus[];
