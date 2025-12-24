@@ -7,7 +7,7 @@ export const useCreateChallengeAndGame = () => {
   const router = useRouter();
   const { error } = useToastit();
   
-  const { mutate: createChallengeAndGame, isPending } = useMutation({
+  const { mutateAsync: createChallengeAndGame, isPending } = useMutation({
     mutationFn: createChallengeGameAction,
     onSuccess: (gameId) => {
       router.push(`/game/${gameId}`);
