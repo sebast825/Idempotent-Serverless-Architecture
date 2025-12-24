@@ -49,7 +49,17 @@ export default function GameDashboard({
         />
       )}
 
-      <div className="d-flex flex-column pt-5 bg-info" style={{ height: "100vh" }}>
+      <div className="d-flex flex-column pt-5 " style={{ height: "100vh",
+         background: `
+    linear-gradient(
+        180deg,
+        #1a4a7aff 0%,
+        #2b5e91ff 35%,
+        #126ecaff 100%
+      )
+    `
+
+       }}>
         <div
           className="d-flex mt-auto flex-column  justify-content-center  items-center gap-10 py-2 flex-1"
           style={{ minHeight: 0 }}
