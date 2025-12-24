@@ -12,7 +12,6 @@ export interface PaginatedResponse<T> {
   currentPage: number;
   itemsPerPage: number;
 }
-//start from page 0
 export const getPaginatedGamesByUser = async (
   currentPage: number,
   pageSize : number
@@ -36,8 +35,8 @@ export const getPaginatedGamesByUser = async (
   const rsta: PaginatedResponse<Game> = {
     data: games,
     currentPage: currentPage,
-    totalPages: totalGames,
-    itemsPerPage: 7,
+    totalPages: Math.ceil(totalGames/pageSize),
+    itemsPerPage: pageSize,
   };
   return rsta;
 };

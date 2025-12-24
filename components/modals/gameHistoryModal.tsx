@@ -1,21 +1,6 @@
-import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
-import { usePagination } from "@/hooks/usePagination";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import PaginationBtns from "../paginationBtns";
+import { HistoryGamesTable } from "../tables/historyGamesTable";
 
 export function GameHistoryModal({ onClose }: { onClose: () => void }) {
-  const { page, pageSize, goToPage } = usePagination();
-
-  const { data } = useQuery({
-    queryKey: ["gameHistory", page],
-    queryFn: () => getPaginatedGamesByUser(page, pageSize),
-  });
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg">
       <button
@@ -34,23 +19,12 @@ export function GameHistoryModal({ onClose }: { onClose: () => void }) {
       >
         ✕
       </button>
-      <div
-        className=" p-4  p-md-5 rounded-xl shadow-2xl text-center bg-light border rounded-2"
-        onClick={onClose}
-      >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Game History</h2>
-        </div>
-        <div>
-          <h2>Here goes the table</h2>
-        </div>
-
-        <div className="pt-4 border-t border-zinc-800">
-          <PaginationBtns
-            page={page}
-            totalPages={3}
-            goToPage={goToPage}
-          ></PaginationBtns>
+      <div className=" p-4  p-md-5 rounded-xl shadow-2xl text-center bg-light border rounded-2">
+        <div
+          className=" overflow-y-auto mb-6 custom-scrollbar"
+          style={{ maxHeight: "70vh" }}
+        >
+          <HistoryGamesTable />
         </div>
       </div>
     </div>

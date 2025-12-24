@@ -27,7 +27,7 @@ const PaginationBtns = ({
         className="w-100 d-flex align-items-center justify-content-around p-2 "
         style={{ maxWidth: "200px" }}
       >
-        <Button disabled={page == 0} onClick={decrementPage}>
+        <Button disabled={page <= 1} onClick={decrementPage}>
           {"<"}
         </Button>
         <div className="d-flex align-items-center">
