@@ -1,7 +1,12 @@
 "use server";
 
 import { generateSecretCode } from "@/lib/game/engine";
-import { FeedbackStatus, GameWithAttempts, MastermindColor } from "@/lib/game/types";
+import {
+  FeedbackStatus,
+  GameWithAttempts,
+  GameWithAttemptsAndChallenge,
+  MastermindColor,
+} from "@/lib/game/types";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { Game, Prisma } from "@prisma/client";
@@ -29,10 +34,9 @@ export async function createChallengeGameAction(): Promise<string> {
   return gameId;
 }
 
-//use this fn in case user refresj te window has access to the same game
-export const findExistingGame = async (
+export const findBaseGame = async (
   gameId: string
-): Promise<GameWithAttempts | null> => {
+): Promise<GameWithAttemptsAndChallenge | null> => {
   const { user } = await createClient();
   if (!user) return null;
   const game = await prisma.game.findUnique({
@@ -40,7 +44,7 @@ export const findExistingGame = async (
       id: gameId,
       playerUserId: user.id,
     },
-    include: { attempts: true },
+    include: { attempts: true, challenge: true },
   });
   if (!game) return null;
   // Transform attempt to be usable
@@ -52,5 +56,17 @@ export const findExistingGame = async (
   return {
     ...game,
     attempts: formattedAttempts,
-  } as GameWithAttempts;
+  } as GameWithAttemptsAndChallenge;
+};
+
+//remove challenge resolution
+//use this fn for in progres games to reload and remain the history
+export const findExistingGame = async (
+  gameId: string
+): Promise<GameWithAttempts | null> => {
+  var game: GameWithAttemptsAndChallenge | null = await findBaseGame(gameId);
+  if (!game) return null;
+  const { challenge, ...restOfGame } = game;
+
+  return restOfGame;
 };

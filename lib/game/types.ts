@@ -16,22 +16,27 @@ export interface responsePosition {
   matchDifferentPosition: null | boolean;
 }
 
+// Primero definimos el Intento formateado para no repetirlo
+export interface FormattedAttempt {
+  id: string;
+  gameId: string;
+  submissionId: string;
+  guess: MastermindColor[];
+  results: FeedbackStatus[];
+  createdAt: Date;
+}
+
 export type GameWithAttempts = Omit<
-  Prisma.GameGetPayload<{
-    include: { attempts: true };
-  }>,
+  Prisma.GameGetPayload<{ include: { attempts: true } }>,
   "attempts"
 > & {
-  attempts: {
-    id: string;
-    gameId: string;
-    submissionId: string;
-    guess: MastermindColor[];
-    results: FeedbackStatus[];
-    createdAt: Date;
-  }[];
+  attempts: FormattedAttempt[];
 };
 
+
+export type GameWithAttemptsAndChallenge = GameWithAttempts & {
+  challenge: Prisma.ChallengeGetPayload<{}>;
+};
 export interface AttemptResponse {
   feedback: FeedbackStatus[];
   gameStatus: GameStatus;
