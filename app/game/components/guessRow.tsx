@@ -14,7 +14,7 @@ export default function GuessRow(props: PropsGuessRow) {
       <div className="bg-dark p-3 px-4 rounded-5 ">
         {currentGuess.map((color, index) => (
           <ColorCircle
-            key={index + "asd"}
+            key={index }
             color={color?.toString() || "transparent"}
             customClass={`${
               color

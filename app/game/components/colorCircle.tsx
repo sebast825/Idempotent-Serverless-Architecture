@@ -2,8 +2,8 @@ import { Button } from "react-bootstrap";
 
 interface PropsColorCircle {
   color: string;
-  btnAction: () => void;
-  isDisabled: boolean;
+  btnAction?: () => void;
+  isDisabled?: boolean;
   cursor: "pointer" | "default";
   customClass?: string;
   fullOpacity?: boolean;
@@ -13,7 +13,7 @@ export default function ColorCircle(props: PropsColorCircle) {
   const {
     color,
     btnAction,
-    isDisabled,
+    isDisabled = true,
     cursor,
     customClass,
     fullOpacity = true,
@@ -22,7 +22,7 @@ export default function ColorCircle(props: PropsColorCircle) {
   return (
     <>
       <Button
-        onClick={btnAction}
+        onClick={!isDisabled ? btnAction : undefined}
         disabled={isDisabled}
         className={`m-2 rounded-circle shadow-sm ${customClass}`}
         style={{
