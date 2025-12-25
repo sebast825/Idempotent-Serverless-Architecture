@@ -1,4 +1,4 @@
-import { Button, Table } from "react-bootstrap";
+import { Button, Spinner, Table } from "react-bootstrap";
 import { usePagination } from "../../hooks/usePagination";
 import PaginationBtns from "../paginationBtns";
 import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
@@ -12,7 +12,7 @@ export function HistoryGamesTable() {
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
 
-  const { data: historyGames } = useQuery({
+  const { data: historyGames, isLoading } = useQuery({
     queryKey: ["gameHistory", page],
     queryFn: () => getPaginatedGamesByUser(page, pageSize),
   });
@@ -30,74 +30,81 @@ export function HistoryGamesTable() {
       <div className="w-100 ">
         <h2 className="mb-3 border-bottom">Games History</h2>
       </div>
+      <div style={{ minHeight: "50px" }}>
+        {isLoading ? (
+          <Spinner></Spinner>
+        ) : (
+          <>
+            <div
+              className=" overflow-y-auto mb-6 custom-scrollbar"
+              style={{ overflowX: "auto", width: "100%", maxHeight: "50vh" }}
+            >
+              <Table striped bordered hover style={{ overflowX: "auto" }}>
+                <thead>
+                  <tr className="text-center">
+                    <th>Id</th>
+                    <th>Status</th>
+                    <th>Options</th>
 
-      <div
-        className=" overflow-y-auto mb-6 custom-scrollbar"
-        style={{ overflowX: "auto", width: "100%", maxHeight: "50vh" }}
-      >
-        <Table striped bordered hover style={{ overflowX: "auto" }}>
-          <thead>
-            <tr className="text-center">
-              <th>Id</th>
-              <th>Status</th>
-              <th>Options</th>
+                    <th>Completed At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historyGames?.data?.map((game, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="text-center"
+                        style={{ verticalAlign: "middle" }}
+                      >
+                        <td>{index}</td>
+                        <td>{game.status}</td>
+                        <td>
+                          <div className="d-flex gap-2 justify-content-center">
+                            {game.status === "PLAYING" ? (
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => handleContinueGame(game.id)}
+                              >
+                                Continue
+                              </Button>
+                            ) : (
+                              <>
+                                <Button
+                                  onClick={() => handleShowRepetition(game.id)}
+                                  variant="outline-success"
+                                  size="sm"
+                                >
+                                  Watch
+                                </Button>
+                                <button className="btn btn-sm btn-outline-info">
+                                  Share
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          {game.completedAt
+                            ? game.completedAt.toLocaleDateString()
+                            : "-"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div>
 
-              <th>Completed At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {historyGames?.data?.map((game, index) => {
-              return (
-                <tr
-                  key={index}
-                  className="text-center"
-                  style={{ verticalAlign: "middle" }}
-                >
-                  <td>{index}</td>
-                  <td>{game.status}</td>
-                  <td>
-                    <div className="d-flex gap-2 justify-content-center">
-                      {game.status === "PLAYING" ? (
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleContinueGame(game.id)}
-                        >
-                          Continue
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            onClick={() => handleShowRepetition(game.id)}
-                            variant="outline-success"
-                            size="sm"
-                          >
-                            Watch
-                          </Button>
-                          <button className="btn btn-sm btn-outline-info">
-                            Share
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    {game.completedAt
-                      ? game.completedAt.toLocaleDateString()
-                      : "-"}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+            <PaginationBtns
+              page={page}
+              totalPages={historyGames?.totalPages!}
+              goToPage={goToPage}
+            />
+          </>
+        )}
       </div>
-
-      <PaginationBtns
-        page={page}
-        totalPages={historyGames?.totalPages!}
-        goToPage={goToPage}
-      />
     </>
   );
 }
