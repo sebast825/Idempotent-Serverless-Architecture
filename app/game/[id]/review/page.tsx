@@ -87,6 +87,8 @@ export default function ReviewGame({
                         game.challenge.secretCode as MastermindColor[]
                       }
                       handleRemoveColor={() => {}}
+                      btnPointer={false}
+                      
                     />
                   </div>
                 </div>

@@ -1,21 +1,30 @@
-import { MastermindColor } from "@/lib/game/types";
 import { Button } from "react-bootstrap";
 
 interface PropsColorCircle {
-  color: MastermindColor;
+  color: string;
   btnAction: () => void;
   isDisabled: boolean;
   cursor: "pointer" | "default";
+  customClass?: string;
+  fullOpacity?: boolean;
 }
 
 export default function ColorCircle(props: PropsColorCircle) {
-  const { color, btnAction, isDisabled, cursor } = props;
+  const {
+    color,
+    btnAction,
+    isDisabled,
+    cursor,
+    customClass,
+    fullOpacity = true,
+  } = props;
+
   return (
     <>
       <Button
         onClick={btnAction}
         disabled={isDisabled}
-        className="m-2 rounded-circle shadow-sm"
+        className={`m-2 rounded-circle shadow-sm ${customClass}`}
         style={{
           backgroundColor: color.toLowerCase(),
           width: "40px",
@@ -23,6 +32,7 @@ export default function ColorCircle(props: PropsColorCircle) {
           display: "inline-block",
           cursor: cursor,
           border: "2px solid #666",
+          opacity: fullOpacity ? "1" : undefined,
         }}
         aria-label={`Select ${color}`}
       ></Button>

@@ -22,10 +22,11 @@ export default function ColorPicker(props: propsColorPicker) {
             <>
               <ColorCircle
                 key={index}
-                color={color}
+                color={color.toString()}
                 btnAction={() => handleSelect(color)}
                 isDisabled={currentGuess.indexOf(null) === -1}
                 cursor={"pointer"}
+                fullOpacity={false}
               ></ColorCircle>
             </>
           ))}
