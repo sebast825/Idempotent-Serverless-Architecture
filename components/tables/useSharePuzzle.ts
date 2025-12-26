@@ -16,7 +16,8 @@ export const useSharePuzzle = () => {
       return findExistingGame(gameId);
     },
   });
-
+  const { mutateAsync: mutateAsyncGame } = useMutation({});
+  
   const generateText = (game: GameWithAttempts): string => {
     const text = `🏆 Mastermind Puzzle! 🧠
 

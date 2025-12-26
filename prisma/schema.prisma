@@ -14,6 +14,7 @@ model Profile {
   username  String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  challenges Challenge[]
 }
 
 model Puzzle {
@@ -53,6 +54,7 @@ enum ChallengeType {
 model Challenge {
   id              String        @id @default(uuid())
   challengerId    String
+  challenger      Profile       @relation(fields: [challengerId], references: [id])
   type            ChallengeType  
   config          Json         
   createdAt       DateTime      @default(now())
