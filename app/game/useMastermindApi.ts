@@ -43,8 +43,7 @@ export const useMastermindApi = (gameId: string) => {
       });
     },
     onError: (err: Error) => {
-      console.error("Error al enviar intento:", err.message);
-      error("An error happend");
+      error(err.message);
     },
   });
   const submitAttempt = async (
