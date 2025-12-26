@@ -1,4 +1,5 @@
 import { findExistingGame } from "@/app/actions/gameActions";
+import { MAX_ATTEMPTS } from "@/lib/game/config";
 import {
   COLOR_TO_EMOJI,
   FEEDBACK_TO_EMOJI,
@@ -30,7 +31,7 @@ ${window.location.origin}/game/${game.id}/review`.trim();
   };
   const selectTextWinOrLose = (game: GameWithAttempts): string => {
    return game.status === "WON" 
-      ? `I cracked the code in ${game.attempts.length}/12 tries! ⚔️\nCan you beat my record?`
+      ? `I cracked the code in ${game.attempts.length}/${MAX_ATTEMPTS} tries! ⚔️\nCan you beat my record?`
       : `I couldn't solve it in 12 attempts... 😅\nCan you beat this level?`;
   };
 

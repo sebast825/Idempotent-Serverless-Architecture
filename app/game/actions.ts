@@ -1,4 +1,5 @@
 "use server";
+import { MAX_ATTEMPTS } from "@/lib/game/config";
 import { validate } from "@/lib/game/engine";
 import {
   AttemptResponse,
@@ -9,7 +10,7 @@ import {
 import prisma from "@/lib/prisma";
 import { Attempt, Prisma } from "@prisma/client";
 
-const MAX_ATTEMPTS = 2;
+
 
 type GameWithRelations = Prisma.GameGetPayload<{
   include: {
