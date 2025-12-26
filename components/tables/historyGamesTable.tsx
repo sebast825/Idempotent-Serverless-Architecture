@@ -7,12 +7,13 @@ import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
 import { useSharePuzzle } from "./useSharePuzzle";
 import { useState } from "react";
+import { MessageCard } from "../cards/messageCard";
 
 export function HistoryGamesTable() {
   const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
-    const { handleSharePuzzle } = useSharePuzzle();
+  const { handleSharePuzzle } = useSharePuzzle();
 
   //use to disable share btns while processing
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -29,12 +30,20 @@ export function HistoryGamesTable() {
     router.push(`/game/${gameId}/review`);
     closeModal();
   }
-  
+
   const onShareClick = async (gameId: string) => {
     setProcessingId(gameId);
     await handleSharePuzzle(gameId);
     setProcessingId(null);
   };
+  if (historyGames?.data.length == 0) {
+    return (
+      <MessageCard
+        title={"Games History"}
+        text={"Still no games played"}
+      ></MessageCard>
+    );
+  }
   return (
     <>
       <div className="w-100 ">
