@@ -1,3 +1,4 @@
+import { createGhostChallengeAction } from "@/app/actions/challengeActions";
 import { findExistingGame } from "@/app/actions/gameActions";
 import useToastit from "@/hooks/useToastit";
 import { MAX_ATTEMPTS } from "@/lib/game/config";
@@ -14,11 +15,24 @@ export const useSharePuzzle = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (gameId: string): Promise<GameWithAttempts> => {
       return findExistingGame(gameId);
-    },
+    },onError: (err) => {
+      console.error("Error fetching game:", err);
+      error(err.message || "Error fetching game");
+      throw err;
+    }
   });
-  const { mutateAsync: mutateAsyncGame } = useMutation({});
+   const { mutateAsync : createChallenge } = useMutation({
+    mutationFn: async (gameId: string): Promise<string> => {
+      return createGhostChallengeAction(gameId);
+    },
+    onError: (err) => {
+      console.error("Error creating ghost challenge:", err);
+      error(err.message || "Error creating ghost challenge");
+      throw err;
+    }
+  });
   
-  const generateText = (game: GameWithAttempts): string => {
+  const generateText = (game: GameWithAttempts,challengeId: string): string => {
     const text = `🏆 Mastermind Puzzle! 🧠
 
 ${selectTextWinOrLose(game)}    
@@ -29,7 +43,7 @@ ${formatColorAttempt(game.attempts[0])}
 🔥 You have been Challenged! 🔥
 
 Accept the puzzle here 👇
-${window.location.origin}/challenge/${game.id}`.trim();
+${window.location.origin}/challenge/${challengeId}`.trim();
     return text;
   };
   const selectTextWinOrLose = (game: GameWithAttempts): string => {
@@ -58,8 +72,10 @@ ${window.location.origin}/challenge/${game.id}`.trim();
   };
   const handleSharePuzzle = async (gameId: string): Promise<void> => {
     try {
+      console.log(gameId)
+      const challengeId = await createChallenge(gameId);
       const game: GameWithAttempts = await mutateAsync(gameId);
-      const text: string = generateText(game);
+      const text: string = generateText(game,challengeId);
       navigator.clipboard.writeText(text);
       success("Copied to clipboard!");
     } catch (err) {
