@@ -1,4 +1,5 @@
 import { findExistingGame } from "@/app/actions/gameActions";
+import useToastit from "@/hooks/useToastit";
 import { MAX_ATTEMPTS } from "@/lib/game/config";
 import {
   COLOR_TO_EMOJI,
@@ -9,6 +10,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 
 export const useShareChallenge = () => {
+  const { success, error } = useToastit();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (gameId: string): Promise<GameWithAttempts> => {
       return findExistingGame(gameId);
@@ -30,7 +32,7 @@ ${window.location.origin}/game/${game.id}/review`.trim();
     return text;
   };
   const selectTextWinOrLose = (game: GameWithAttempts): string => {
-   return game.status === "WON" 
+    return game.status === "WON"
       ? `I cracked the code in ${game.attempts.length}/${MAX_ATTEMPTS} tries! ⚔️\nCan you beat my record?`
       : `I couldn't solve it in 12 attempts... 😅\nCan you beat this level?`;
   };
@@ -53,9 +55,15 @@ ${window.location.origin}/game/${game.id}/review`.trim();
   const converFeedbackToEmoji = (feedback: string) => {
     return FEEDBACK_TO_EMOJI[feedback as keyof typeof FEEDBACK_TO_EMOJI];
   };
-  const handleShareChallenge = async (gameId: string): Promise<string> => {
-    const game: GameWithAttempts = await mutateAsync(gameId);
-    return generateText(game);
+  const handleShareChallenge = async (gameId: string): Promise<void> => {
+    try {
+      const game: GameWithAttempts = await mutateAsync(gameId);
+      const text: string = generateText(game);
+      navigator.clipboard.writeText(text);
+      success("Copied to clipboard!");
+    } catch (err) {
+      error("An error occurred while copying to clipboard");
+    }
   };
   return { handleShareChallenge, isPending };
 };

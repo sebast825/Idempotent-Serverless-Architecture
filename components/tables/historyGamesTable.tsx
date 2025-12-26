@@ -5,8 +5,6 @@ import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
 import { useQuery } from "@tanstack/react-query";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
-import useToastit from "@/hooks/useToastit";
-
 import { useShareChallenge } from "./useShareChallenge";
 import { useState } from "react";
 
@@ -14,7 +12,8 @@ export function HistoryGamesTable() {
   const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
-  const { success, error } = useToastit();
+    const { handleShareChallenge } = useShareChallenge();
+
   //use to disable share btns while processing
   const [processingId, setProcessingId] = useState<string | null>(null);
   const { data: historyGames, isLoading } = useQuery({
@@ -30,14 +29,10 @@ export function HistoryGamesTable() {
     router.push(`/game/${gameId}/review`);
     closeModal();
   }
-  const { handleShareChallenge: asd, isPending } = useShareChallenge();
-  const handleShareChallenge = async (gameId: string) => {
+  
+  const onShareClick = async (gameId: string) => {
     setProcessingId(gameId);
-    const txt: string = await asd(gameId);
-    navigator.clipboard
-      .writeText(txt)
-      .then(() => success("Copied to clipboard!"))
-      .catch((err) => error("An error occurred while copying to clipboard"));
+    await handleShareChallenge(gameId);
     setProcessingId(null);
   };
   return (
@@ -95,7 +90,7 @@ export function HistoryGamesTable() {
                                 </Button>
                                 <button
                                   className="btn btn-sm btn-outline-info"
-                                  onClick={() => handleShareChallenge(game.id)}
+                                  onClick={() => onShareClick(game.id)}
                                   disabled={processingId == game.id}
                                 >
                                   Challenge
