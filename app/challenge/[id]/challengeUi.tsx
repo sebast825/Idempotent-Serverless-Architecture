@@ -1,5 +1,9 @@
 "use client";
+import { createGameAction } from "@/app/actions/gameActions";
+import useToastit from "@/hooks/useToastit";
 import { FEEDBACK_TO_EMOJI, FormattedAttempt } from "@/lib/game/types";
+import { useMutation } from "@tanstack/react-query";
+import {  useRouter } from "next/navigation";
 
 import {
   Container,
@@ -12,14 +16,24 @@ import {
 
 interface propsChallengeUi{
   attempts:FormattedAttempt[],
-  gameId:string
+  challengeId:string
 }
-export  const ChallengeUi =  ( { attempts, gameId }: propsChallengeUi) => {
+export  const ChallengeUi =  ( { attempts, challengeId }: propsChallengeUi) => {
+  const router = useRouter();
+const {error}= useToastit();
+  const {mutateAsync,isPending} = useMutation({
+    mutationFn: async () => {
+      return createGameAction(challengeId);
+    },
+    onSuccess: (data) => {
+      router.push(`/game/${data.id}`);
+    },onError: (err) => {
+      console.error("Error creating game from challenge:", err);
+      error("Error accepting challenge. Please try again.");
+    }
+  });
 
 
-function handleClick(){
-  console.log("Accept challenge for gameId:",gameId);
-}
   return (
     <Container className="d-flex align-items-center justify-content-center min-vh-100">
       <Row className="w-100 justify-content-center">
@@ -50,7 +64,8 @@ function handleClick(){
                   variant="primary"
                   size="lg"
                   className="py-3 fw-bold shadow-sm"
-                  onClick={()=>handleClick()}
+                  onClick={()=>mutateAsync()}
+                  disabled={isPending}
                 >
                   ACCEPT CHALLENGE
                 </Button>

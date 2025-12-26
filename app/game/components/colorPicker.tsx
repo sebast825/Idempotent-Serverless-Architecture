@@ -19,7 +19,7 @@ export default function ColorPicker(props: propsColorPicker) {
         </h4>
         <div className="flex gap-2 rounded-2xl shadow-xl ">
           {MASTERMIND_COLORS.map((color, index) => (
-            <>
+            
               <ColorCircle
                 key={index}
                 color={color.toString()}
@@ -28,7 +28,7 @@ export default function ColorPicker(props: propsColorPicker) {
                 cursor={"pointer"}
                 fullOpacity={false}
               ></ColorCircle>
-            </>
+            
           ))}
         </div>
         <Button className="mt-2" onClick={submit} disabled={disableBtn}>

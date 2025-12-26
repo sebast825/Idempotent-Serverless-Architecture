@@ -15,8 +15,9 @@ const ChallengePage = async ({
 
     if (!game) return <NotFound message="Game not found" />;
 
-    return <ChallengeUi gameId={game.id} attempts={game.attempts} />;
+    return <ChallengeUi challengeId={game.challengeId} attempts={game.attempts} />;
   } catch (error) {
+    console.error("Error loading challenge page:", error);
     return (
       <NotFound
         title="Server Error"
