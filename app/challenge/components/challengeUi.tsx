@@ -2,40 +2,34 @@
 import { createGameAction } from "@/app/actions/gameActions";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import useToastit from "@/hooks/useToastit";
-import { FEEDBACK_TO_EMOJI, FormattedAttempt } from "@/lib/game/types";
+import { FEEDBACK_TO_EMOJI } from "@/lib/game/types";
 import { useMutation } from "@tanstack/react-query";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Card,
-  Badge,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Card } from "react-bootstrap";
 
-interface propsPuzzleUi{
-  attempts:FormattedAttempt[],
-  puzzleId:string
+interface propsPuzzleUi {
+  children: React.ReactNode;
+  puzzleId: string;
 }
-export  const ChallengeUi  =  ( { attempts, puzzleId }: propsPuzzleUi) => {
-  const router = useRouter();
-const {error}= useToastit();
-  const { createPuzzleAndGame, isPending : isPendingCreatePuzzleAndGame } = useCreatePuzzleAndGame();
+export const ChallengeUi = ({ children, puzzleId }: propsPuzzleUi) => {
+  const { createPuzzleAndGame, isPending: isPendingCreatePuzzleAndGame } =
+    useCreatePuzzleAndGame();
 
-  const {mutateAsync,isPending: isPendingCreateGame} = useMutation({
+  const router = useRouter();
+  const { error } = useToastit();
+  const { mutateAsync, isPending: isPendingCreateGame } = useMutation({
     mutationFn: async () => {
       return createGameAction(puzzleId);
     },
     onSuccess: (data) => {
       router.push(`/game/${data.id}`);
-    },onError: (err) => {
+    },
+    onError: (err) => {
       console.error("Error creating game from puzzle:", err);
       error("Error accepting puzzle. Please try again.");
-    }
+    },
   });
-
 
   return (
     <Container className="d-flex align-items-center justify-content-center min-vh-100">
@@ -50,24 +44,14 @@ const {error}= useToastit();
                 Mastermind Puzzle
               </Card.Title>
 
-              <Card.Text className="lead text-secondary mb-4">
-                Your friend cracked this code in{" "}
-                <Badge bg="success" className="p-2 px-3">
-                  {attempts.length} attempts
-                </Badge>
-                <br />
-                <strong>
-                  Can you do it in {attempts.length - 1}?
-                </strong>{" "}
-                ⚔️
-              </Card.Text>
+              {children}
 
               <div className="d-grid gap-3 ">
                 <Button
                   variant="primary"
                   size="lg"
                   className="py-3 fw-bold shadow-sm"
-                  onClick={()=>mutateAsync()}
+                  onClick={() => mutateAsync()}
                   disabled={isPendingCreateGame}
                 >
                   ACCEPT CHALLENGE
@@ -104,4 +88,3 @@ const {error}= useToastit();
     </Container>
   );
 };
-
