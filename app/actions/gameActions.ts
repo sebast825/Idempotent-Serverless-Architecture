@@ -76,13 +76,14 @@ export const findExistingGame = async (
   return restOfGame;
 };
 
-export const createGameAction = async (puzzleId:string): Promise<Game> => {
+export const createGameAction = async (puzzleId:string,challengeId?:string): Promise<Game> => {
     const { user } = await createClient();
 
   const game : Game = await prisma.game.create({
     data: {
       puzzleId: puzzleId,
       playerUserId : user?.id || null,
+      challengeId: challengeId || null
     },
   });
   return game;

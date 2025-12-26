@@ -57,7 +57,8 @@ async function createChallenge(
       data: {
         challengerId: userId,
         type: type,
-        config: config as unknown as Prisma.InputJsonValue,
+        config: config as unknown as Prisma.InputJsonValue
+        
       },
     });
     return challenge.id;

@@ -24,7 +24,7 @@ const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
     if (!game) return <NotFound message="Game not found" />;
 
-    return <ChallengeGhost attempts={game.attempts} puzzleId={game.puzzleId} />;
+    return <ChallengeGhost attempts={game.attempts} puzzleId={game.puzzleId} challengeId={challenge.id} />;
   } catch (error) {
     console.error("Error loading puzzle page:", error);
     return (

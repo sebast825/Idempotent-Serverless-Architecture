@@ -11,8 +11,9 @@ import { Container, Row, Col, Button, Card } from "react-bootstrap";
 interface propsPuzzleUi {
   children: React.ReactNode;
   puzzleId: string;
+  challengeId: string;
 }
-export const ChallengeUi = ({ children, puzzleId }: propsPuzzleUi) => {
+export const ChallengeUi = ({ children, puzzleId, challengeId }: propsPuzzleUi) => {
   const { createPuzzleAndGame, isPending: isPendingCreatePuzzleAndGame } =
     useCreatePuzzleAndGame();
 
@@ -20,7 +21,7 @@ export const ChallengeUi = ({ children, puzzleId }: propsPuzzleUi) => {
   const { error } = useToastit();
   const { mutateAsync, isPending: isPendingCreateGame } = useMutation({
     mutationFn: async () => {
-      return createGameAction(puzzleId);
+      return createGameAction(puzzleId, challengeId);
     },
     onSuccess: (data) => {
       router.push(`/game/${data.id}`);
