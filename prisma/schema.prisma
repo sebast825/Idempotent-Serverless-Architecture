@@ -16,7 +16,7 @@ model Profile {
   updatedAt DateTime @default(now())
 }
 
-model Challenge {
+model Puzzle {
   id                String   @id @default(uuid())
   createdByUserId   String?
   secretCode        String[] // Stored as a string array
@@ -26,8 +26,8 @@ model Challenge {
 
 model Game {
   id             String    @id @default(uuid())
-  challengeId    String
-  challenge      Challenge @relation(fields: [challengeId], references: [id])
+  puzzleId       String
+  puzzle         Puzzle @relation(fields: [puzzleId], references: [id])
   playerUserId   String?
   status         String    @default("PLAYING") // PLAYING, WON, LOST
   completedAt    DateTime?

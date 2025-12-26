@@ -1,6 +1,6 @@
 "use client";
 import { createGameAction } from "@/app/actions/gameActions";
-import { useCreateChallengeAndGame } from "@/hooks/game/useCreateChallengeAndGame";
+import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import useToastit from "@/hooks/useToastit";
 import { FEEDBACK_TO_EMOJI, FormattedAttempt } from "@/lib/game/types";
 import { useMutation } from "@tanstack/react-query";
@@ -15,24 +15,24 @@ import {
   Badge,
 } from "react-bootstrap";
 
-interface propsChallengeUi{
+interface propsPuzzleUi{
   attempts:FormattedAttempt[],
-  challengeId:string
+  puzzleId:string
 }
-export  const ChallengeUi =  ( { attempts, challengeId }: propsChallengeUi) => {
+export  const ChallengeUi  =  ( { attempts, puzzleId }: propsPuzzleUi) => {
   const router = useRouter();
 const {error}= useToastit();
-  const { createChallengeAndGame, isPending : isPendingCreateChallengeAndGame } = useCreateChallengeAndGame();
+  const { createPuzzleAndGame, isPending : isPendingCreatePuzzleAndGame } = useCreatePuzzleAndGame();
 
   const {mutateAsync,isPending: isPendingCreateGame} = useMutation({
     mutationFn: async () => {
-      return createGameAction(challengeId);
+      return createGameAction(puzzleId);
     },
     onSuccess: (data) => {
       router.push(`/game/${data.id}`);
     },onError: (err) => {
-      console.error("Error creating game from challenge:", err);
-      error("Error accepting challenge. Please try again.");
+      console.error("Error creating game from puzzle:", err);
+      error("Error accepting puzzle. Please try again.");
     }
   });
 
@@ -47,7 +47,7 @@ const {error}= useToastit();
                 <div className=" text-warning" style={{ fontSize: "3rem" }}>
                   <h2>🏆🏆🏆</h2>
                 </div>
-                Mastermind Challenge
+                Mastermind Puzzle
               </Card.Title>
 
               <Card.Text className="lead text-secondary mb-4">
@@ -77,8 +77,8 @@ const {error}= useToastit();
                   variant="outline-secondary"
                   size="sm"
                   className="border-0"
-                  onClick={() => createChallengeAndGame()}
-                  disabled={isPendingCreateChallengeAndGame}
+                  onClick={() => createPuzzleAndGame()}
+                  disabled={isPendingCreatePuzzleAndGame}
                 >
                   I'm scared, just let me play a normal game
                 </Button>

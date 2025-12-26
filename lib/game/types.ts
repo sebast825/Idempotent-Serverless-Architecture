@@ -47,8 +47,8 @@ export type GameWithAttempts = Omit<
 };
 
 
-export type GameWithAttemptsAndChallenge = GameWithAttempts & {
-  challenge: Prisma.ChallengeGetPayload<{}>;
+export type GameWithAttemptsAndPuzzle = GameWithAttempts & {
+  puzzle: Prisma.PuzzleGetPayload<{}>;
 };
 export interface AttemptResponse {
   feedback: FeedbackStatus[];

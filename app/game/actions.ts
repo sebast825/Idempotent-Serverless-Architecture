@@ -15,7 +15,7 @@ import { GAME_ERRORS } from "../constants/errorMessages";
 type GameWithRelations = Prisma.GameGetPayload<{
   include: {
     attempts: true;
-    challenge: true;
+    puzzle: true;
   };
 }>;
 
@@ -29,7 +29,7 @@ export async function submitGuessAction(
 
   //validate guessAttempt with the secret
   const currentFeedback = validate(
-    game.challenge.secretCode as MastermindColor[],
+    game.puzzle.secretCode as MastermindColor[],
     guessAttempt
   );
   return persistAttemptAndResponse(
@@ -82,7 +82,7 @@ async function persistAttemptAndResponse(
     feedback: currentFeedback,
     gameStatus: nextStatus,
     secretCode: isGameFinished
-      ? (game.challenge.secretCode as MastermindColor[])
+      ? (game.puzzle.secretCode as MastermindColor[])
       : undefined,
   };
   return rsta;
@@ -98,7 +98,7 @@ function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
 async function findGameOrThrow(gameId: string): Promise<GameWithRelations> {
   const game = await prisma.game.findUnique({
     where: { id: gameId },
-    include: { challenge: true, attempts: true },
+    include: { puzzle: true, attempts: true },
   });
   if (!game) throw new Error("Game not found");
 

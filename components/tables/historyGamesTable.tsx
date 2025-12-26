@@ -5,14 +5,14 @@ import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
 import { useQuery } from "@tanstack/react-query";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
-import { useShareChallenge } from "./useShareChallenge";
+import { useSharePuzzle } from "./useSharePuzzle";
 import { useState } from "react";
 
 export function HistoryGamesTable() {
   const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
-    const { handleShareChallenge } = useShareChallenge();
+    const { handleSharePuzzle } = useSharePuzzle();
 
   //use to disable share btns while processing
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export function HistoryGamesTable() {
   
   const onShareClick = async (gameId: string) => {
     setProcessingId(gameId);
-    await handleShareChallenge(gameId);
+    await handleSharePuzzle(gameId);
     setProcessingId(null);
   };
   return (
@@ -93,7 +93,7 @@ export function HistoryGamesTable() {
                                   onClick={() => onShareClick(game.id)}
                                   disabled={processingId == game.id}
                                 >
-                                  Challenge
+                                  Puzzle
                                 </button>
                               </>
                             )}

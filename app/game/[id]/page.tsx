@@ -8,7 +8,7 @@ import { useMastermind } from "../useMastermind";
 import { use, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
-import { useCreateChallengeAndGame } from "@/hooks/game/useCreateChallengeAndGame";
+import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 
 export default function GameDashboard({
   params,
@@ -16,8 +16,8 @@ export default function GameDashboard({
   params: Promise<{ id: string }>;
 }) {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const { createChallengeAndGame, isPending: isPendingNewGame } =
-    useCreateChallengeAndGame();
+  const { createPuzzleAndGame, isPending: isPendingNewGame } =
+    useCreatePuzzleAndGame();
   const { error } = useToastit();
   const { id } = use(params);
 
@@ -43,7 +43,7 @@ export default function GameDashboard({
     }
   };
   const handleNewGame = async () => {
-    await createChallengeAndGame();
+    await createPuzzleAndGame();
     setShowModal(false);
   };
   return (

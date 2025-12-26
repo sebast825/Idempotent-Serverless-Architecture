@@ -8,8 +8,8 @@ interface NotFoundProps {
 }
 
 export const NotFound = ({ 
-  message = "The challenge you are looking for does not exist or has expired.", 
-  title = "Challenge Not Found" 
+  message = "The puzzle you are looking for does not exist or has expired.", 
+  title = "Puzzle Not Found" 
 }: NotFoundProps) => {
   const router = useRouter();
 

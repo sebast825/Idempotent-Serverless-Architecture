@@ -68,7 +68,7 @@ export default function ReviewGame({
         <div>
           <Card className="shadow-sm bg-dark bg-opacity-50 text-light rounded-0">
             <Card.Body className="text-center">
-              {game?.challenge?.secretCode && (
+              {game?.puzzle?.secretCode && (
                 <div className="">
                   <div className="d-flex justify-content-center flex-column bg-black bg-opacity-50 rounded-3 py-3">
                     <div className="d-flex justify-content-center align-items-center p-2 mb-2">
@@ -84,7 +84,7 @@ export default function ReviewGame({
                     </h6>
                     <GuessRow
                       currentGuess={
-                        game.challenge.secretCode as MastermindColor[]
+                        game.puzzle.secretCode as MastermindColor[]
                       }
                       handleRemoveColor={() => {}}
                       btnPointer={false}

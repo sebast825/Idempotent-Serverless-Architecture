@@ -2,14 +2,14 @@
 
 import { Button } from "react-bootstrap";
 import { Opening } from "@/components/opening";
-import { useCreateChallengeAndGame } from "@/hooks/game/useCreateChallengeAndGame";
+import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import { GenericModal } from "@/components/modals/genericModal";
 import { useState } from "react";
 import { HistoryGamesTable } from "@/components/tables/historyGamesTable";
 import { useModalStore } from "@/store/useModalStore";
 
 export default function Dashboard() {
-  const { createChallengeAndGame, isPending } = useCreateChallengeAndGame();
+  const { createPuzzleAndGame, isPending } = useCreatePuzzleAndGame();
   const [showModal, setShowModal] = useState<boolean>(false);
   const openModal = useModalStore((state) => state.openModal);
 
@@ -23,7 +23,7 @@ export default function Dashboard() {
             <HistoryGamesTable />
           </GenericModal>
         )}
-        <Button onClick={() => createChallengeAndGame()} disabled={isPending}>
+        <Button onClick={() => createPuzzleAndGame()} disabled={isPending}>
           Start Game!
         </Button>
       </div>

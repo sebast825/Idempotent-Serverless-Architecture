@@ -1,14 +1,14 @@
-import { createChallengeGameAction } from "@/app/actions/gameActions";
+import { createPuzzleGameAction } from "@/app/actions/gameActions";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import useToastit from "../useToastit";
 
-export const useCreateChallengeAndGame = () => {
+export const useCreatePuzzleAndGame = () => {
   const router = useRouter();
   const { error } = useToastit();
   
-  const { mutateAsync: createChallengeAndGame, isPending } = useMutation({
-    mutationFn: createChallengeGameAction,
+  const { mutateAsync: createPuzzleAndGame, isPending } = useMutation({
+    mutationFn: createPuzzleGameAction,
     onSuccess: (gameId) => {
       router.push(`/game/${gameId}`);
     },
@@ -18,7 +18,7 @@ export const useCreateChallengeAndGame = () => {
     },
   });
   return {
-    createChallengeAndGame,
+    createPuzzleAndGame,
     isPending,
   };
 };

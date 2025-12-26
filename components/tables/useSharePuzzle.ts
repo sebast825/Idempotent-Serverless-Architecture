@@ -9,7 +9,7 @@ import {
 } from "@/lib/game/types";
 import { useMutation } from "@tanstack/react-query";
 
-export const useShareChallenge = () => {
+export const useSharePuzzle = () => {
   const { success, error } = useToastit();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (gameId: string): Promise<GameWithAttempts> => {
@@ -18,16 +18,16 @@ export const useShareChallenge = () => {
   });
 
   const generateText = (game: GameWithAttempts): string => {
-    const text = `🏆 Mastermind Challenge! 🧠
+    const text = `🏆 Mastermind Puzzle! 🧠
 
 ${selectTextWinOrLose(game)}    
 
 My opening move:
 ${formatColorAttempt(game.attempts[0])}
 
-🔥 You have been challenged! 🔥
+🔥 You have been Challenged! 🔥
 
-Accept the challenge here 👇
+Accept the puzzle here 👇
 ${window.location.origin}/challenge/${game.id}`.trim();
     return text;
   };
@@ -55,7 +55,7 @@ ${window.location.origin}/challenge/${game.id}`.trim();
   const converFeedbackToEmoji = (feedback: string) => {
     return FEEDBACK_TO_EMOJI[feedback as keyof typeof FEEDBACK_TO_EMOJI];
   };
-  const handleShareChallenge = async (gameId: string): Promise<void> => {
+  const handleSharePuzzle = async (gameId: string): Promise<void> => {
     try {
       const game: GameWithAttempts = await mutateAsync(gameId);
       const text: string = generateText(game);
@@ -65,5 +65,5 @@ ${window.location.origin}/challenge/${game.id}`.trim();
       error("An error occurred while copying to clipboard");
     }
   };
-  return { handleShareChallenge, isPending };
+  return { handleSharePuzzle, isPending };
 };
