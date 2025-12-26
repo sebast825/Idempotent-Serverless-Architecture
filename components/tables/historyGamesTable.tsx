@@ -3,15 +3,20 @@ import { usePagination } from "../../hooks/usePagination";
 import PaginationBtns from "../paginationBtns";
 import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
+import useToastit from "@/hooks/useToastit";
+
+import { useShareChallenge } from "./useShareChallenge";
+import { useState } from "react";
 
 export function HistoryGamesTable() {
   const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
-
+  const { success, error } = useToastit();
+  //use to disable share btns while processing
+  const [processingId, setProcessingId] = useState<string | null>(null);
   const { data: historyGames, isLoading } = useQuery({
     queryKey: ["gameHistory", page],
     queryFn: () => getPaginatedGamesByUser(page, pageSize),
@@ -25,6 +30,16 @@ export function HistoryGamesTable() {
     router.push(`/game/${gameId}/review`);
     closeModal();
   }
+  const { handleShareChallenge: asd, isPending } = useShareChallenge();
+  const handleShareChallenge = async (gameId: string) => {
+    setProcessingId(gameId);
+    const txt: string = await asd(gameId);
+    navigator.clipboard
+      .writeText(txt)
+      .then(() => success("Copied to clipboard!"))
+      .catch((err) => error("An error occurred while copying to clipboard"));
+    setProcessingId(null);
+  };
   return (
     <>
       <div className="w-100 ">
@@ -78,8 +93,12 @@ export function HistoryGamesTable() {
                                 >
                                   Watch
                                 </Button>
-                                <button className="btn btn-sm btn-outline-info">
-                                  Share
+                                <button
+                                  className="btn btn-sm btn-outline-info"
+                                  onClick={() => handleShareChallenge(game.id)}
+                                  disabled={processingId == game.id}
+                                >
+                                  Challenge
                                 </button>
                               </>
                             )}
