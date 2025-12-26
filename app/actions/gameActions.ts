@@ -9,7 +9,7 @@ import {
 } from "@/lib/game/types";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { Game, Prisma } from "@prisma/client";
+import { GAME_ERRORS } from "../constants/errorMessages";
 
 export async function createChallengeGameAction(): Promise<string> {
   const { user } = await createClient();
@@ -36,9 +36,9 @@ export async function createChallengeGameAction(): Promise<string> {
 
 export const findBaseGame = async (
   gameId: string
-): Promise<GameWithAttemptsAndChallenge | null> => {
+): Promise<GameWithAttemptsAndChallenge> => {
   const { user } = await createClient();
-  if (!user) return null;
+  if (!user) throw new Error(GAME_ERRORS.AUTH_REQUIRED);
   const game = await prisma.game.findUnique({
     where: {
       id: gameId,
@@ -46,7 +46,9 @@ export const findBaseGame = async (
     },
     include: { attempts: true, challenge: true },
   });
-  if (!game) return null;
+  if (!game) {
+    throw new Error(GAME_ERRORS.NOT_FOUND);
+  }
   // Transform attempt to be usable
   const formattedAttempts = game.attempts.map((attempt) => ({
     ...attempt,
@@ -63,9 +65,8 @@ export const findBaseGame = async (
 //use this fn for in progres games to reload and remain the history
 export const findExistingGame = async (
   gameId: string
-): Promise<GameWithAttempts | null> => {
-  var game: GameWithAttemptsAndChallenge | null = await findBaseGame(gameId);
-  if (!game) return null;
+): Promise<GameWithAttempts> => {
+  var game: GameWithAttemptsAndChallenge = await findBaseGame(gameId);
   const { challenge, ...restOfGame } = game;
 
   return restOfGame;
