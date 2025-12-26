@@ -1,5 +1,6 @@
 "use client";
 import { createGameAction } from "@/app/actions/gameActions";
+import { useCreateChallengeAndGame } from "@/hooks/game/useCreateChallengeAndGame";
 import useToastit from "@/hooks/useToastit";
 import { FEEDBACK_TO_EMOJI, FormattedAttempt } from "@/lib/game/types";
 import { useMutation } from "@tanstack/react-query";
@@ -21,7 +22,9 @@ interface propsChallengeUi{
 export  const ChallengeUi =  ( { attempts, challengeId }: propsChallengeUi) => {
   const router = useRouter();
 const {error}= useToastit();
-  const {mutateAsync,isPending} = useMutation({
+  const { createChallengeAndGame, isPending : isPendingCreateChallengeAndGame } = useCreateChallengeAndGame();
+
+  const {mutateAsync,isPending: isPendingCreateGame} = useMutation({
     mutationFn: async () => {
       return createGameAction(challengeId);
     },
@@ -65,7 +68,7 @@ const {error}= useToastit();
                   size="lg"
                   className="py-3 fw-bold shadow-sm"
                   onClick={()=>mutateAsync()}
-                  disabled={isPending}
+                  disabled={isPendingCreateGame}
                 >
                   ACCEPT CHALLENGE
                 </Button>
@@ -74,6 +77,8 @@ const {error}= useToastit();
                   variant="outline-secondary"
                   size="sm"
                   className="border-0"
+                  onClick={() => createChallengeAndGame()}
+                  disabled={isPendingCreateChallengeAndGame}
                 >
                   I'm scared, just let me play a normal game
                 </Button>
