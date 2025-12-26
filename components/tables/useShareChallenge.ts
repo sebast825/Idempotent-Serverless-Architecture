@@ -28,7 +28,7 @@ ${formatColorAttempt(game.attempts[0])}
 🔥 You have been challenged! 🔥
 
 Accept the challenge here 👇
-${window.location.origin}/game/${game.id}/review`.trim();
+${window.location.origin}/challenge/${game.id}`.trim();
     return text;
   };
   const selectTextWinOrLose = (game: GameWithAttempts): string => {
