@@ -1,24 +1,19 @@
 "use server";
 import { MAX_ATTEMPTS } from "@/lib/game/config";
-import { validate } from "@/lib/game/engine";
+import { isVictory, validate } from "@/lib/game/engine";
 import {
   AttemptResponse,
   FeedbackStatus,
   GameStatus,
+  GameWithRelations,
   MastermindColor,
 } from "@/lib/game/types";
 import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { Attempt, Prisma } from "@prisma/client";
+import { Attempt } from "@prisma/client";
 import { GAME_ERRORS } from "../../constants/errorMessages";
 
-type GameWithRelations = Prisma.GameGetPayload<{
-  include: {
-    attempts: true;
-    puzzle: true;
-    challenge: true;
-  };
-}>;
+
 
 export async function submitGuessAction(
   guessAttempt: MastermindColor[],
@@ -26,6 +21,11 @@ export async function submitGuessAction(
   attemptKey: string
 ): Promise<AttemptResponse> {
   const game: GameWithRelations = await findGameOrThrow(gameId);
+    const { user } = await createClient();
+  //validate only owner can use add attempts
+  if (game.playerUserId != user?.id) {
+    throw new Error(GAME_ERRORS.AUTH_REQUIRED);
+  }
   await ifAttemptNotExistThrow(game.attempts, attemptKey);
 
   //validate guessAttempt with the secret
@@ -115,14 +115,5 @@ async function findGameOrThrow(gameId: string): Promise<GameWithRelations> {
   });
   if (!game) throw new Error("Game not found");
 
-  const { user } = await createClient();
-  //validate only owner can use add attempts
-  if (game.playerUserId != user?.id) {
-    throw new Error(GAME_ERRORS.AUTH_REQUIRED);
-  }
   return game;
-}
-function isVictory(code: FeedbackStatus[]): boolean {
-  let isVictory: boolean = code.every((e) => e == "MATCH");
-  return isVictory;
 }

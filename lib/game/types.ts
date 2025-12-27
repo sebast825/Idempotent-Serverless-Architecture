@@ -56,8 +56,19 @@ export type GameWithAttempts = Omit<
 export type GameWithAttemptsAndPuzzle = GameWithAttempts & {
   puzzle: Prisma.PuzzleGetPayload<{}>;
 };
+
+export type GameWithRelations = Prisma.GameGetPayload<{
+  include: {
+    attempts: true;
+    puzzle: true;
+    challenge: true;
+  };
+}>;
+
 export interface AttemptResponse {
   feedback: FeedbackStatus[];
   gameStatus: GameStatus;
   secretCode?: MastermindColor[];
 }
+
+

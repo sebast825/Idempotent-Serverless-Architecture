@@ -93,3 +93,8 @@ function createResponsePosition(
     matchDifferentPosition: null,
   };
 }
+
+export function isVictory(code: FeedbackStatus[]): boolean {
+  let isVictory: boolean = code.every((e) => e == "MATCH");
+  return isVictory;
+}
