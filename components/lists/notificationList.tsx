@@ -18,7 +18,7 @@ export const NotificationList = () => {
               <small className="text-muted">{n.createdAt}</small>
             </div>
             <p className="small mb-0 text-secondary">{n.message}</p>
-            <a href={n.link}>Watch Review </a>
+         {n.link &&   <a href={n.link}>Watch Review </a>}
           </div>
         ))
       ) : (

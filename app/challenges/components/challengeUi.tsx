@@ -1,10 +1,11 @@
 "use client";
 import { createGameAction } from "@/app/actions/gameActions";
+import { createChallengeAcceptedNotification } from "@/app/actions/notificationActions";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import useToastit from "@/hooks/useToastit";
 import { FEEDBACK_TO_EMOJI } from "@/lib/game/types";
 import { ROUTES } from "@/lib/routes";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
@@ -26,7 +27,9 @@ export const ChallengeUi = ({
   const { error } = useToastit();
   const { mutateAsync, isPending: isPendingCreateGame } = useMutation({
     mutationFn: async () => {
-      return createGameAction(puzzleId, challengeId);
+      const game =  await createGameAction(puzzleId, challengeId);
+      await createChallengeAcceptedNotification(challengeId,game.id);
+      return game;
     },
     onSuccess: (data) => {
       router.push(ROUTES.game(data.id));
@@ -36,6 +39,8 @@ export const ChallengeUi = ({
       error("Error accepting puzzle. Please try again.");
     },
   });
+
+
 
   return (
     <Container className="d-flex align-items-center justify-content-center min-vh-100">
