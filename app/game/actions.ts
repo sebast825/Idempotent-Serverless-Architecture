@@ -16,6 +16,7 @@ type GameWithRelations = Prisma.GameGetPayload<{
   include: {
     attempts: true;
     puzzle: true;
+    challenge: true;
   };
 }>;
 
@@ -76,6 +77,18 @@ async function persistAttemptAndResponse(
         },
       });
     }
+    //if game finished notifye challenger of challenge if exists
+   if (nextStatus != "PLAYING" && game.challenge) {
+      await tx.notification.create({
+        data: {
+          recipientId: game.challenge.challengerId,
+          actorId: game.playerUserId,
+          type: "CHALLENGE_COMPLETED",
+          challengeId: game.challenge.id,
+          gameId: game.id,
+    }   
+  })}
+
   });
 
   var rsta: AttemptResponse = {
@@ -98,7 +111,7 @@ function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
 async function findGameOrThrow(gameId: string): Promise<GameWithRelations> {
   const game = await prisma.game.findUnique({
     where: { id: gameId },
-    include: { puzzle: true, attempts: true },
+    include: { puzzle: true, attempts: true,challenge: true },
   });
   if (!game) throw new Error("Game not found");
 
