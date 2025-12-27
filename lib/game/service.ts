@@ -48,3 +48,20 @@ export async function createGameWithPuzzle(secretCode:string[],userId?:string): 
      });
      return gameId;
 }
+
+
+export async function getGamesPaginatedByUserId(userId: string, pageSize: number, skipAmount: number): Promise<Game[]> {
+    const games: Game[] = await prisma.game.findMany({
+       where: { playerUserId: userId },
+       take: pageSize,
+       skip: skipAmount,
+     });
+     return games;
+}
+
+export async function countGamesByUserId(userId: string): Promise<number> {
+    const totalGames = await prisma.game.count({
+       where: { playerUserId: userId },
+     });
+     return totalGames;
+}
