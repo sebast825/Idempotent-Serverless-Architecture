@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import {  NotificationType } from "@prisma/client";
+import { NotificationType } from "@prisma/client";
 import { ERRORS_GENERIC } from "../constants/errorGeneric";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -9,7 +9,10 @@ import {
 } from "@/lib/notification/types";
 import { formatNotifications } from "@/lib/notification/formater";
 import { getChallengerIdFromChallenge } from "@/lib/challege/service";
-import { getNotifications } from "@/lib/notification/service";
+import {
+  getNotifications,
+  markNotificationsAsRead,
+} from "@/lib/notification/service";
 
 export async function getNotificationActions(): Promise<NotificationFormat[]> {
   const { user } = await createClient();
@@ -20,22 +23,12 @@ export async function getNotificationActions(): Promise<NotificationFormat[]> {
   return formatNotifications(notifications);
 }
 
-
-export async function markNotificationsAsRead(
+export async function handleReadNotifications(
   notificationsId: string[]
 ): Promise<void> {
   const { user } = await createClient();
   if (user == null) throw new Error(ERRORS_GENERIC.AUTH_REQUIRED);
-  await prisma.notification.updateMany({
-    where: {
-      id: { in: notificationsId },
-      recipientId: user.id,
-      readAt: null,
-    },
-    data: {
-      readAt: new Date(),
-    },
-  });
+  await markNotificationsAsRead(notificationsId, user.id);
 }
 
 export async function createChallengeAcceptedNotification(
@@ -57,4 +50,3 @@ export async function createChallengeAcceptedNotification(
     },
   });
 }
-

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getNotificationActions,
-  markNotificationsAsRead,
+  handleReadNotifications,
 } from "@/app/actions/notificationActions";
 import { NotificationFormat } from "@/lib/notification/types";
 
@@ -18,7 +18,7 @@ export const useSetNoticationReadAt = () => {
   return useMutation({
     mutationKey: ["notifications"],
     mutationFn: async (notificationsId : string[]) => {
-      await markNotificationsAsRead(notificationsId);
+      await handleReadNotifications(notificationsId);
     },
     onSuccess: () => {
       //this allows to remove the badge red in nav bar

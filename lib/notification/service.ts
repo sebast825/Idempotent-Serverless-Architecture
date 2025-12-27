@@ -30,3 +30,19 @@ export const getNotifications = async (
     });
   return notifications;
 };
+
+export async function markNotificationsAsRead(
+  notificationsId: string[],
+  userId: string
+): Promise<void> {
+  await prisma.notification.updateMany({
+    where: {
+      id: { in: notificationsId },
+      recipientId: userId,
+      readAt: null,
+    },
+    data: {
+      readAt: new Date(),
+    },
+  });
+}
