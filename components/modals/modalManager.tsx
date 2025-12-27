@@ -3,6 +3,7 @@
 import { useModalStore } from "@/store/useModalStore";
 import { GenericModal } from "./genericModal";
 import { HistoryGamesTable } from "../tables/historyGamesTable";
+import { NotificationList } from "../lists/notificationList";
 
 export const ModalManager = () => {
   const { isOpen, closeModal, view } = useModalStore();
@@ -14,6 +15,11 @@ export const ModalManager = () => {
           <HistoryGamesTable />
         </GenericModal>
       )}
+          {view == "NOTIFICATIONS" && (
+            <GenericModal onClose={closeModal} title={"Notifications"}>
+              <NotificationList notifications={[]} />
+            </GenericModal>
+          )}
     </>
   );
 };
