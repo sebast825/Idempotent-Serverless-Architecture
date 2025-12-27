@@ -8,10 +8,11 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getNotificationActions } from "@/app/actions/notificationActions";
 import { NotificationsModal } from "./modals/notificationsModal";
+import { useModalStore } from "@/store/useModalStore";
 
 export const NavBar = ({ user }: { user: User | null }) => {
     const [showModal, setShowModal] = useState<boolean>(false);
-
+  const openModal = useModalStore((state) => state.openModal);
   const { loginWithGoogle, isLoading } = useLogin();
   useEffect(() => {
     console.log(user);
@@ -59,7 +60,12 @@ export const NavBar = ({ user }: { user: User | null }) => {
             >
               Notifications
             </Nav.Link>
-            
+            <Nav.Link
+              onClick={()=> openModal("HISTORYGAMES")}
+              className="dropdown-item py-1 px-3  text-dark"
+            >
+              My History
+            </Nav.Link>
             <Nav.Link
               onClick={() => signOut()}
               disabled={isLoading}
