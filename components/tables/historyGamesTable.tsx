@@ -48,12 +48,11 @@ export function HistoryGamesTable() {
   }
   return (
     <>
-      <div className="w-100 ">
-        <h2 className="mb-3 border-bottom">Games History</h2>
-      </div>
       <div style={{ minHeight: "50px" }}>
         {isLoading ? (
-          <Spinner></Spinner>
+          <div className="w-100 text-center p-5">
+            <Spinner></Spinner>
+          </div>
         ) : (
           <>
             <div
