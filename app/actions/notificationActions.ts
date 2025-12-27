@@ -1,12 +1,13 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { Notification, NotificationType } from "@prisma/client";
+import {  NotificationType } from "@prisma/client";
 import { ERRORS_GENERIC } from "../constants/errorGeneric";
 import { createClient } from "@/lib/supabase/server";
 import {
   NotificationFormat,
   NotifcationWithRelations,
 } from "@/lib/notification/types";
+import { formatNotifications } from "@/lib/notification/formater";
 
 export async function getNotificationActions(): Promise<NotificationFormat[]> {
   const { user } = await createClient();
@@ -46,62 +47,6 @@ const getRawNotifications = async (
     });
   return notifications;
 };
-const formatNotifications = (
-  notifications: NotifcationWithRelations[]
-): NotificationFormat[] => {
-  const formatedNotifications: NotificationFormat[] = [];
-  notifications.forEach((element) => {
-    switch (element.type) {
-      case NotificationType.CHALLENGE_COMPLETED:
-        formatedNotifications.push(formatNotifcationChallengeComplete(element));
-        break;
-      case NotificationType.CHALLENGE_ACCEPTED:
-        formatedNotifications.push(formatNotifcationChallengeAccepted(element));
-
-      default:
-        break;
-    }
-  });
-  return formatedNotifications;
-};
-const formatNotifcationChallengeAccepted = (
-  notification: NotifcationWithRelations
-): NotificationFormat => {
-  return {
-    title: "Challenge Accepted",
-    message: `${
-      notification.actor?.username || "Someone"
-    } accepted your challenge!`,
-    createdAt: notification.createdAt.toLocaleDateString("es-ES", {
-      month: "short",
-      day: "numeric",
-    }) as string,
-    type: NotificationType.CHALLENGE_ACCEPTED,
-    id: notification.id,
-    readAt: notification.readAt,
-  };
-};
-const formatNotifcationChallengeComplete = (
-  notification: NotifcationWithRelations
-): NotificationFormat => {
-  const messageText =
-    notification.game?.status === "WON"
-      ? `won the game in ${notification.game?.attempts.length} attempts!`
-      : " lost the challenge!";
-  return {
-    title: "Challenge Completed",
-    message: `${notification.actor?.username || "Someone"} ${messageText}`,
-    link: `/games/${notification.gameId}/review`,
-    type: NotificationType.CHALLENGE_COMPLETED,
-    createdAt: notification.createdAt.toLocaleDateString("es-ES", {
-      month: "short",
-      day: "numeric",
-    }) as string,
-    id: notification.id,
-    readAt: notification.readAt,
-  };
-};
-
 export async function markNotificationsAsRead(
   notificationsId: string[]
 ): Promise<void> {
@@ -151,7 +96,7 @@ async function getChallengerIdFromChallenge(
     },
   });
   if (!rsta) {
-    throw new Error("Challenge not found");
+    throw new Error("Challenger Id not found");
   }
   return rsta?.challengerId;
 }
