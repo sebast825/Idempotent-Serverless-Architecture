@@ -34,8 +34,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NavBar user={user}></NavBar>
         <QueryProvider>
+          <NavBar user={user}></NavBar>
           {children}
           <ModalManager />
         </QueryProvider>
