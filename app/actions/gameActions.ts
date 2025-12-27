@@ -11,7 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { GAME_ERRORS } from "../constants/errorMessages";
 import { Game } from "@prisma/client";
-import { getGameById } from "@/lib/game/service";
+import { createGame, getGameById } from "@/lib/game/service";
 import { Console } from "console";
 
 export async function createPuzzleGameAction(): Promise<string> {
@@ -37,10 +37,10 @@ export async function createPuzzleGameAction(): Promise<string> {
   return gameId;
 }
 
-export const findBaseGame = async (
+export const getGameFormated = async (
   gameId: string
 ): Promise<GameWithAttemptsAndPuzzle> => {
-  console.log("findBaseGame", gameId)
+  console.log("findBaseGame", gameId);
   const game = await getGameById(gameId);
   // Transform attempt to be usable
   const formattedAttempts = game.attempts.map((attempt) => ({
@@ -59,27 +59,21 @@ export const findBaseGame = async (
 export const findExistingGame = async (
   gameId: string
 ): Promise<GameWithAttempts> => {
-  console.log("llama aca")
-  var game: GameWithAttemptsAndPuzzle = await findBaseGame(gameId);
-    const { user } = await createClient();
-    //validate only owner can use the game if in playing state
-    if(game.playerUserId!= user?.id &&game.status==="PLAYING"){
-      throw new Error(GAME_ERRORS.AUTH_REQUIRED);
-    }
+  var game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
+  const { user } = await createClient();
+  //validate only owner can use the game if in playing state
+  if (game.playerUserId != user?.id && game.status === "PLAYING") {
+    throw new Error(GAME_ERRORS.AUTH_REQUIRED);
+  }
   const { puzzle, ...restOfGame } = game;
 
   return restOfGame;
 };
 
-export const createGameAction = async (puzzleId:string,challengeId?:string): Promise<Game> => {
-    const { user } = await createClient();
-
-  const game : Game = await prisma.game.create({
-    data: {
-      puzzleId: puzzleId,
-      playerUserId : user?.id || null,
-      challengeId: challengeId || null
-    },
-  });
-  return game;
+export const createGameAction = async (
+  puzzleId: string,
+  challengeId?: string
+): Promise<Game> => {
+  const { user } = await createClient();
+  return createGame(puzzleId, challengeId, user?.id);
 };

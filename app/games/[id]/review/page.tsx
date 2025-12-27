@@ -1,5 +1,5 @@
 "use client";
-import { findBaseGame } from "@/app/actions/gameActions";
+import { getGameFormated } from "@/app/actions/gameActions";
 import { useQuery } from "@tanstack/react-query";
 import { use } from "react";
 import AttemptRow from "../../components/attemptRow";
@@ -16,7 +16,7 @@ export default function ReviewGame({
 
   const { data: game } = useQuery({
     queryKey: ["game", id],
-    queryFn: () => findBaseGame(id),
+    queryFn: () => getGameFormated(id),
 
     refetchOnWindowFocus: false,
     staleTime: Infinity,
@@ -57,7 +57,7 @@ export default function ReviewGame({
                   <AttemptRow
                     props={{
                       attemptGuess: attempt.guess,
-                      results: attempt.results,
+                      results: attempt.result,
                     }}
                   />
                 </div>
