@@ -4,14 +4,14 @@ import { NotFound } from "@/app/404/page";
 import { ChallengeGhost } from "../components/challengeGhost";
 import {
   ChallengeWithConfig,
-  getChallengeByIdAction,
+  getChallenge,
 } from "@/app/actions/challengeActions";
 
 const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
 
   try {
-    const challenge: ChallengeWithConfig = await getChallengeByIdAction(id);
+    const challenge: ChallengeWithConfig = await getChallenge(id);
     if (!challenge) {
       return <NotFound message="Challenge not found" />;
     }

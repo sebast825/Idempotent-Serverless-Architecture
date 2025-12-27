@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Challenge, ChallengeType, Prisma } from "@prisma/client";
 import { GAME_ERRORS } from "../constants/errorMessages";
 import { ERRORS_GENERIC } from "../constants/errorGeneric";
+import { getChallengeById } from "@/lib/challege/service";
 
 interface ChallengeConfig {
   secret?: MastermindColor[];
@@ -57,8 +58,7 @@ async function createChallenge(
       data: {
         challengerId: userId,
         type: type,
-        config: config as unknown as Prisma.InputJsonValue
-        
+        config: config as unknown as Prisma.InputJsonValue,
       },
     });
     return challenge.id;
@@ -76,18 +76,10 @@ function createGhostPayload(
     isGhostVisible: isVisible,
   };
 }
-// -----------------------------------------
 
-export const getChallengeByIdAction = async (
+
+export const getChallenge = async (
   challengeId: string
 ): Promise<ChallengeWithConfig> => {
-  const challenge: Challenge | null = await prisma.challenge.findUnique({
-    where: {
-      id: challengeId,
-    },
-  });
-  if (!challenge) {
-    throw new Error(GAME_ERRORS.NOT_FOUND);
-  }
-  return challenge as unknown as ChallengeWithConfig;
+  return getChallengeById(challengeId);
 };
