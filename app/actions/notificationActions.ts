@@ -1,6 +1,6 @@
 "use server";
 import { NotificationType } from "@prisma/client";
-import { ERRORS_GENERIC } from "../constants/errorGeneric";
+import { ERRORS_GENERIC } from "../../constants/errorGeneric";
 import { createClient } from "@/lib/supabase/server";
 import {
   NotificationFormat,

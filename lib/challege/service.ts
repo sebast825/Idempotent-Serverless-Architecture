@@ -1,8 +1,8 @@
 import { ChallengeWithConfig } from "@/app/actions/challengeActions";
-import { GAME_ERRORS } from "@/app/constants/errorMessages";
+import { GAME_ERRORS } from "@/constants/errorMessages";
 import { Challenge, ChallengeType, Prisma } from "@prisma/client";
 import prisma from "../prisma";
-import { ERRORS_GENERIC } from "@/app/constants/errorGeneric";
+import { ERRORS_GENERIC } from "@/constants/errorGeneric";
 import { ChallengeConfig } from "./types";
 
 export async function getChallengerIdFromChallenge(

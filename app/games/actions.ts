@@ -10,7 +10,7 @@ import {
 import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { Attempt, Prisma } from "@prisma/client";
-import { GAME_ERRORS } from "../constants/errorMessages";
+import { GAME_ERRORS } from "../../constants/errorMessages";
 
 type GameWithRelations = Prisma.GameGetPayload<{
   include: {

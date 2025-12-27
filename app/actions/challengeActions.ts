@@ -1,7 +1,7 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
 import { Challenge, ChallengeType } from "@prisma/client";
-import { GAME_ERRORS } from "../constants/errorMessages";
+import { GAME_ERRORS } from "../../constants/errorMessages";
 import { createChallenge, getChallengeById } from "@/lib/challege/service";
 import { ChallengeConfig } from "@/lib/challege/types";
 import { createGhostPayload } from "@/lib/challege/utils";

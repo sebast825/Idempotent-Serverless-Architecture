@@ -8,7 +8,7 @@ import {
   MastermindColor,
 } from "@/lib/game/types";
 import { createClient } from "@/lib/supabase/server";
-import { GAME_ERRORS } from "../constants/errorMessages";
+import { GAME_ERRORS } from "../../constants/errorMessages";
 import { Game } from "@prisma/client";
 import {
   createGame,

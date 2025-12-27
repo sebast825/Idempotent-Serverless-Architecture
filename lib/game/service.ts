@@ -1,4 +1,4 @@
-import { GAME_ERRORS } from "@/app/constants/errorMessages";
+import { GAME_ERRORS } from "@/constants/errorMessages";
 import prisma from "../prisma";
 import {  GameWithAttemptsAndPuzzle } from "./types";
 import { Game } from "@prisma/client";
