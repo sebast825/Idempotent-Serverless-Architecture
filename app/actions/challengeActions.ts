@@ -1,17 +1,14 @@
 "use server";
-import { MastermindColor } from "@/lib/game/types";
 import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { Challenge, ChallengeType, Prisma } from "@prisma/client";
 import { GAME_ERRORS } from "../constants/errorMessages";
 import { ERRORS_GENERIC } from "../constants/errorGeneric";
 import { getChallengeById } from "@/lib/challege/service";
+import { ChallengeConfig } from "@/lib/challege/types";
+import { createGhostPayload } from "@/lib/challege/utils";
 
-interface ChallengeConfig {
-  secret?: MastermindColor[];
-  originalGameId?: string;
-  isGhostVisible: boolean;
-}
+
 // 2. Creamos un tipo que extiende el Challenge de Prisma pero sobrescribe 'config'
 export type ChallengeWithConfig = Omit<Challenge, "config"> & {
   config: ChallengeConfig;
@@ -67,15 +64,6 @@ async function createChallenge(
   }
 }
 
-function createGhostPayload(
-  originalGameId: string,
-  isVisible: boolean = true
-): ChallengeConfig {
-  return {
-    originalGameId,
-    isGhostVisible: isVisible,
-  };
-}
 
 
 export const getChallenge = async (
