@@ -10,11 +10,9 @@ import {
 } from "@/lib/game/types";
 import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { Attempt } from "@prisma/client";
 import { GAME_ERRORS } from "../../constants/errorMessages";
-import { getGameById, getGameWithRelationsById } from "@/lib/game/service";
-
-
+import { getGameWithRelationsById } from "@/lib/game/service";
+import { ifAttemptNotExistThrow } from "@/lib/game/validations";
 
 export async function submitGuessAction(
   guessAttempt: MastermindColor[],
@@ -22,12 +20,12 @@ export async function submitGuessAction(
   attemptKey: string
 ): Promise<AttemptResponse> {
   const game: GameWithRelations = await getGameWithRelationsById(gameId);
-    const { user } = await createClient();
+  const { user } = await createClient();
   //validate only owner can use add attempts
   if (game.playerUserId != user?.id) {
     throw new Error(GAME_ERRORS.AUTH_REQUIRED);
   }
-  await ifAttemptNotExistThrow(game.attempts, attemptKey);
+  ifAttemptNotExistThrow(game.attempts, attemptKey);
 
   //validate guessAttempt with the secret
   const currentFeedback = validate(
@@ -79,7 +77,7 @@ async function persistAttemptAndResponse(
       });
     }
     //if game finished notifye challenger of challenge if exists
-   if (nextStatus != "PLAYING" && game.challenge) {
+    if (nextStatus != "PLAYING" && game.challenge) {
       await tx.notification.create({
         data: {
           recipientId: game.challenge.challengerId,
@@ -87,9 +85,9 @@ async function persistAttemptAndResponse(
           type: "CHALLENGE_COMPLETED",
           challengeId: game.challenge.id,
           gameId: game.id,
-    }   
-  })}
-
+        },
+      });
+    }
   });
 
   var rsta: AttemptResponse = {
@@ -100,12 +98,4 @@ async function persistAttemptAndResponse(
       : undefined,
   };
   return rsta;
-}
- function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
-  //validate attemps is not  processed for idempotency
-  var attemptAlreadyProcesed = attempts.some(
-    (e) => e.submissionId == attemptKey
-  );
-
-  if (attemptAlreadyProcesed) throw new Error("Attempt already exist");
 }
