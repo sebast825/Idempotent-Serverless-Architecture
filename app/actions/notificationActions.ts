@@ -36,13 +36,12 @@ export async function createChallengeAcceptedNotification(
   gameId: string
 ): Promise<void> {
   const { user } = await createClient();
-  if (user == null) throw new Error(ERRORS_GENERIC.AUTH_REQUIRED);
   const challengerId = await getChallengerIdFromChallenge(challengeId);
 
   if (!challengerId) throw new Error("Challenge not found");
   await createNotficication(
     challengerId,
-    user.id,
+    user?.id ?? null,
     challengeId,
     gameId,
     NotificationType.CHALLENGE_ACCEPTED

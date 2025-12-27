@@ -49,15 +49,15 @@ export async function markNotificationsAsRead(
 }
 
 export async function createNotficication(
-  challengerId: string,
-  actorId: string,
+  recipientId: string,
+  actorId: string | null,
   challengeId: string,
   gameId: string,
   type: NotificationType
 ): Promise<void> {
   await prisma.notification.create({
     data: {
-      recipientId: challengerId,
+      recipientId: recipientId,
       actorId: actorId,
       type: type,
       challengeId: challengeId,
