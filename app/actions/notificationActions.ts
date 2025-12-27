@@ -1,5 +1,4 @@
 "use server";
-import prisma from "@/lib/prisma";
 import { NotificationType } from "@prisma/client";
 import { ERRORS_GENERIC } from "../constants/errorGeneric";
 import { createClient } from "@/lib/supabase/server";
@@ -10,6 +9,7 @@ import {
 import { formatNotifications } from "@/lib/notification/formater";
 import { getChallengerIdFromChallenge } from "@/lib/challege/service";
 import {
+  createNotficication,
   getNotifications,
   markNotificationsAsRead,
 } from "@/lib/notification/service";
@@ -40,13 +40,11 @@ export async function createChallengeAcceptedNotification(
   const challengerId = await getChallengerIdFromChallenge(challengeId);
 
   if (!challengerId) throw new Error("Challenge not found");
-  await prisma.notification.create({
-    data: {
-      recipientId: challengerId,
-      actorId: user.id,
-      type: NotificationType.CHALLENGE_ACCEPTED,
-      challengeId: challengeId,
-      gameId: gameId,
-    },
-  });
+  await createNotficication(
+    challengerId,
+    user.id,
+    challengeId,
+    gameId,
+    NotificationType.CHALLENGE_ACCEPTED
+  );
 }

@@ -1,3 +1,4 @@
+import { NotificationType } from "@prisma/client";
 import prisma from "../prisma";
 import { NotifcationWithRelations } from "./types";
 
@@ -43,6 +44,24 @@ export async function markNotificationsAsRead(
     },
     data: {
       readAt: new Date(),
+    },
+  });
+}
+
+export async function createNotficication(
+  challengerId: string,
+  actorId: string,
+  challengeId: string,
+  gameId: string,
+  type: NotificationType
+): Promise<void> {
+  await prisma.notification.create({
+    data: {
+      recipientId: challengerId,
+      actorId: actorId,
+      type: type,
+      challengeId: challengeId,
+      gameId: gameId,
     },
   });
 }
