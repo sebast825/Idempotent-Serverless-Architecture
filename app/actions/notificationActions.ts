@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { NotificationType } from "@prisma/client";
+import { Notification, NotificationType } from "@prisma/client";
 import { ERRORS_GENERIC } from "../constants/errorGeneric";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -24,7 +24,6 @@ const getRawNotifications = async (
     await prisma.notification.findMany({
       where: {
         recipientId: userId,
-        readAt: null,
       },
       include: {
         actor: {
@@ -39,10 +38,11 @@ const getRawNotifications = async (
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 20,
+      orderBy: [
+        { readAt: { sort: "asc", nulls: "first" } },
+        { createdAt: "desc" },
+      ],
+      take: 10,
     });
   return notifications;
 };
@@ -74,6 +74,25 @@ const formatNotifcationChallengeComplete = (
     message: `${notification.actor?.username || "Someone"} ${messageText}`,
     link: `/games/${notification.gameId}/review`,
     type: NotificationType.CHALLENGE_COMPLETED,
-    createdAt: notification.createdAt,
+    createdAt: notification.createdAt.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' }) as string,
+    id: notification.id,
+    readAt: notification.readAt,
   };
 };
+
+export async function markNotificationsAsRead(
+  notificationsId: string[]
+): Promise<void> {
+  const { user } = await createClient();
+  if (user == null) throw new Error(ERRORS_GENERIC.AUTH_REQUIRED);
+  await prisma.notification.updateMany({
+    where: {
+      id: { in: notificationsId },
+      recipientId: user.id,
+      readAt: null,
+    },
+    data: {
+      readAt: new Date(),
+    },
+  });
+}

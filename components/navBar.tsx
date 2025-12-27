@@ -6,7 +6,10 @@ import { signOut } from "@/app/auth/actions";
 import { User } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useModalStore } from "@/store/useModalStore";
-import { useNotifications } from "@/hooks/useNotifications";
+import {
+  useNotifications,
+  useSetNoticationReadAt,
+} from "@/hooks/useNotifications";
 
 export const NavBar = ({ user }: { user: User | null }) => {
   const openModal = useModalStore((state) => state.openModal);
@@ -14,9 +17,13 @@ export const NavBar = ({ user }: { user: User | null }) => {
   useEffect(() => {
     console.log(user);
   }, [user]);
-
   const { data: notifications } = useNotifications();
+  const { mutate: markNotificationsAsRead } = useSetNoticationReadAt();
 
+  const handleOpenNotifications = () => {
+    openModal("NOTIFICATIONS");
+    notifications && markNotificationsAsRead(notifications?.map((n) => n.id));
+  };
   return (
     <>
       <Navbar bg="dark" variant="dark" fixed="top" className="shadow">
@@ -32,23 +39,27 @@ export const NavBar = ({ user }: { user: User | null }) => {
               title={
                 <span className="d-inline-flex align-items-center">
                   {user.user_metadata?.full_name || "Mi Cuenta"}
-                  {notifications && notifications?.length > 0 && (
-                    <Badge
-                      pill
-                      bg="danger"
-                      className="ms-2"
-                      style={{ fontSize: "0.6rem" }}
-                    >
-                      {notifications?.length}
-                    </Badge>
-                  )}
+                  {notifications &&
+                    notifications?.some((elem) => elem.readAt == null) && (
+                      <Badge
+                        pill
+                        bg="danger"
+                        className="ms-2"
+                        style={{ fontSize: "0.6rem" }}
+                      >
+                        {
+                          notifications?.filter((elem) => elem.readAt == null)
+                            .length
+                        }
+                      </Badge>
+                    )}
                 </span>
               }
               id="user-nav-dropdown"
               align="end"
             >
               <Nav.Link
-                onClick={() => openModal("NOTIFICATIONS")}
+                onClick={() => handleOpenNotifications()}
                 className="dropdown-item py-1 px-3  text-dark"
               >
                 Notifications

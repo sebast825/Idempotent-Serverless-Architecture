@@ -15,7 +15,7 @@ export const NotificationList = () => {
           >
             <div className="d-flex justify-content-between">
               <h6 className="mb-1">{n.title}</h6>
-              <small className="text-muted">{n.createdAt.toDateString()}</small>
+              <small className="text-muted">{n.createdAt}</small>
             </div>
             <p className="small mb-0 text-secondary">{n.message}</p>
             <a href={n.link}>Watch Review </a>
@@ -26,6 +26,7 @@ export const NotificationList = () => {
           No tienes notificaciones pendientes.
         </div>
       )}
+      
     </>
   );
 };

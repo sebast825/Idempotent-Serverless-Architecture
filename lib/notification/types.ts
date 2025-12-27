@@ -17,10 +17,12 @@ export type NotifcationWithRelations = Prisma.NotificationGetPayload<{
   };
 }>;
 export interface NotificationFormat {
+  id: string;
   title: string;
   message: string;
   link?: string;
-  createdAt: Date;
+  createdAt: string;
   type: NotificationType;
+  readAt: Date | null;
 }
 
