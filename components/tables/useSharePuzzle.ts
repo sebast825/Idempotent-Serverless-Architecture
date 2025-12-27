@@ -15,13 +15,14 @@ export const useSharePuzzle = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (gameId: string): Promise<GameWithAttempts> => {
       return findExistingGame(gameId);
-    },onError: (err) => {
+    },
+    onError: (err) => {
       console.error("Error fetching game:", err);
       error(err.message || "Error fetching game");
       throw err;
-    }
+    },
   });
-   const { mutateAsync : createChallenge } = useMutation({
+  const { mutateAsync: createChallenge } = useMutation({
     mutationFn: async (gameId: string): Promise<string> => {
       return createGhostChallengeAction(gameId);
     },
@@ -29,10 +30,13 @@ export const useSharePuzzle = () => {
       console.error("Error creating ghost challenge:", err);
       error(err.message || "Error creating ghost challenge");
       throw err;
-    }
+    },
   });
-  
-  const generateText = (game: GameWithAttempts,challengeId: string): string => {
+
+  const generateText = (
+    game: GameWithAttempts,
+    challengeId: string
+  ): string => {
     const text = `🏆 Mastermind Puzzle! 🧠
 
 ${selectTextWinOrLose(game)}    
@@ -43,7 +47,7 @@ ${formatColorAttempt(game.attempts[0])}
 🔥 You have been Challenged! 🔥
 
 Accept the puzzle here 👇
-${window.location.origin}/challenge/${challengeId}`.trim();
+${window.location.origin}/challenges/${challengeId}`.trim();
     return text;
   };
   const selectTextWinOrLose = (game: GameWithAttempts): string => {
@@ -72,10 +76,10 @@ ${window.location.origin}/challenge/${challengeId}`.trim();
   };
   const handleSharePuzzle = async (gameId: string): Promise<void> => {
     try {
-      console.log(gameId)
+      console.log(gameId);
       const challengeId = await createChallenge(gameId);
       const game: GameWithAttempts = await mutateAsync(gameId);
-      const text: string = generateText(game,challengeId);
+      const text: string = generateText(game, challengeId);
       navigator.clipboard.writeText(text);
       success("Copied to clipboard!");
     } catch (err) {
