@@ -8,6 +8,7 @@ import {
   NotifcationWithRelations,
 } from "@/lib/notification/types";
 import { formatNotifications } from "@/lib/notification/formater";
+import { getChallengerIdFromChallenge } from "@/lib/challege/service";
 
 export async function getNotificationActions(): Promise<NotificationFormat[]> {
   const { user } = await createClient();
@@ -84,19 +85,3 @@ export async function createChallengeAcceptedNotification(
   });
 }
 
-async function getChallengerIdFromChallenge(
-  challengeId: string
-): Promise<string> {
-  const rsta = await prisma.challenge.findUnique({
-    where: {
-      id: challengeId,
-    },
-    select: {
-      challengerId: true,
-    },
-  });
-  if (!rsta) {
-    throw new Error("Challenger Id not found");
-  }
-  return rsta?.challengerId;
-}
