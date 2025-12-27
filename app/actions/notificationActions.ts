@@ -68,11 +68,12 @@ const formatNotifcationChallengeComplete = (
   const messageText =
     notification.game?.status === "WON"
       ? `won the game in ${notification.game?.attempts.length} attempts!`
-      : " couldn't win the challenge!";
+      : " lost the challenge!";
   return {
-    title: "Challenge Finished",
+    title: "Challenge Completed",
     message: `${notification.actor?.username || "Someone"} ${messageText}`,
-    link: `/games/${notification.gameId}`,
+    link: `/games/${notification.gameId}/review`,
     type: NotificationType.CHALLENGE_COMPLETED,
+    createdAt: notification.createdAt,
   };
 };

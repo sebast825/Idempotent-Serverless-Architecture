@@ -20,6 +20,7 @@ export interface NotificationFormat {
   title: string;
   message: string;
   link?: string;
+  createdAt: Date;
   type: NotificationType;
 }
 
