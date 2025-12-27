@@ -28,3 +28,23 @@ export async function createGame(puzzleId:string,challengeId?:string,userId?:str
      });
      return game;
 }
+
+export async function createGameWithPuzzle(secretCode:string[],userId?:string): Promise<string>{
+
+    const gameId: string = await prisma.$transaction(async (tx) => {
+       const puzzle = await tx.puzzle.create({
+         data: {
+           secretCode: secretCode,
+           createdByUserId: userId,
+         },
+       });
+       const game = await tx.game.create({
+         data: {
+           puzzleId: puzzle.id,
+           playerUserId: userId,
+         },
+       });
+       return game.id;
+     });
+     return gameId;
+}

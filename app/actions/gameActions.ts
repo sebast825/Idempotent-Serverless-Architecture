@@ -7,33 +7,20 @@ import {
   GameWithAttemptsAndPuzzle,
   MastermindColor,
 } from "@/lib/game/types";
-import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { GAME_ERRORS } from "../constants/errorMessages";
 import { Game } from "@prisma/client";
-import { createGame, getGameById } from "@/lib/game/service";
-import { Console } from "console";
+import {
+  createGame,
+  createGameWithPuzzle,
+  getGameById,
+} from "@/lib/game/service";
 
 export async function createPuzzleGameAction(): Promise<string> {
   const { user } = await createClient();
-  const userId = user?.id || null;
   const secretCode: MastermindColor[] = generateSecretCode();
 
-  const gameId: string = await prisma.$transaction(async (tx) => {
-    const puzzle = await tx.puzzle.create({
-      data: {
-        secretCode: secretCode,
-        createdByUserId: userId,
-      },
-    });
-    const game = await tx.game.create({
-      data: {
-        puzzleId: puzzle.id,
-        playerUserId: userId,
-      },
-    });
-    return game.id;
-  });
+  const gameId: string = await createGameWithPuzzle(secretCode, user?.id);
   return gameId;
 }
 
