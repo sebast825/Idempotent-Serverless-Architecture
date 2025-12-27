@@ -66,6 +66,7 @@ export async function createGameWithPuzzle(secretCode:string[],userId?:string): 
 export async function getGamesPaginatedByUserId(userId: string, pageSize: number, skipAmount: number): Promise<Game[]> {
     const games: Game[] = await prisma.game.findMany({
        where: { playerUserId: userId },
+       orderBy: { createdAt: "desc" },
        take: pageSize,
        skip: skipAmount,
      });
