@@ -11,6 +11,8 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { GAME_ERRORS } from "../constants/errorMessages";
 import { Game } from "@prisma/client";
+import { getGameById } from "@/lib/game/service";
+import { Console } from "console";
 
 export async function createPuzzleGameAction(): Promise<string> {
   const { user } = await createClient();
@@ -38,16 +40,8 @@ export async function createPuzzleGameAction(): Promise<string> {
 export const findBaseGame = async (
   gameId: string
 ): Promise<GameWithAttemptsAndPuzzle> => {
-
-  const game = await prisma.game.findUnique({
-    where: {
-      id: gameId    
-    },
-    include: { attempts: true, puzzle: true },
-  });
-  if (!game) {
-    throw new Error(GAME_ERRORS.NOT_FOUND);
-  }
+  console.log("findBaseGame", gameId)
+  const game = await getGameById(gameId);
   // Transform attempt to be usable
   const formattedAttempts = game.attempts.map((attempt) => ({
     ...attempt,
@@ -65,6 +59,7 @@ export const findBaseGame = async (
 export const findExistingGame = async (
   gameId: string
 ): Promise<GameWithAttempts> => {
+  console.log("llama aca")
   var game: GameWithAttemptsAndPuzzle = await findBaseGame(gameId);
     const { user } = await createClient();
     //validate only owner can use the game if in playing state

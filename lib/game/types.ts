@@ -1,6 +1,13 @@
 import { Prisma } from "@prisma/client";
 
-export const MASTERMIND_COLORS = ['RED', 'BLUE', 'GREEN', 'YELLOW', 'PURPLE', 'ORANGE'] as const;
+export const MASTERMIND_COLORS = [
+  "RED",
+  "BLUE",
+  "GREEN",
+  "YELLOW",
+  "PURPLE",
+  "ORANGE",
+] as const;
 export const COLOR_TO_EMOJI: Record<MastermindColor, string> = {
   RED: "🟥",
   BLUE: "🟦",
@@ -10,16 +17,16 @@ export const COLOR_TO_EMOJI: Record<MastermindColor, string> = {
   ORANGE: "🟧",
 };
 
-export const FEEDBACK_TO_EMOJI : Record<FeedbackStatus, string>= {
-  MATCH: "🟢", 
+export const FEEDBACK_TO_EMOJI: Record<FeedbackStatus, string> = {
+  MATCH: "🟢",
   COLOR_ONLY: "🟡",
-  NONE : "⚪"
+  NONE: "⚪",
 };
-export type MastermindColor = typeof MASTERMIND_COLORS[number];
+export type MastermindColor = (typeof MASTERMIND_COLORS)[number];
 
-export type FeedbackStatus = 'MATCH' | 'COLOR_ONLY' | 'NONE';
+export type FeedbackStatus = "MATCH" | "COLOR_ONLY" | "NONE";
 
-export type GameStatus = 'PLAYING' | 'WON' | 'LOST';
+export type GameStatus = "PLAYING" | "WON" | "LOST";
 
 export interface responsePosition {
   position: number;
@@ -35,7 +42,7 @@ export interface FormattedAttempt {
   gameId: string;
   submissionId: string;
   guess: MastermindColor[];
-  results: FeedbackStatus[];
+  result: FeedbackStatus[];
   createdAt: Date;
 }
 
@@ -45,7 +52,6 @@ export type GameWithAttempts = Omit<
 > & {
   attempts: FormattedAttempt[];
 };
-
 
 export type GameWithAttemptsAndPuzzle = GameWithAttempts & {
   puzzle: Prisma.PuzzleGetPayload<{}>;
