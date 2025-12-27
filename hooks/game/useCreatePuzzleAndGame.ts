@@ -2,6 +2,7 @@ import { createPuzzleGameAction } from "@/app/actions/gameActions";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import useToastit from "../useToastit";
+import { ROUTES } from "@/lib/routes";
 
 export const useCreatePuzzleAndGame = () => {
   const router = useRouter();
@@ -10,7 +11,7 @@ export const useCreatePuzzleAndGame = () => {
   const { mutateAsync: createPuzzleAndGame, isPending } = useMutation({
     mutationFn: createPuzzleGameAction,
     onSuccess: (gameId) => {
-      router.push(`/game/${gameId}`);
+      router.push(ROUTES.game(gameId));
     },
     onError: (err) => {
       console.error("Error al crear el juego:", err);

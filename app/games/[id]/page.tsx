@@ -1,9 +1,9 @@
 "use client";
 
-import AttemptRow from "@/app/game/components/attemptRow";
-import ColorPicker from "@/app/game/components/colorPicker";
-import GameResultModal from "@/app/game/components/gameResultModal";
-import GuessRow from "@/app/game/components/guessRow";
+import AttemptRow from "@/app/games/components/attemptRow";
+import ColorPicker from "@/app/games/components/colorPicker";
+import GameResultModal from "@/app/games/components/gameResultModal";
+import GuessRow from "@/app/games/components/guessRow";
 import { useMastermind } from "../useMastermind";
 import { use, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";

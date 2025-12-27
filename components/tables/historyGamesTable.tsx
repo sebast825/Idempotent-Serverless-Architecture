@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useSharePuzzle } from "./useSharePuzzle";
 import { useState } from "react";
 import { MessageCard } from "../cards/messageCard";
+import { ROUTES } from "@/lib/routes";
 
 export function HistoryGamesTable() {
   const router = useRouter();
@@ -23,7 +24,8 @@ export function HistoryGamesTable() {
   });
 
   function handleContinueGame(gameId: string) {
-    router.push(`/game/${gameId}`);
+    router.push(ROUTES.game(gameId));
+
     closeModal();
   }
   function handleShowRepetition(gameId: string) {

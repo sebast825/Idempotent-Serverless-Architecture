@@ -3,6 +3,7 @@ import { createGameAction } from "@/app/actions/gameActions";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import useToastit from "@/hooks/useToastit";
 import { FEEDBACK_TO_EMOJI } from "@/lib/game/types";
+import { ROUTES } from "@/lib/routes";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +14,11 @@ interface propsPuzzleUi {
   puzzleId: string;
   challengeId: string;
 }
-export const ChallengeUi = ({ children, puzzleId, challengeId }: propsPuzzleUi) => {
+export const ChallengeUi = ({
+  children,
+  puzzleId,
+  challengeId,
+}: propsPuzzleUi) => {
   const { createPuzzleAndGame, isPending: isPendingCreatePuzzleAndGame } =
     useCreatePuzzleAndGame();
 
@@ -24,7 +29,7 @@ export const ChallengeUi = ({ children, puzzleId, challengeId }: propsPuzzleUi) 
       return createGameAction(puzzleId, challengeId);
     },
     onSuccess: (data) => {
-      router.push(`/game/${data.id}`);
+      router.push(ROUTES.game(data.id));
     },
     onError: (err) => {
       console.error("Error creating game from puzzle:", err);
