@@ -1,7 +1,9 @@
 import { GAME_ERRORS } from "@/constants/errorMessages";
 import prisma from "../prisma";
-import {  GameWithAttemptsAndPuzzle, GameWithRelations } from "./types";
+import {  AttemptResponse, FeedbackStatus, GameStatus, GameWithAttemptsAndPuzzle, GameWithRelations, MastermindColor } from "./types";
 import { Game } from "@prisma/client";
+import { MAX_ATTEMPTS } from "./config";
+import { isVictory } from "./engine";
 
 export async function getGameById(gameId: string) : Promise<GameWithAttemptsAndPuzzle> {
     const game = await prisma.game.findUnique({
@@ -75,4 +77,64 @@ export async function countGamesByUserId(userId: string): Promise<number> {
        where: { playerUserId: userId },
      });
      return totalGames;
+}
+
+
+export async function persistAttemptAndResponse(
+  currentFeedback: FeedbackStatus[],
+  game: GameWithRelations,
+  gameId: string,
+  attemptKey: string,
+  guessAttempt: MastermindColor[]
+) {
+  const isVictoryState: boolean = isVictory(currentFeedback);
+  const isLastAttempt: boolean = game.attempts.length + 1 >= MAX_ATTEMPTS;
+  const isGameFinished: boolean = isVictoryState || isLastAttempt;
+  const nextStatus: GameStatus = isVictoryState
+    ? "WON"
+    : isLastAttempt
+    ? "LOST"
+    : "PLAYING";
+
+  await prisma.$transaction(async (tx) => {
+    await tx.attempt.create({
+      data: {
+        gameId: game.id,
+        submissionId: attemptKey,
+        guess: guessAttempt,
+        result: currentFeedback,
+      },
+    });
+    //only update is game is finished
+    if (isGameFinished) {
+      await tx.game.update({
+        where: { id: gameId },
+        data: {
+          status: nextStatus,
+          completedAt: new Date(),
+        },
+      });
+    }
+    //if game finished notifye challenger of challenge if exists
+    if (nextStatus != "PLAYING" && game.challenge) {
+      await tx.notification.create({
+        data: {
+          recipientId: game.challenge.challengerId,
+          actorId: game.playerUserId,
+          type: "CHALLENGE_COMPLETED",
+          challengeId: game.challenge.id,
+          gameId: game.id,
+        },
+      });
+    }
+  });
+
+  var rsta: AttemptResponse = {
+    feedback: currentFeedback,
+    gameStatus: nextStatus,
+    secretCode: isGameFinished
+      ? (game.puzzle.secretCode as MastermindColor[])
+      : undefined,
+  };
+  return rsta;
 }
