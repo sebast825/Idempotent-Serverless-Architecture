@@ -1,6 +1,6 @@
 import { GAME_ERRORS } from "@/constants/errorMessages";
 import prisma from "../prisma";
-import {  GameWithAttemptsAndPuzzle } from "./types";
+import {  GameWithAttemptsAndPuzzle, GameWithRelations } from "./types";
 import { Game } from "@prisma/client";
 
 export async function getGameById(gameId: string) : Promise<GameWithAttemptsAndPuzzle> {
@@ -15,7 +15,18 @@ export async function getGameById(gameId: string) : Promise<GameWithAttemptsAndP
      }
 return game as unknown as GameWithAttemptsAndPuzzle;
 }
-
+export async function getGameWithRelationsById(gameId: string) : Promise<GameWithRelations> {
+    const game = await prisma.game.findUnique({
+       where: {
+         id: gameId    
+       },
+       include: { attempts: true, puzzle: true , challenge: true},
+     });
+     if (!game) {
+       throw new Error(GAME_ERRORS.NOT_FOUND);
+     }
+return game as unknown as GameWithRelations;
+}
 export async function createGame(puzzleId:string,challengeId?:string,userId?:string): Promise<Game>{
    
      const game : Game = await prisma.game.create({

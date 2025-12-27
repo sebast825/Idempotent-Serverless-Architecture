@@ -12,6 +12,7 @@ import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { Attempt } from "@prisma/client";
 import { GAME_ERRORS } from "../../constants/errorMessages";
+import { getGameById, getGameWithRelationsById } from "@/lib/game/service";
 
 
 
@@ -20,7 +21,7 @@ export async function submitGuessAction(
   gameId: string,
   attemptKey: string
 ): Promise<AttemptResponse> {
-  const game: GameWithRelations = await findGameOrThrow(gameId);
+  const game: GameWithRelations = await getGameWithRelationsById(gameId);
     const { user } = await createClient();
   //validate only owner can use add attempts
   if (game.playerUserId != user?.id) {
@@ -100,20 +101,11 @@ async function persistAttemptAndResponse(
   };
   return rsta;
 }
-function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
+ function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
   //validate attemps is not  processed for idempotency
   var attemptAlreadyProcesed = attempts.some(
     (e) => e.submissionId == attemptKey
   );
 
   if (attemptAlreadyProcesed) throw new Error("Attempt already exist");
-}
-async function findGameOrThrow(gameId: string): Promise<GameWithRelations> {
-  const game = await prisma.game.findUnique({
-    where: { id: gameId },
-    include: { puzzle: true, attempts: true,challenge: true },
-  });
-  if (!game) throw new Error("Game not found");
-
-  return game;
 }
