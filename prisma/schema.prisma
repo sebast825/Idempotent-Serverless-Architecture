@@ -15,6 +15,8 @@ model Profile {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   challenges Challenge[]
+  notificationsReceived Notification[] @relation("Recipient")
+  notificationsTriggered Notification[] @relation("Actor")
 }
 
 model Puzzle {
@@ -36,6 +38,7 @@ model Game {
   createdAt      DateTime  @default(now())
   challengeId    String?
   challenge      Challenge? @relation(fields: [challengeId], references: [id])
+  notification Notification[]
 }
 
 model Attempt {
@@ -59,4 +62,35 @@ model Challenge {
   config          Json         
   createdAt       DateTime      @default(now())
   games           Game[]
+  notification Notification[]
+}
+
+enum NotificationType {
+  CHALLENGE_ACCEPTED
+  CHALLENGE_COMPLETED
+  SYSTEM
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  recipientId String          
+  actorId     String?          
+  
+  type        NotificationType
+  
+  challengeId String?
+  gameId      String?
+  
+  metadata    Json?            
+  
+  readAt      DateTime?        
+  createdAt   DateTime         @default(now())
+
+  // Relaciones
+  recipient   Profile          @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor       Profile?         @relation("Actor", fields: [actorId], references: [id], onDelete: Cascade)
+  challenge   Challenge?       @relation(fields: [challengeId], references: [id], onDelete: SetNull)
+  game        Game?            @relation(fields: [gameId], references: [id], onDelete: SetNull)
+
+  @@index([recipientId, readAt])
 }
