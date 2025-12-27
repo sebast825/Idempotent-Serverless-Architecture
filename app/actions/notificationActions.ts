@@ -9,45 +9,18 @@ import {
 } from "@/lib/notification/types";
 import { formatNotifications } from "@/lib/notification/formater";
 import { getChallengerIdFromChallenge } from "@/lib/challege/service";
+import { getNotifications } from "@/lib/notification/service";
 
 export async function getNotificationActions(): Promise<NotificationFormat[]> {
   const { user } = await createClient();
   if (user == null) throw new Error(ERRORS_GENERIC.AUTH_REQUIRED);
-  const notifications: NotifcationWithRelations[] = await getRawNotifications(
+  const notifications: NotifcationWithRelations[] = await getNotifications(
     user.id
   );
   return formatNotifications(notifications);
 }
 
-const getRawNotifications = async (
-  userId: string
-): Promise<NotifcationWithRelations[]> => {
-  const notifications: NotifcationWithRelations[] =
-    await prisma.notification.findMany({
-      where: {
-        recipientId: userId,
-      },
-      include: {
-        actor: {
-          select: {
-            username: true,
-          },
-        },
-        game: {
-          select: {
-            status: true,
-            attempts: true,
-          },
-        },
-      },
-      orderBy: [
-        { readAt: { sort: "desc", nulls: "first" } },
-        { createdAt: "desc" },
-      ],
-      take: 10,
-    });
-  return notifications;
-};
+
 export async function markNotificationsAsRead(
   notificationsId: string[]
 ): Promise<void> {
