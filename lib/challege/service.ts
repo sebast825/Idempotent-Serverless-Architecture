@@ -1,7 +1,9 @@
 import { ChallengeWithConfig } from "@/app/actions/challengeActions";
 import { GAME_ERRORS } from "@/app/constants/errorMessages";
-import { Challenge } from "@prisma/client";
+import { Challenge, ChallengeType, Prisma } from "@prisma/client";
 import prisma from "../prisma";
+import { ERRORS_GENERIC } from "@/app/constants/errorGeneric";
+import { ChallengeConfig } from "./types";
 
 export async function getChallengerIdFromChallenge(
   challengeId: string
@@ -33,3 +35,23 @@ export const getChallengeById = async (
   }
   return challenge as unknown as ChallengeWithConfig;
 };
+
+
+export async function createChallenge(
+  userId: string,
+  type: ChallengeType,
+  config: ChallengeConfig
+): Promise<string> {
+  try {
+    const challenge = await prisma.challenge.create({
+      data: {
+        challengerId: userId,
+        type: type,
+        config: config as unknown as Prisma.InputJsonValue,
+      },
+    });
+    return challenge.id;
+  } catch (err) {
+    throw new Error(ERRORS_GENERIC.GENERIC);
+  }
+}

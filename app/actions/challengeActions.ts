@@ -1,13 +1,10 @@
 "use server";
-import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { Challenge, ChallengeType, Prisma } from "@prisma/client";
+import { Challenge, ChallengeType } from "@prisma/client";
 import { GAME_ERRORS } from "../constants/errorMessages";
-import { ERRORS_GENERIC } from "../constants/errorGeneric";
-import { getChallengeById } from "@/lib/challege/service";
+import { createChallenge, getChallengeById } from "@/lib/challege/service";
 import { ChallengeConfig } from "@/lib/challege/types";
 import { createGhostPayload } from "@/lib/challege/utils";
-
 
 // 2. Creamos un tipo que extiende el Challenge de Prisma pero sobrescribe 'config'
 export type ChallengeWithConfig = Omit<Challenge, "config"> & {
@@ -37,7 +34,6 @@ export const createGhostChallengeAction = async (
   if (!userId) {
     throw new Error(GAME_ERRORS.AUTH_REQUIRED);
   }
-  console.log("User ID:", userId);
   const challengeId = await createChallenge(
     userId,
     ChallengeType.GHOST,
@@ -45,26 +41,6 @@ export const createGhostChallengeAction = async (
   );
   return challengeId;
 };
-async function createChallenge(
-  userId: string,
-  type: ChallengeType,
-  config: ChallengeConfig
-): Promise<string> {
-  try {
-    const challenge = await prisma.challenge.create({
-      data: {
-        challengerId: userId,
-        type: type,
-        config: config as unknown as Prisma.InputJsonValue,
-      },
-    });
-    return challenge.id;
-  } catch (err) {
-    throw new Error(ERRORS_GENERIC.GENERIC);
-  }
-}
-
-
 
 export const getChallenge = async (
   challengeId: string
