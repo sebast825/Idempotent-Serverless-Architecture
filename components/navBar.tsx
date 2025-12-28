@@ -70,6 +70,12 @@ export const NavBar = ({ user }: { user: User | null }) => {
               >
                 My History
               </Nav.Link>
+               <Nav.Link
+                onClick={() => openModal("USERSTATS")}
+                className="dropdown-item py-1 px-3  text-dark"
+              >
+                Performance
+              </Nav.Link>
               <Nav.Link
                 onClick={() => signOut()}
                 disabled={isLoading}

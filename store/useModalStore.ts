@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ModalView = "HISTORYGAMES" | "NOTIFICATIONS";
+type ModalView = "HISTORYGAMES" | "NOTIFICATIONS" | "USERSTATS";
 
 interface ModalState {
   isOpen: boolean;
