@@ -1,85 +1,114 @@
 import { GAME_ERRORS } from "@/constants/errorMessages";
 import prisma from "../prisma";
-import {  AttemptResponse, FeedbackStatus, GameStatus, GameWithAttemptsAndPuzzle, GameWithRelations, MastermindColor } from "./types";
-import { Game } from "@prisma/client";
+import {
+  AttemptResponse,
+  FeedbackStatus,
+  GameStatus,
+  GameWithAttemptsAndPuzzle,
+  GameWithRelations,
+  MastermindColor,
+} from "./types";
+import { Game, Prisma } from "@prisma/client";
 import { MAX_ATTEMPTS } from "./config";
 import { isVictory } from "./engine";
 
-export async function getGameById(gameId: string) : Promise<GameWithAttemptsAndPuzzle> {
-    const game = await prisma.game.findUnique({
-       where: {
-         id: gameId    
-       },
-       include: { attempts: true, puzzle: true },
-     });
-     if (!game) {
-       throw new Error(GAME_ERRORS.NOT_FOUND);
-     }
-return game as unknown as GameWithAttemptsAndPuzzle;
+export async function getGameById(
+  gameId: string
+): Promise<GameWithAttemptsAndPuzzle> {
+  const game = await prisma.game.findUnique({
+    where: {
+      id: gameId,
+    },
+    include: { attempts: true, puzzle: true },
+  });
+  if (!game) {
+    throw new Error(GAME_ERRORS.NOT_FOUND);
+  }
+  return game as unknown as GameWithAttemptsAndPuzzle;
 }
-export async function getGameWithRelationsById(gameId: string) : Promise<GameWithRelations> {
-    const game = await prisma.game.findUnique({
-       where: {
-         id: gameId    
-       },
-       include: { attempts: true, puzzle: true , challenge: true},
-     });
-     if (!game) {
-       throw new Error(GAME_ERRORS.NOT_FOUND);
-     }
-return game as unknown as GameWithRelations;
+export async function getGameWithRelationsById(
+  gameId: string
+): Promise<GameWithRelations> {
+  const game = await prisma.game.findUnique({
+    where: {
+      id: gameId,
+    },
+    include: { attempts: true, puzzle: true, challenge: true },
+  });
+  if (!game) {
+    throw new Error(GAME_ERRORS.NOT_FOUND);
+  }
+  return game as unknown as GameWithRelations;
 }
-export async function createGame(puzzleId:string,challengeId?:string,userId?:string): Promise<Game>{
-   
-     const game : Game = await prisma.game.create({
-       data: {
-         puzzleId: puzzleId,
-         playerUserId : userId || null,
-         challengeId: challengeId || null
-       },
-       
-     });
-     return game;
+export async function getGamesWithAttemptsByUserId(
+  userId: string
+): Promise<GameWithAttemptsAndPuzzle[]> {
+  return (await prisma.game.findMany({
+    where: {
+      playerUserId: userId,
+    },
+    include: {
+      attempts: true,
+    },
+  })) as unknown as GameWithAttemptsAndPuzzle[];
 }
-
-export async function createGameWithPuzzle(secretCode:string[],userId?:string): Promise<string>{
-
-    const gameId: string = await prisma.$transaction(async (tx) => {
-       const puzzle = await tx.puzzle.create({
-         data: {
-           secretCode: secretCode,
-           createdByUserId: userId,
-         },
-       });
-       const game = await tx.game.create({
-         data: {
-           puzzleId: puzzle.id,
-           playerUserId: userId,
-         },
-       });
-       return game.id;
-     });
-     return gameId;
+export async function createGame(
+  puzzleId: string,
+  challengeId?: string,
+  userId?: string
+): Promise<Game> {
+  const game: Game = await prisma.game.create({
+    data: {
+      puzzleId: puzzleId,
+      playerUserId: userId || null,
+      challengeId: challengeId || null,
+    },
+  });
+  return game;
 }
 
+export async function createGameWithPuzzle(
+  secretCode: string[],
+  userId?: string
+): Promise<string> {
+  const gameId: string = await prisma.$transaction(async (tx) => {
+    const puzzle = await tx.puzzle.create({
+      data: {
+        secretCode: secretCode,
+        createdByUserId: userId,
+      },
+    });
+    const game = await tx.game.create({
+      data: {
+        puzzleId: puzzle.id,
+        playerUserId: userId,
+      },
+    });
+    return game.id;
+  });
+  return gameId;
+}
 
-export async function getGamesPaginatedByUserId(userId: string, pageSize: number, skipAmount: number): Promise<Game[]> {
-    const games: Game[] = await prisma.game.findMany({
-       where: { playerUserId: userId },
-       orderBy: { createdAt: "desc" },
-       take: pageSize,
-       skip: skipAmount,
-     });
-     return games;
+export async function getGamesPaginatedByUserId(
+  userId: string,
+  pageSize: number,
+  skipAmount: number
+): Promise<Game[]> {
+  const games: Game[] = await prisma.game.findMany({
+    where: { playerUserId: userId },
+    orderBy: { createdAt: "desc" },
+    take: pageSize,
+    skip: skipAmount,
+  });
+  return games;
 }
 
 export async function countGamesByUserId(userId: string): Promise<number> {
-    const totalGames = await prisma.game.count({
-       where: { playerUserId: userId },
-     });
-     return totalGames;
+  const totalGames = await prisma.game.count({
+    where: { playerUserId: userId },
+  });
+  return totalGames;
 }
-
 
 export async function persistAttemptAndResponse(
   currentFeedback: FeedbackStatus[],
