@@ -17,7 +17,7 @@ export const NavBar = ({ user }: { user: User | null }) => {
   useEffect(() => {
     console.log(user);
   }, [user]);
-  const { data: notifications } = useNotifications();
+  const { data: notifications } = useNotifications(user != null);
   const { mutate: markNotificationsAsRead } = useSetNoticationReadAt();
 
   const handleOpenNotifications = () => {

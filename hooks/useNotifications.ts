@@ -5,11 +5,13 @@ import {
 } from "@/app/actions/notificationActions";
 import { NotificationFormat } from "@/lib/notification/types";
 
-export const useNotifications = () => {
+//isEable avoid the render if the user is not authenticated, this is usefull in navbar component
+export const useNotifications = (isEnable : boolean = true) => {
   return useQuery<NotificationFormat[]>({
     queryKey: ["notifications"],
     queryFn: () => getNotificationActions(),
     staleTime: Infinity,
+    enabled :isEnable 
   });
 };
 
