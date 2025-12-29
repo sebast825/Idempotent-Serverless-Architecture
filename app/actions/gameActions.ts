@@ -64,3 +64,9 @@ export const createGameAction = async (
   const { user } = await createClient();
   return createGame(puzzleId, challengeId, user?.id);
 };
+
+export const getGameForReview = async  (gameId: string):Promise<GameWithAttemptsAndPuzzle> => {
+  const game : GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
+  if(game.status == "PLAYING") throw new Error("This game is not finished yet.")
+    return game;
+}

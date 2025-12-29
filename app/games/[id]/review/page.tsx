@@ -1,5 +1,5 @@
 "use client";
-import { getGameFormated } from "@/app/actions/gameActions";
+import { getGameForReview } from "@/app/actions/gameActions";
 import { useQuery } from "@tanstack/react-query";
 import { use } from "react";
 import AttemptRow from "../../components/attemptRow";
@@ -16,7 +16,7 @@ export default function ReviewGame({
 
   const { data: game } = useQuery({
     queryKey: ["game", id],
-    queryFn: () => getGameFormated(id),
+    queryFn: () => getGameForReview(id),
 
     refetchOnWindowFocus: false,
     staleTime: Infinity,
@@ -83,12 +83,9 @@ export default function ReviewGame({
                       Secret Code to Crack
                     </h6>
                     <GuessRow
-                      currentGuess={
-                        game.puzzle.secretCode as MastermindColor[]
-                      }
+                      currentGuess={game.puzzle.secretCode as MastermindColor[]}
                       handleRemoveColor={() => {}}
                       btnPointer={false}
-                      
                     />
                   </div>
                 </div>
