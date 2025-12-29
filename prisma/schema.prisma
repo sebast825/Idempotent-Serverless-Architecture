@@ -38,7 +38,7 @@ model Game {
   attempts       Attempt[]
   createdAt      DateTime  @default(now())
   challengeId    String?
-  challenges     Challenge? @relation("ChallengeGames",fields: [challengeId], references: [id])
+  challenge     Challenge? @relation("ChallengeGames",fields: [challengeId], references: [id])
   notification Notification[]
   sourceForChallenges Challenge[] @relation("SourceGame")
 }
