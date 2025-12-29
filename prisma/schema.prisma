@@ -25,7 +25,7 @@ model Puzzle {
   secretCode        String[] // Stored as a string array
   createdAt         DateTime @default(now())
   games             Game[]
-  challenge         Challenge?
+  challenge         Challenge[]
 }
 
 model Game {
@@ -38,9 +38,9 @@ model Game {
   attempts       Attempt[]
   createdAt      DateTime  @default(now())
   challengeId    String?
-  challenge      Challenge? @relation("ChallengeGames",fields: [challengeId], references: [id])
+  challenges     Challenge? @relation("ChallengeGames",fields: [challengeId], references: [id])
   notification Notification[]
-  sourceForChallenge Challenge? @relation("SourceGame")
+  sourceForChallenges Challenge[] @relation("SourceGame")
 }
 
 model Attempt {
@@ -64,9 +64,9 @@ model Challenge {
   isGhost         Boolean        @default(false)
   createdAt       DateTime      @default(now())
 
-  puzzleId        String @unique
+  puzzleId        String 
   puzzle          Puzzle      @relation(fields: [puzzleId],references:[id])
-  challengerGameId          String? @unique
+  challengerGameId          String? 
   challengerGame  Game?           @relation("SourceGame",fields: [challengerGameId],references:[id])
 
   games           Game[]      @relation("ChallengeGames")
