@@ -26,9 +26,10 @@ export const createCreatorChallengeAction = async (
 };*/
 
 export const createGhostChallengeAction = async (
-  gameId: string
+  gameId: string,
+  puzzleId:string
 ): Promise<string> => {
-  const config = createGhostPayload(gameId);
+ // const config = createGhostPayload(gameId);
   const { user } = await createClient();
   const userId: string | null = user?.id || null;
   if (!userId) {
@@ -36,8 +37,9 @@ export const createGhostChallengeAction = async (
   }
   const challengeId = await createChallenge(
     userId,
-    ChallengeType.GHOST,
-    config
+    ChallengeType.SYSTEM,
+    puzzleId,
+    gameId
   );
   return challengeId;
 };

@@ -13,11 +13,12 @@ const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   try {
     const challenge: ChallengeWithConfig = await getChallenge(id);
     if (!challenge) {
+      console.log("")
       return <NotFound message="Challenge not found" />;
     }
     let game;
-    if (challenge.config.originalGameId) {
-      game = await findExistingGame(challenge.config.originalGameId);
+    if (challenge.challengerGameId) {
+      game = await findExistingGame(challenge.challengerGameId);
     } else {
       return <NotFound message="Original game not found" />;
     }

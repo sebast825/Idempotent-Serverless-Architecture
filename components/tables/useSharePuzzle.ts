@@ -23,8 +23,8 @@ export const useSharePuzzle = () => {
     },
   });
   const { mutateAsync: createChallenge } = useMutation({
-    mutationFn: async (gameId: string): Promise<string> => {
-      return createGhostChallengeAction(gameId);
+    mutationFn: async ({ gameId, puzzleId }: { gameId: string; puzzleId: string }): Promise<string> => {
+      return createGhostChallengeAction(gameId,puzzleId);
     },
     onError: (err) => {
       console.error("Error creating ghost challenge:", err);
@@ -61,7 +61,7 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
     let coloredAttempt = attempt.guess
       .map((color) => convertColorToEmoji(color))
       .join("");
-    let feedbackAttempt = attempt.results
+    let feedbackAttempt = attempt.result
       .map((feedback) => converFeedbackToEmoji(feedback))
       .join("");
     const text = `${coloredAttempt} ➔ ${feedbackAttempt} `;
@@ -77,8 +77,9 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
   const handleSharePuzzle = async (gameId: string): Promise<void> => {
     try {
       console.log(gameId);
-      const challengeId = await createChallenge(gameId);
       const game: GameWithAttempts = await mutateAsync(gameId);
+            const challengeId = await createChallenge({gameId,puzzleId:game.puzzleId});
+
       const text: string = generateText(game, challengeId);
       navigator.clipboard.writeText(text);
       success("Copied to clipboard!");

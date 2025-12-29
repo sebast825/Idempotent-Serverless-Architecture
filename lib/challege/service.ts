@@ -40,18 +40,21 @@ export const getChallengeById = async (
 export async function createChallenge(
   userId: string,
   type: ChallengeType,
-  config: ChallengeConfig
+  puzzleId : string,
+  gameId : string
 ): Promise<string> {
   try {
     const challenge = await prisma.challenge.create({
       data: {
         challengerId: userId,
         type: type,
-        config: config as unknown as Prisma.InputJsonValue,
+        puzzleId:puzzleId,
+        challengerGameId : gameId
       },
     });
     return challenge.id;
-  } catch (err) {
+  } catch (err:any) {
+    console.log(err.message)
     throw new Error(ERRORS_GENERIC.GENERIC);
   }
 }
