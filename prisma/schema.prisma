@@ -25,6 +25,7 @@ model Puzzle {
   secretCode        String[] // Stored as a string array
   createdAt         DateTime @default(now())
   games             Game[]
+  challenge         Challenge?
 }
 
 model Game {
@@ -37,8 +38,9 @@ model Game {
   attempts       Attempt[]
   createdAt      DateTime  @default(now())
   challengeId    String?
-  challenge      Challenge? @relation(fields: [challengeId], references: [id])
+  challenge      Challenge? @relation("ChallengeGames",fields: [challengeId], references: [id])
   notification Notification[]
+  sourceForChallenge Challenge? @relation("SourceGame")
 }
 
 model Attempt {
@@ -51,18 +53,24 @@ model Attempt {
   createdAt    DateTime @default(now())
 }
 enum ChallengeType {
-  GHOST
-  CREATOR
+  SYSTEM
+  CUSTOM
 }
 model Challenge {
   id              String        @id @default(uuid())
   challengerId    String
   challenger      Profile       @relation(fields: [challengerId], references: [id])
-  type            ChallengeType  
-  config          Json         
+  type            ChallengeType    
+  isGhost         Boolean        @default(false)
   createdAt       DateTime      @default(now())
-  games           Game[]
-  notification Notification[]
+
+  puzzleId        String @unique
+  puzzle          Puzzle      @relation(fields: [puzzleId],references:[id])
+  challengerGameId          String? @unique
+  challengerGame  Game?           @relation("SourceGame",fields: [challengerGameId],references:[id])
+
+  games           Game[]      @relation("ChallengeGames")
+  notification    Notification[]  
 }
 
 enum NotificationType {
