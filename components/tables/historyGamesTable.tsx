@@ -7,7 +7,6 @@ import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
 import { useSharePuzzle } from "./useSharePuzzle";
 import { useState } from "react";
-import { MessageCard } from "../cards/messageCard";
 import { ROUTES } from "@/lib/routes";
 
 export function HistoryGamesTable() {
@@ -40,10 +39,9 @@ export function HistoryGamesTable() {
   };
   if (historyGames?.data.length == 0) {
     return (
-      <MessageCard
-        title={"Games History"}
-        text={"Still no games played"}
-      ></MessageCard>
+      <div className="w-100 text-center p-5">
+        <p>No games aviable</p>
+      </div>
     );
   }
   return (
