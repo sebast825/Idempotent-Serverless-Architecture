@@ -33,7 +33,7 @@ export const getGameFormated = async (
   const formattedAttempts = game.attempts.map((attempt) => ({
     ...attempt,
     guess: attempt.guess as MastermindColor[],
-    results: attempt.result as FeedbackStatus[],
+    result: attempt.result as FeedbackStatus[],
   }));
   return {
     ...game,

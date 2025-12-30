@@ -32,7 +32,7 @@ export const useMastermindApi = (gameId: string) => {
 
         const newAttempt = {
           guess: variables.finalGuess,
-          results: _data.feedback,
+          result: _data.feedback,
           submissionId: variables.submissionId,
         };
         return {
