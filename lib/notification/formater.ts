@@ -1,7 +1,8 @@
 import { NotificationType } from "@prisma/client";
 import { NotifcationWithRelations, NotificationFormat } from "./types";
+import { ROUTES } from "../routes";
 
-export  const formatNotifications = (
+export const formatNotifications = (
   notifications: NotifcationWithRelations[]
 ): NotificationFormat[] => {
   const formatedNotifications: NotificationFormat[] = [];
@@ -59,6 +60,6 @@ const formatNotifcationChallengeComplete = (
   notificationResponse.message = `${
     notification.actor?.username || "Someone"
   } ${messageText}`;
-  notificationResponse.link = `/games/${notification.gameId}/review`;
+  notificationResponse.link = ROUTES.reviewGame(notification.gameId!);
   return notificationResponse;
 };

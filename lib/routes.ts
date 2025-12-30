@@ -1,5 +1,5 @@
 export const ROUTES = {
   game: (id: string) => `/games/${id}`,
-  not_found :()=>"/404"
-
-}
+  reviewGame: (id: string) => `/games/${id}/review`,
+  not_found: () => "/404",
+};

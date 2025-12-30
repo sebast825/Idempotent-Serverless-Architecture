@@ -28,7 +28,7 @@ export function HistoryGamesTable() {
     closeModal();
   }
   function handleShowRepetition(gameId: string) {
-    router.push(`/game/${gameId}/review`);
+    router.push(ROUTES.reviewGame(gameId));
     closeModal();
   }
 
