@@ -1,11 +1,12 @@
 import { findExistingGame } from "@/app/actions/gameActions";
-import { NotFound } from "@/app/404/page";
 
 import { ChallengeGhost } from "../components/challengeGhost";
 import {
   ChallengeWithConfig,
   getChallenge,
 } from "@/app/actions/challengeActions";
+import { redirect } from "next/navigation";
+import { ROUTES } from "@/lib/routes";
 
 const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -13,27 +14,26 @@ const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   try {
     const challenge: ChallengeWithConfig = await getChallenge(id);
     if (!challenge) {
-      console.log("")
-      return <NotFound message="Challenge not found" />;
+      redirect(ROUTES.not_found())
     }
     let game;
     if (challenge.challengerGameId) {
       game = await findExistingGame(challenge.challengerGameId);
     } else {
-      return <NotFound message="Original game not found" />;
+      redirect(ROUTES.not_found());
     }
 
-    if (!game) return <NotFound message="Game not found" />;
+    if (!game) redirect(ROUTES.not_found());
 
-    return <ChallengeGhost attempts={game.attempts} puzzleId={game.puzzleId} challengeId={challenge.id} />;
-  } catch (error) {
-    console.error("Error loading puzzle page:", error);
     return (
-      <NotFound
-        title="Server Error"
-        message="Something went wrong on our side."
+      <ChallengeGhost
+        attempts={game.attempts}
+        puzzleId={game.puzzleId}
+        challengeId={challenge.id}
       />
     );
+  } catch (error) {
+    redirect(ROUTES.not_found());
   }
 };
 

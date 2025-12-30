@@ -6,9 +6,9 @@ interface NotFoundProps {
   title?: string;
 }
 
-export const NotFound = ({
-  message = "The puzzle you are looking for does not exist or has expired.",
-  title = "Puzzle Not Found",
-}: NotFoundProps) => {
+export default function NotFound  ({
+  message = "Something went wrong",
+  title = "Not Found",
+}: NotFoundProps)  {
   return <FeedbackDisplay title={title} message={message} />;
 };
