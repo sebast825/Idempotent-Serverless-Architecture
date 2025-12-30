@@ -9,6 +9,8 @@ interface PropsFeatureCard {
   svgChildren: React.ReactNode;
   btnVariant: string;
   btnText: string;
+  btnAction:()=>void
+  btndisable?:boolean
 }
 export const FeatureCard = (props: PropsFeatureCard) => {
   const {
@@ -19,6 +21,8 @@ export const FeatureCard = (props: PropsFeatureCard) => {
     btnText,
     text,
     description,
+    btnAction,
+    btndisable = false
   } = props;
   return (
     <>
@@ -54,6 +58,8 @@ export const FeatureCard = (props: PropsFeatureCard) => {
               variant={btnVariant}
               className="w-100 mt-auto fw-bold py-2 text-uppercase"
               style={{ borderRadius: "12px" }}
+              onClick={btnAction}
+              disabled={btndisable}
             >
               {btnText}
             </Button>

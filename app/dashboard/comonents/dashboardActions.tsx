@@ -1,7 +1,11 @@
 import { FeatureCard } from "@/components/cards/featureCard";
+import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
+import { useModalStore } from "@/store/useModalStore";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 export const DashboardActions = () => {
+    const { createPuzzleAndGame, isPending } = useCreatePuzzleAndGame();
+    const openModal = useModalStore((state) => state.openModal);
   return (
     <div className="py-3 py-md-3 m-md-5 rounded-3 my-4 bg-primary">
       <Row className="g-4 justify-content-center p-3 p-md-5">
@@ -11,6 +15,8 @@ export const DashboardActions = () => {
           svgChildren={<polygon points="5 3 19 12 5 21 5 3"></polygon>}
           btnVariant={"outline-primary"}
           btnText={"PLAY NOW"}
+          btnAction={()=>createPuzzleAndGame()}
+          btndisable={isPending}
           text="Quick Play"
           description="Jump straight into the action and crack the secret code."
         />
@@ -24,6 +30,7 @@ export const DashboardActions = () => {
               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
             </>
           }
+           btnAction={()=>openModal("CUSTOM_CHALLENGE")}
           btnVariant={"outline-success"}
           btnText={"CREATE CHALLENGE"}
           text="Custom Challenge"
@@ -42,6 +49,7 @@ export const DashboardActions = () => {
           }
           btnVariant={"outline-warning"}
           btnText={"VIEW STATISTICS"}
+          btnAction={()=>openModal("USERSTATS")}
           text="Performance"
           description="Analyze your accuracy and effectiveness by color."
         />
