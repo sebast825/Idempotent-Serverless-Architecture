@@ -47,12 +47,14 @@ export const ProgressCard = (props: propsProgressCard) => {
               />
             </ProgressBar>
           </Col>
-          <Col md={4} className="text-center mt-3 mt-md-0">
-            <div className="h2 mb-0 fw-bold">
-              {Math.round((rightValue / totalValue) * 100)}%
-              <span className="h6"> Win Rate</span>
-            </div>
-          </Col>
+          {rightValue != 0 && (
+            <Col md={4} className="text-center mt-3 mt-md-0">
+              <div className="h2 mb-0 fw-bold">
+                {Math.round((rightValue / totalValue) * 100)}%
+                <span className="h6"> Win Rate</span>
+              </div>
+            </Col>
+          )}
         </Row>
       </Card>
     </Col>
