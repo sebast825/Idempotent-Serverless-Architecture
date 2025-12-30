@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 
 interface propsPuzzleUi {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   puzzleId: string;
   challengeId: string;
 }

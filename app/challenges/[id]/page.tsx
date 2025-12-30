@@ -7,6 +7,8 @@ import {
 } from "@/app/actions/challengeActions";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/routes";
+import { isRedirectError } from "next/dist/client/components/redirect";
+import { ChallengeUi } from "../components/challengeUi";
 
 const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -15,6 +17,10 @@ const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const challenge: ChallengeWithConfig = await getChallenge(id);
     if (!challenge) {
       redirect(ROUTES.not_found())
+    }
+    if(challenge.type == "CUSTOM"){
+      return <ChallengeUi  puzzleId={challenge.puzzleId} challengeId={challenge.id}></ChallengeUi>
+ 
     }
     let game;
     if (challenge.challengerGameId) {
@@ -33,6 +39,10 @@ const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
       />
     );
   } catch (error) {
+    //when use redirect next throws an error, this ensure the redirect works
+    if (isRedirectError(error)) {
+      throw error;
+    }
     redirect(ROUTES.not_found());
   }
 };
