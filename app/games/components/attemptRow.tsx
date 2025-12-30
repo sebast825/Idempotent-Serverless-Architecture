@@ -1,6 +1,6 @@
 import { FeedbackStatus, MastermindColor } from "@/lib/game/types";
 import { FeedbackIcons } from "./feedbackIcons";
-import ColorCircle from "./colorCircle";
+import ColorCircle from "../../../components/game/colorCircle";
 
 interface propsAttemptRow {
   attemptGuess: MastermindColor[];

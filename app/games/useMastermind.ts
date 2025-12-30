@@ -2,8 +2,8 @@
 import { MastermindColor, GameStatus, AttemptResponse } from "@/lib/game/types";
 import { useState } from "react";
 import { v4 } from "uuid";
-import { useCurrentGuess } from "./useCurrentGuess";
 import { useMastermindApi } from "./useMastermindApi";
+import { useColorSelection } from "@/components/game/useColorSelection";
 
 export function useMastermind(gameId: string) {
   const [secretCode, setSecretCode] = useState<(MastermindColor | null)[]>(
@@ -15,7 +15,7 @@ export function useMastermind(gameId: string) {
     handleSelectColor,
     currentGuess,
     clearCurrentGuess,
-  } = useCurrentGuess();
+  } = useColorSelection();
   const history = game?.attempts ?? [];
   const status: GameStatus = (game?.status as GameStatus) ?? "PLAYING";
 

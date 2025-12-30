@@ -1,7 +1,7 @@
 "use client";
 
 import AttemptRow from "../../components/attemptRow";
-import GuessRow from "../../components/guessRow";
+import ColorSequenceRow from "../../../../components/game/colorSequenceRow";
 import { GameWithAttemptsAndPuzzle, MastermindColor } from "@/lib/game/types";
 import { Card, Badge } from "react-bootstrap";
 
@@ -67,7 +67,7 @@ export default function ReviewGame({game} : {game: GameWithAttemptsAndPuzzle}) {
                     <h6 className="text-slate-400 mb-3 uppercase small font-bold">
                       Secret Code to Crack
                     </h6>
-                    <GuessRow
+                    <ColorSequenceRow
                       currentGuess={game.puzzle.secretCode as MastermindColor[]}
                       handleRemoveColor={() => {}}
                       btnPointer={false}

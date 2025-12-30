@@ -1,7 +1,7 @@
 import { MastermindColor } from "@/lib/game/types";
 import { useState } from "react";
 
-export const useCurrentGuess = () => {
+export const useColorSelection = () => {
   const [currentGuess, setCurrentGuess] = useState<(MastermindColor | null)[]>(
     Array(4).fill(null)
   );

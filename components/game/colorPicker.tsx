@@ -13,7 +13,6 @@ export default function ColorPicker(props: propsColorPicker) {
   return (
     <>
       <div className="d-flex flex-column align-items-center justify-content-center w-100 gap-0 px-0 py-4 bottom">
-        {" "}
         <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest text-light">
           Select Color
         </h4>

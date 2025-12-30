@@ -1,6 +1,6 @@
 import { GameStatus, MastermindColor } from "@/lib/game/types";
 import { Button } from "react-bootstrap";
-import GuessRow from "./guessRow";
+import ColorSequenceRow from "../../../components/game/colorSequenceRow";
 
 export interface propsGameResultModal {
   code: (MastermindColor | null)[];
@@ -22,7 +22,7 @@ export default function GameResultModal(props: propsGameResultModal) {
             <h2 className="text-danger">Game Over 💀</h2>
           )}
           <p>The secret code is:</p>
-          <GuessRow currentGuess={code} handleRemoveColor={() => {}}/>
+          <ColorSequenceRow currentGuess={code} handleRemoveColor={() => {}}/>
           <div className="d-flex gap-3 p-2">
             <Button className="w-100" onClick={() => btnPrimary()} disabled={btnPrimaryDisable}>
               Play Again

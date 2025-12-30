@@ -1,9 +1,9 @@
 "use client";
 
 import AttemptRow from "@/app/games/components/attemptRow";
-import ColorPicker from "@/app/games/components/colorPicker";
+import ColorPicker from "@/components/game/colorPicker";
 import GameResultModal from "@/app/games/components/gameResultModal";
-import GuessRow from "@/app/games/components/guessRow";
+import ColorSequenceRow from "@/components/game/colorSequenceRow";
 import { useMastermind } from "../useMastermind";
 import { use, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
@@ -98,10 +98,10 @@ export default function GameDashboard({
 
         {/* 1. Active Guess Display */}
         <div className=" w-100">
-          <GuessRow
+          <ColorSequenceRow
             currentGuess={currentGuess}
             handleRemoveColor={(e) => handleRemoveColor(e)}
-          ></GuessRow>
+          ></ColorSequenceRow>
           {/* 2. Color Selection Palette */}
           <Card className="shadow-sm bg-dark bg-opacity-50 text-light rounded-0 mt-2">
             <Card.Body className="text-center">

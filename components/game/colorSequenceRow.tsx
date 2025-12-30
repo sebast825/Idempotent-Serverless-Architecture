@@ -1,13 +1,13 @@
 import { MastermindColor } from "@/lib/game/types";
 import ColorCircle from "./colorCircle";
 
-interface PropsGuessRow {
+interface PropsColorSequenceRow {
   currentGuess: (MastermindColor | null)[];
   handleRemoveColor: (e: number) => void;
   btnPointer?: boolean;
 }
 
-export default function GuessRow(props: PropsGuessRow) {
+export default function ColorSequenceRow(props: PropsColorSequenceRow) {
   const { currentGuess, handleRemoveColor, btnPointer = true } = props;
   return (
     <div className="d-flex justify-content-center p-1 ">
