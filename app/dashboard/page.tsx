@@ -1,12 +1,10 @@
 "use client";
 
-import { Button } from "react-bootstrap";
 import { Opening } from "@/components/opening";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
-import { GenericModal } from "@/components/modals/genericModal";
 import { useState } from "react";
-import { HistoryGamesTable } from "@/components/tables/historyGamesTable";
 import { useModalStore } from "@/store/useModalStore";
+import { DashboardActions } from "./comonents/dashboardActions";
 
 export default function Dashboard() {
   const { createPuzzleAndGame, isPending } = useCreatePuzzleAndGame();
@@ -17,15 +15,7 @@ export default function Dashboard() {
     <>
       <div className="margin-top px-2">
         <Opening />
-        <button onClick={() => openModal("HISTORYGAMES")}>Show modal</button>
-        {showModal && (
-          <GenericModal onClose={() => setShowModal(false)}>
-            <HistoryGamesTable />
-          </GenericModal>
-        )}
-        <Button onClick={() => createPuzzleAndGame()} disabled={isPending}>
-          Start Game!
-        </Button>
+        <DashboardActions></DashboardActions>
       </div>
     </>
   );
