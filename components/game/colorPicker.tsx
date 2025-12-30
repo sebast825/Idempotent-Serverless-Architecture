@@ -7,9 +7,10 @@ interface propsColorPicker {
   currentGuess: (MastermindColor | null)[];
   submit: () => void;
   disableBtn: boolean;
+  btnText?:string
 }
 export default function ColorPicker(props: propsColorPicker) {
-  const { handleSelect, currentGuess, submit, disableBtn } = props;
+  const { handleSelect, currentGuess, submit, disableBtn,btnText="Validate" } = props;
   return (
     <>
       <div className="d-flex flex-column align-items-center justify-content-center w-100 gap-0 px-0 py-4 bottom">
@@ -31,7 +32,7 @@ export default function ColorPicker(props: propsColorPicker) {
           ))}
         </div>
         <Button className="mt-2" onClick={submit} disabled={disableBtn}>
-          Validate
+          {btnText}
         </Button>
       </div>
     </>

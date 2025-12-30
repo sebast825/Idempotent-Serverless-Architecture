@@ -5,6 +5,7 @@ import { GenericModal } from "./genericModal";
 import { HistoryGamesTable } from "../tables/historyGamesTable";
 import { NotificationList } from "../lists/notificationList";
 import { StatsGrid } from "../statsGrid";
+import { CreateCustomChallenge } from "../createCustomChallenge";
 
 export const ModalManager = () => {
   const { isOpen, closeModal, view } = useModalStore();
@@ -26,6 +27,14 @@ export const ModalManager = () => {
               <StatsGrid/>
             </GenericModal>
           )}
+           {view == "CUSTOM_CHALLENGE" && (
+            <GenericModal onClose={closeModal} title={"Create Custom Challenge"}>
+              <CreateCustomChallenge/>
+            </GenericModal>
+          )}
+
+
+          
     </>
   );
 };
