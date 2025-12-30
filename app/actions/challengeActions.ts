@@ -5,25 +5,31 @@ import { GAME_ERRORS } from "../../constants/errorMessages";
 import { createChallenge, getChallengeById } from "@/lib/challege/service";
 import { ChallengeConfig } from "@/lib/challege/types";
 import { createGhostPayload } from "@/lib/challege/utils";
+import { MastermindColor } from "@/lib/game/types";
 
 // 2. Creamos un tipo que extiende el Challenge de Prisma pero sobrescribe 'config'
 export type ChallengeWithConfig = Omit<Challenge, "config"> & {
   config: ChallengeConfig;
 };
-/*
-export const createCreatorChallengeAction = async (
 
-  secret: MastermindColor[]
+export const createCustomChallengeAction = async (
+
+  puzzleId: string
 ): Promise<string> => {
-  const config = createCreatorPayload(secret);
+    const { user } = await createClient();
+  if (!user) {
+    throw new Error(GAME_ERRORS.AUTH_REQUIRED);
+  }
+
 
   const challengeId = await createChallenge(
-    userId,
-    ChallengeType.CREATOR,
-    config
+    user.id,
+    ChallengeType.CUSTOM,
+    puzzleId
+    
   );
   return challengeId;
-};*/
+};
 
 export const createGhostChallengeAction = async (
   gameId: string,

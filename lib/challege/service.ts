@@ -41,7 +41,7 @@ export async function createChallenge(
   userId: string,
   type: ChallengeType,
   puzzleId : string,
-  gameId : string
+  gameId? : string
 ): Promise<string> {
   try {
     const challenge = await prisma.challenge.create({

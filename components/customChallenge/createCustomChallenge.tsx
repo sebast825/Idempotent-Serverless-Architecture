@@ -1,10 +1,19 @@
-import ColorSequenceRow from "./game/colorSequenceRow";
-import { useColorSelection } from "./game/useColorSelection";
-import ColorPicker from "./game/colorPicker";
+
+import ColorSequenceRow from "../game/colorSequenceRow";
+import { useColorSelection } from "../game/useColorSelection";
+import ColorPicker from "../game/colorPicker";
+import { useCreateCustomChallenge } from "./useCreateCustomChallenge";
+import { MastermindColor } from "@/lib/game/types";
 
 export const CreateCustomChallenge = () => {
   const { handleRemoveColor, handleSelectColor, currentGuess } =
     useColorSelection();
+  const { handleSharePuzzle } = useCreateCustomChallenge();
+  const hadnleSubmit = () => {
+    if (currentGuess.indexOf(null) === -1) {
+      handleSharePuzzle(currentGuess as unknown as MastermindColor[]);
+    }
+  };
   return (
     <div className=" m-1 mx-md-5 my-md-3 ">
       <div className=" rounded-3 p-3 mb-2  bg-dark  w-100">
@@ -20,7 +29,7 @@ export const CreateCustomChallenge = () => {
         <ColorPicker
           handleSelect={(e) => handleSelectColor(e)}
           currentGuess={currentGuess}
-          submit={() => {}}
+          submit={() => hadnleSubmit()}
           disableBtn={currentGuess.indexOf(null) !== -1}
           btnText="Create Challenge"
         ></ColorPicker>

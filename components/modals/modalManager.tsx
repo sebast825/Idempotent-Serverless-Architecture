@@ -5,7 +5,7 @@ import { GenericModal } from "./genericModal";
 import { HistoryGamesTable } from "../tables/historyGamesTable";
 import { NotificationList } from "../lists/notificationList";
 import { StatsGrid } from "../statsGrid";
-import { CreateCustomChallenge } from "../createCustomChallenge";
+import { CreateCustomChallenge } from "../customChallenge/createCustomChallenge";
 
 export const ModalManager = () => {
   const { isOpen, closeModal, view } = useModalStore();
