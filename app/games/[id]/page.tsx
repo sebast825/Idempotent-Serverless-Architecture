@@ -9,6 +9,7 @@ import { use, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
+import { Card } from "react-bootstrap";
 
 export default function GameDashboard({
   params,
@@ -87,7 +88,7 @@ export default function GameDashboard({
                   key={history.length - index}
                   props={{
                     attemptGuess: attempt.guess,
-                    results: attempt.results,
+                    results: attempt.result,
                   }}
                 />
               ))}
@@ -102,13 +103,18 @@ export default function GameDashboard({
             handleRemoveColor={(e) => handleRemoveColor(e)}
           ></GuessRow>
           {/* 2. Color Selection Palette */}
-
-          <ColorPicker
-            handleSelect={(e) => handleSelectColor(e)}
-            currentGuess={currentGuess}
-            submit={() => onSubmit()}
-            disableBtn={isPending || status !== "PLAYING"}
-          ></ColorPicker>
+          <Card className="shadow-sm bg-dark bg-opacity-50 text-light rounded-0 mt-2">
+            <Card.Body className="text-center">
+              <div className="bg-black bg-opacity-50 rounded-3 py-3">
+                <ColorPicker
+                  handleSelect={(e) => handleSelectColor(e)}
+                  currentGuess={currentGuess}
+                  submit={() => onSubmit()}
+                  disableBtn={isPending || status !== "PLAYING"}
+                ></ColorPicker>
+              </div>
+            </Card.Body>
+          </Card>
         </div>
       </div>
     </>

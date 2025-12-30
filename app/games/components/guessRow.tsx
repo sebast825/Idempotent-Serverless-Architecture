@@ -10,8 +10,8 @@ interface PropsGuessRow {
 export default function GuessRow(props: PropsGuessRow) {
   const { currentGuess, handleRemoveColor, btnPointer = true } = props;
   return (
-    <div className="d-flex justify-content-center p-1">
-      <div className="bg-dark p-3 px-4 rounded-5 ">
+    <div className="d-flex justify-content-center p-1 ">
+      <div className="bg-dark bg-opacity-75 p-3 px-4 rounded-4 ">
         {currentGuess.map((color, index) => (
           <ColorCircle
             key={index }
