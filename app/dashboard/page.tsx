@@ -3,17 +3,18 @@
 import { Opening } from "@/components/opening";
 
 import { DashboardActions } from "./comonents/dashboardActions";
+import { Footer } from "@/components/footer";
 
 export default function Dashboard() {
   return (
     <>
-
-
-     <div className="margin-top px-2 px-md-5">
+      <div className="d-flex flex-column  min-vh-100">
+        <div className="flex-grow-1 margin-top px-2 px-md-5  ">
           <Opening />
-          <DashboardActions></DashboardActions>
+          <DashboardActions />
         </div>
-   
+        <Footer />
+      </div>
     </>
   );
 }
