@@ -13,7 +13,7 @@ export const EngineeringDecisionsSection = () => {
              <Badge bg="danger" className="mb-3 px-3 py-2  bg-opacity-75">
               SERVERLESS BACKEND · CASE STUDY
             </Badge>
-         <div className="mt-3 bg-info bg-opacity-50 p-4 rounded-3 text-dark" style={{ width: "fit-content", margin: "0 auto" }}>
+         <div className="mt-3 bg-info bg-opacity-50 p-4 rounded-3 text-dark">
             <h3 className="fw-bold mb-1">Engineering Decisions</h3>
             <p className="mx-auto" style={{ maxWidth: 720 }}>
               The value of this project lies not in the game itself, but in the
@@ -23,7 +23,7 @@ export const EngineeringDecisionsSection = () => {
             </div>
           </div>
         </div>
-        <div className="d-flex flex-column gap-4">
+        <div className="d-flex flex-column gap-4 mt-3">
           <Row className="g-4 justify-content-center">
             {engineeringDecisions &&
               engineeringDecisions.map((elem, index) => (
@@ -39,7 +39,10 @@ export const EngineeringDecisionsSection = () => {
                 </Col>
               ))}
           </Row>
-          <Row className="px-5 mx-5 py-5 gap-3 bg-info rounded-3">
+       <Row className="px-3 px-md-5 mx-0 mx-md-5 py-5 gap-3 bg-info rounded-3 text-dark">
+
+
+           
             <h3 className="text-dark fw-bold mb-2">Execution Model & Client Boundaries</h3>
             <div>
               The system is designed around a strictly server-authoritative
@@ -72,7 +75,8 @@ export const EngineeringDecisionsSection = () => {
               assumptions on the frontend, and guarantees consistency,
               correctness, and safety under concurrent and unreliable
               conditions.
-            </div>{" "}
+            </div>
+        
           </Row>
           
         </div>
