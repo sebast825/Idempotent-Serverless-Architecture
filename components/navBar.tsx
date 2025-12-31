@@ -49,10 +49,10 @@ export const NavBar = ({ user }: { user: User | null }) => {
               </svg>
             </Link>
           </div>
-          <div className="d-flex">
+          <div className="d-flex align-items-center">
             {!user ? (
               <NavDropdown.Item
-                as={Link}
+                className="text-light"
                 onClick={loginWithGoogle}
                 disabled={isLoading}
               >
@@ -120,7 +120,7 @@ export const NavBar = ({ user }: { user: User | null }) => {
                   onClick={() => openModal("GAME_RULES")}
                   className="dropdown-item py-1 px-3  text-dark"
                 >
-                  How to Play{" "}
+                  How to Play
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => signOut()}
