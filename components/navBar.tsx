@@ -100,7 +100,22 @@ export const NavBar = ({ user }: { user: User | null }) => {
                 >
                   Performance
                 </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item
+                  as={Link}
+                  href={ROUTES.home()}
+                  className="dropdown-item py-1 px-3"
+                >
+                  Home
+                </NavDropdown.Item>
 
+                <NavDropdown.Item
+                  as={Link}
+                  href={ROUTES.dashboard()}
+                  className="dropdown-item py-1 px-3"
+                >
+                  Dashboard
+                </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => signOut()}
                   disabled={isLoading}
