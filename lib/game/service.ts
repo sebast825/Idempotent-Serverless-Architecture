@@ -127,6 +127,7 @@ export async function persistAttemptAndResponse(
     : "PLAYING";
 
   await prisma.$transaction(async (tx) => {
+    try {
     await tx.attempt.create({
       data: {
         gameId: game.id,
@@ -135,6 +136,14 @@ export async function persistAttemptAndResponse(
         result: currentFeedback,
       },
     });
+      } catch (e: any) {
+    // Prisma unique constraint error
+    if (e.code === "P2002") {
+      // attempt already processed, handle 
+      return;
+    }
+    throw e;
+  }
     //only update is game is finished
     if (isGameFinished) {
       await tx.game.update({
