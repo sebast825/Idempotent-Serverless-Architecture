@@ -47,3 +47,12 @@ a {
     margin-top: 70px !important;
   }
 }
+
+.bgGradient {
+  background: linear-gradient(
+    750deg,
+    #0052a5ff 0%,
+    #2ac4dfff 35%,
+    #1088ffff 100%
+  );
+}

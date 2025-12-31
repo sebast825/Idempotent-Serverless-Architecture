@@ -2,7 +2,8 @@ export const Opening = () => {
   return (
     <div
       id="hero"
-      className="text-white text-center py-1 py-md-3 m-md-5 bg-primary border rounded-3 bgColorGradient"
+      className="text-dark text-center py-1 py-md-3 m-md-5  border rounded-3 bgGradient shadow shadow-lg "
+  
     >
       <div className="py-5 ">
         <h1 className="display-4 fw-bold mb-3">Welcome</h1>

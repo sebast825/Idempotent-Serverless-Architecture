@@ -10,17 +10,10 @@ export default function ReviewGame({game} : {game: GameWithAttemptsAndPuzzle}) {
   return (
     <>
       <div
-        className="d-flex flex-column pt-5 "
+        className="d-flex flex-column pt-5 bgGradient"
         style={{
           height: "100vh",
-          background: `
-    linear-gradient(
-        180deg,
-        #1a4a7aff 0%,
-        #2b5e91ff 35%,
-        #126ecaff 100%
-      )
-    `,
+
         }}
       >
         <div

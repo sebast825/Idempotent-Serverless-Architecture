@@ -60,24 +60,17 @@ export default function GameDashboard({
       )}
 
       <div
-        className="d-flex flex-column pt-5 "
+        className="d-flex flex-column pt-5 bg-primary bg-opacity-100 bgGradient"
         style={{
           height: "100vh",
-          background: `
-    linear-gradient(
-        180deg,
-        #1a4a7aff 0%,
-        #2b5e91ff 35%,
-        #126ecaff 100%
-      )
-    `,
+   
         }}
       >
         <div
           className="d-flex mt-auto flex-column  justify-content-center  items-center gap-10 py-2 flex-1"
           style={{ minHeight: 0 }}
         >
-          {/* Contenedor para el historial con scroll */}
+          {/* container with scroll */}
           <div
             className="d-flex justify-content-center  w-100 mt-4 rounded-4 overflow-auto flex-1"
             style={{ minHeight: 0 }}
