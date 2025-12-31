@@ -51,13 +51,13 @@ export const NavBar = ({ user }: { user: User | null }) => {
           </div>
           <div className="d-flex">
             {!user ? (
-              <Nav.Link
+              <NavDropdown.Item
                 as={Link}
                 onClick={loginWithGoogle}
                 disabled={isLoading}
               >
                 {isLoading ? "Cargando..." : "Login"}
-              </Nav.Link>
+              </NavDropdown.Item>
             ) : (
               <NavDropdown
                 title={
@@ -82,32 +82,32 @@ export const NavBar = ({ user }: { user: User | null }) => {
                 id="user-nav-dropdown"
                 align="end"
               >
-                <Nav.Link
+                <NavDropdown.Item
                   onClick={() => handleOpenNotifications()}
                   className="dropdown-item py-1 px-3  text-dark"
                 >
                   Notifications
-                </Nav.Link>
-                <Nav.Link
+                </NavDropdown.Item>
+                <NavDropdown.Item
                   onClick={() => openModal("HISTORYGAMES")}
                   className="dropdown-item py-1 px-3  text-dark"
                 >
                   My History
-                </Nav.Link>
-                <Nav.Link
+                </NavDropdown.Item>
+                <NavDropdown.Item
                   onClick={() => openModal("USERSTATS")}
                   className="dropdown-item py-1 px-3  text-dark"
                 >
                   Performance
-                </Nav.Link>
+                </NavDropdown.Item>
 
-                <Nav.Link
+                <NavDropdown.Item
                   onClick={() => signOut()}
                   disabled={isLoading}
                   className="dropdown-item py-1 px-3 text-danger"
                 >
                   Logout
-                </Nav.Link>
+                </NavDropdown.Item>
               </NavDropdown>
             )}
           </div>
