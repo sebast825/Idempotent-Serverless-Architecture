@@ -37,12 +37,8 @@ export const engineeringDecisions: EngineeringDecisionsProps[] = [
     title: "Sensitive Data Protection",
     description:
       "Access to critical information is restricted by domain roles and state. Sensitive data is only exposed when explicitly allowed by the model, reinforcing a zero-trust approach toward the client.",
-  },
-  {
-    title: "Transactional Consistency",
-    description:
-      "Las operaciones compuestas se ejecutan dentro de transacciones atómicas. Esto asegura consistencia entre múltiples escrituras y previene race conditions en escenarios de alta concurrencia.",
-  },
+  }
+,
   {
     title: "Cryptographically Secure Randomness",
     description:
