@@ -20,7 +20,7 @@ export function GenericModal({ onClose, children, title }: ModalProps) {
 
       <Modal.Footer>
         <Button variant="warning" onClick={() => onClose()}>
-          Cerrar
+          Close
         </Button>
       </Modal.Footer>
     </Modal>
