@@ -30,7 +30,7 @@ export const NavBar = ({ user }: { user: User | null }) => {
     <>
       <Navbar bg="dark" variant="dark" fixed="top" className="shadow">
         <Nav
-          className="w-100 px-4 d-flex justify-content-end m-auto justify-content-md-between flex-row gap-3 gap-md-5 align-items-center px-5"
+          className="w-100 px-4 d-flex  m-auto justify-content-between flex-row gap-3 gap-md-5  px-md-5"
           style={{ maxWidth: "1500px" }}
         >
           <div>
