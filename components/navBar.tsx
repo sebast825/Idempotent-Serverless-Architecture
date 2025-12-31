@@ -117,6 +117,12 @@ export const NavBar = ({ user }: { user: User | null }) => {
                   Dashboard
                 </NavDropdown.Item>
                 <NavDropdown.Item
+                  onClick={() => openModal("GAME_RULES")}
+                  className="dropdown-item py-1 px-3  text-dark"
+                >
+                  How to Play{" "}
+                </NavDropdown.Item>
+                <NavDropdown.Item
                   onClick={() => signOut()}
                   disabled={isLoading}
                   className="dropdown-item py-1 px-3 text-danger"
