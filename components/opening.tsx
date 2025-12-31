@@ -2,7 +2,7 @@ export const Opening = () => {
   return (
     <div
       id="hero"
-      className="text-dark text-center py-1 py-md-3 m-md-5  border rounded-3 bgGradient shadow shadow-lg "
+      className="text-dark text-center py-1 py-md-3  border rounded-3 bgGradient shadow shadow-lg "
   
     >
       <div className="py-5 ">

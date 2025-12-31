@@ -7,8 +7,7 @@ export const DashboardActions = () => {
   const { createPuzzleAndGame, isPending } = useCreatePuzzleAndGame();
   const openModal = useModalStore((state) => state.openModal);
   return (
-    <div className="py-3 py-md-3 m-md-5 rounded-3 my-4 bg-primary bgGradient bg-opacity-75 "
->
+    <div className="py-3  rounded-3 my-4 bg-primary bgGradient bg-opacity-75 ">
       <Row className="g-4 justify-content-center p-3 p-md-5">
         {/* CARD 1: QUICK PLAY */}
         <FeatureCard
