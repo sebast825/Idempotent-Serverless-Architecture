@@ -26,7 +26,7 @@ export const FeatureCard = (props: PropsFeatureCard) => {
   } = props;
   return (
     <>
-      <Col md={4}>
+      <Col md={6} xl={4}>
         <Card
           className="h-100 border-0 shadow-sm text-center p-3 bg-dark"
           style={{ background: `${bgColor}`, borderRadius: "24px" }}
