@@ -9,12 +9,12 @@ import { Container } from "react-bootstrap";
 export default function Dashboard() {
   return (
     <>
-      <div className="d-flex flex-column  min-vh-100">
-        <div className="flex-grow-1 margin-top  ">
-          <Container>
+      <div className=" d-flex flex-column  min-vh-100">
+        <div className="margin-top flex-grow-1   justify-content-center align-content-center bg-dark ">
+          <Container className="my-3">
             <Opening />
             <DashboardActions />
-          </Container>{" "}
+          </Container>
         </div>
         <Footer />
       </div>
