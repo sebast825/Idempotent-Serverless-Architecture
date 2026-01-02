@@ -12,27 +12,29 @@ export const useCreateCustomChallenge = () => {
   //only will change when the component is unmounted
   const idempotencyKey = useMemo(() => v4(), []);
 
-  const { mutateAsync: createPuzzle } = useMutation({
-    mutationFn: async (secretCode: MastermindColor[]): Promise<string> => {
-      return createPuzzleAction(secretCode);
-    },
-    onError: (err) => {
-      console.error("Error creating ghost challenge:", err);
-      error(err.message || "Error creating ghost challenge");
-      throw err;
-    },
-  });
+  const { mutateAsync: createPuzzle, isPending: isCreatingPuzzle } =
+    useMutation({
+      mutationFn: async (secretCode: MastermindColor[]): Promise<string> => {
+        return createPuzzleAction(secretCode);
+      },
+      onError: (err) => {
+        console.error("Error creating ghost challenge:", err);
+        error(err.message || "Error creating ghost challenge");
+        throw err;
+      },
+    });
 
-  const { mutateAsync: createChallenge } = useMutation({
-    mutationFn: async (gameId: string): Promise<string> => {
-      return createCustomChallengeAction(gameId, idempotencyKey);
-    },
-    onError: (err) => {
-      console.error("Error creating ghost challenge:", err);
-      error(err.message || "Error creating ghost challenge");
-      throw err;
-    },
-  });
+  const { mutateAsync: createChallenge, isPending: isCreatingChallenge } =
+    useMutation({
+      mutationFn: async (gameId: string): Promise<string> => {
+        return createCustomChallengeAction(gameId, idempotencyKey);
+      },
+      onError: (err) => {
+        console.error("Error creating ghost challenge:", err);
+        error(err.message || "Error creating ghost challenge");
+        throw err;
+      },
+    });
   const generateText = (challengeId: string): string => {
     const text = `🏆 Mastermind Puzzle! 🧠
 
@@ -43,6 +45,8 @@ Accept the puzzle here 👇
 ${window.location.origin}/challenges/${challengeId}`.trim();
     return text;
   };
+  const isProcessing = isCreatingPuzzle || isCreatingChallenge;
+
   const handleSharePuzzle = async (
     secretCode: MastermindColor[]
   ): Promise<void> => {
@@ -56,5 +60,5 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
       error("An error occurred while copying to clipboard");
     }
   };
-  return { handleSharePuzzle };
+  return { handleSharePuzzle, isProcessing };
 };

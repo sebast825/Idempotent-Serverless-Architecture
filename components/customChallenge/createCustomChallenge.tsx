@@ -8,7 +8,7 @@ import { MastermindColor } from "@/lib/game/types";
 export const CreateCustomChallenge = () => {
   const { handleRemoveColor, handleSelectColor, currentGuess } =
     useColorSelection();
-  const { handleSharePuzzle } = useCreateCustomChallenge();
+  const { handleSharePuzzle,isProcessing } = useCreateCustomChallenge();
   const hadnleSubmit = () => {
     if (currentGuess.indexOf(null) === -1) {
       handleSharePuzzle(currentGuess as unknown as MastermindColor[]);
@@ -30,7 +30,7 @@ export const CreateCustomChallenge = () => {
           handleSelect={(e) => handleSelectColor(e)}
           currentGuess={currentGuess}
           submit={() => hadnleSubmit()}
-          disableBtn={currentGuess.indexOf(null) !== -1}
+          disableBtn={currentGuess.indexOf(null) !== -1 || isProcessing}
           btnText="Create Challenge"
         ></ColorPicker>
       </div>
