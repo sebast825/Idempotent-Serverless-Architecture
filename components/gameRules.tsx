@@ -1,5 +1,6 @@
 "use client";
 
+import { MAX_ATTEMPTS } from "@/lib/game/config";
 import { FEEDBACK_TO_EMOJI } from "@/lib/game/types";
 import React from "react";
 import { Card, Container, Row, Col, ListGroup, Badge } from "react-bootstrap";
@@ -27,6 +28,11 @@ export const GameRules = () => {
           <p className="text-muted ms-4 ps-2">
             Decode the secret 4-color sequence in the fewest attempts possible.
           </p>
+          <div className="ms-4 text-center">
+            <Badge bg="info" className="text-dark fw-normal p-2">
+              Maximum attempts: <strong>{MAX_ATTEMPTS}</strong>
+            </Badge>
+          </div>
         </section>
 
         {/* How to Play */}
@@ -110,7 +116,8 @@ export const GameRules = () => {
                 Resulting Clues
               </p>
               <div className="fs-3 mb-3">
-                {FEEDBACK_TO_EMOJI.COLOR_ONLY}{" "}{FEEDBACK_TO_EMOJI.MATCH}{" "}{FEEDBACK_TO_EMOJI.COLOR_ONLY}
+                {FEEDBACK_TO_EMOJI.COLOR_ONLY} {FEEDBACK_TO_EMOJI.MATCH}{" "}
+                {FEEDBACK_TO_EMOJI.COLOR_ONLY}
               </div>
               <div className="text-start mx-auto" style={{ maxWidth: "400px" }}>
                 <p className="small mb-1">
@@ -121,8 +128,7 @@ export const GameRules = () => {
                 </p>
                 <p className="small mb-0">
                   <strong className="text-dark">
-                 
-                    {FEEDBACK_TO_EMOJI.COLOR_ONLY}   {" "}
+                    {FEEDBACK_TO_EMOJI.COLOR_ONLY}{" "}
                     {FEEDBACK_TO_EMOJI.COLOR_ONLY}
                   </strong>
                   : Green & Blue are correct colors but misplaced.
