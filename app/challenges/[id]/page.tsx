@@ -7,8 +7,8 @@ import {
 } from "@/app/actions/challengeActions";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/routes";
-import { isRedirectError } from "next/dist/client/components/redirect";
 import { ChallengeUi } from "../components/challengeUi";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
