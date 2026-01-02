@@ -9,9 +9,15 @@ import {
   GameWithAttempts,
 } from "@/lib/game/types";
 import { useMutation } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { v4 } from "uuid";
 
 export const useSharePuzzle = () => {
   const { success, error } = useToastit();
+  //without useMemo it generate a new key each time the fn is call
+  //only will change when the component is unmounted
+  const idempotencyKey = useMemo(()=>v4(),[]);
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (gameId: string): Promise<GameWithAttempts> => {
       return findExistingGame(gameId);
@@ -24,7 +30,7 @@ export const useSharePuzzle = () => {
   });
   const { mutateAsync: createChallenge } = useMutation({
     mutationFn: async ({ gameId, puzzleId }: { gameId: string; puzzleId: string }): Promise<string> => {
-      return createGhostChallengeAction(gameId,puzzleId);
+      return createGhostChallengeAction(gameId,puzzleId,idempotencyKey);
     },
     onError: (err) => {
       console.error("Error creating ghost challenge:", err);

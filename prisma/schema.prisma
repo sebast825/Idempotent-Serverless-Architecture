@@ -63,7 +63,8 @@ model Challenge {
   type            ChallengeType    
   isGhost         Boolean        @default(false)
   createdAt       DateTime      @default(now())
-
+  submissionId String   @unique // For idempotency
+  
   puzzleId        String 
   puzzle          Puzzle      @relation(fields: [puzzleId],references:[id])
   challengerGameId          String? 

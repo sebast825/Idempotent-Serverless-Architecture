@@ -36,25 +36,35 @@ export const getChallengeById = async (
   return challenge as unknown as ChallengeWithConfig;
 };
 
-
 export async function createChallenge(
   userId: string,
   type: ChallengeType,
-  puzzleId : string,
-  gameId? : string
+  puzzleId: string,
+  idempotencyKey: string,
+  gameId?: string
 ): Promise<string> {
   try {
     const challenge = await prisma.challenge.create({
       data: {
         challengerId: userId,
         type: type,
-        puzzleId:puzzleId,
-        challengerGameId : gameId
+        puzzleId: puzzleId,
+        challengerGameId: gameId,
+        submissionId: idempotencyKey,
       },
     });
     return challenge.id;
-  } catch (err:any) {
-    console.log(err.message)
+  } catch (err: any) {
+    //this is the code from supabase when a unic key already exist
+    if (err.code == "P2002") {
+      const existingChallenge = await prisma.challenge.findUnique({
+        where: { submissionId: idempotencyKey },
+        select: { id: true },
+      });
+      console.log("existe; ", existingChallenge);
+      if (existingChallenge) return existingChallenge.id;
+    }
+
     throw new Error(ERRORS_GENERIC.GENERIC);
   }
 }

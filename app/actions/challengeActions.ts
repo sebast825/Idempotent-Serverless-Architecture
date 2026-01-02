@@ -14,7 +14,8 @@ export type ChallengeWithConfig = Omit<Challenge, "config"> & {
 
 export const createCustomChallengeAction = async (
 
-  puzzleId: string
+  puzzleId: string,
+  idempotencyKey:string
 ): Promise<string> => {
     const { user } = await createClient();
   if (!user) {
@@ -25,7 +26,8 @@ export const createCustomChallengeAction = async (
   const challengeId = await createChallenge(
     user.id,
     ChallengeType.CUSTOM,
-    puzzleId
+    puzzleId,
+    idempotencyKey
     
   );
   return challengeId;
@@ -33,7 +35,8 @@ export const createCustomChallengeAction = async (
 
 export const createGhostChallengeAction = async (
   gameId: string,
-  puzzleId:string
+  puzzleId:string,
+  idempotencyKey:string
 ): Promise<string> => {
  // const config = createGhostPayload(gameId);
   const { user } = await createClient();
@@ -45,6 +48,7 @@ export const createGhostChallengeAction = async (
     userId,
     ChallengeType.SYSTEM,
     puzzleId,
+    idempotencyKey,
     gameId
   );
   return challengeId;

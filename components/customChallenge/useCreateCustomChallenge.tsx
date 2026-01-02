@@ -1,11 +1,17 @@
 import { createCustomChallengeAction } from "@/app/actions/challengeActions";
 import { createPuzzleAction } from "@/app/actions/puzzleActions";
 import useToastit from "@/hooks/useToastit";
-import {  MastermindColor } from "@/lib/game/types";
+import { MastermindColor } from "@/lib/game/types";
 import { useMutation } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { v4 } from "uuid";
 
 export const useCreateCustomChallenge = () => {
   const { success, error } = useToastit();
+  //without useMemo it generate a new key each time the fn is call
+  //only will change when the component is unmounted
+  const idempotencyKey = useMemo(() => v4(), []);
+
   const { mutateAsync: createPuzzle } = useMutation({
     mutationFn: async (secretCode: MastermindColor[]): Promise<string> => {
       return createPuzzleAction(secretCode);
@@ -19,7 +25,7 @@ export const useCreateCustomChallenge = () => {
 
   const { mutateAsync: createChallenge } = useMutation({
     mutationFn: async (gameId: string): Promise<string> => {
-      return createCustomChallengeAction(gameId);
+      return createCustomChallengeAction(gameId, idempotencyKey);
     },
     onError: (err) => {
       console.error("Error creating ghost challenge:", err);
@@ -41,13 +47,10 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
     secretCode: MastermindColor[]
   ): Promise<void> => {
     try {
-      console.log("llega")
       const puzzleId: string = await createPuzzle(secretCode);
       const challengeId = await createChallenge(puzzleId);
-console.log("creatodo")
       const text: string = generateText(challengeId);
       navigator.clipboard.writeText(text);
-      console.log("deveria devoler")
       success("Copied to clipboard!");
     } catch (err) {
       error("An error occurred while copying to clipboard");
