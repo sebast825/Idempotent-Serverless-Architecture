@@ -10,6 +10,7 @@ export function useMastermind(gameId: string) {
     Array(4).fill(null)
   );
   const { submitAttempt, isPending, game } = useMastermindApi(gameId);
+  const [submissionId, setSubmissionId] = useState(v4());
   const {
     handleRemoveColor,
     handleSelectColor,
@@ -21,11 +22,11 @@ export function useMastermind(gameId: string) {
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
     const finalGuess = currentGuess as MastermindColor[];
-    const submissionId = v4();
     let responseAttempt: AttemptResponse = await submitAttempt(
       finalGuess,
       submissionId
     );
+    setSubmissionId(v4());
     console.log(responseAttempt);
     handleGameStatus(responseAttempt.gameStatus, responseAttempt.secretCode);
     return responseAttempt;
