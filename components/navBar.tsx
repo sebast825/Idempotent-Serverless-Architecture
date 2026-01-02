@@ -24,7 +24,9 @@ export const NavBar = ({ user }: { user: User | null }) => {
 
   const handleOpenNotifications = () => {
     openModal("NOTIFICATIONS");
-    notifications && markNotificationsAsRead(notifications?.map((n) => n.id));
+    if (notifications && notifications.length > 0) {
+      markNotificationsAsRead(notifications?.map((n) => n.id));
+    }
   };
   return (
     <>

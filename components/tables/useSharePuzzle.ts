@@ -16,7 +16,7 @@ export const useSharePuzzle = () => {
   const { success, error } = useToastit();
   //without useMemo it generate a new key each time the fn is call
   //only will change when the component is unmounted
-  const idempotencyKey = useMemo(()=>v4(),[]);
+  const idempotencyKey = useMemo(() => v4(), []);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (gameId: string): Promise<GameWithAttempts> => {
@@ -29,8 +29,14 @@ export const useSharePuzzle = () => {
     },
   });
   const { mutateAsync: createChallenge } = useMutation({
-    mutationFn: async ({ gameId, puzzleId }: { gameId: string; puzzleId: string }): Promise<string> => {
-      return createGhostChallengeAction(gameId,puzzleId,idempotencyKey);
+    mutationFn: async ({
+      gameId,
+      puzzleId,
+    }: {
+      gameId: string;
+      puzzleId: string;
+    }): Promise<string> => {
+      return createGhostChallengeAction(gameId, puzzleId, idempotencyKey);
     },
     onError: (err) => {
       console.error("Error creating ghost challenge:", err);
@@ -64,10 +70,10 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
 
   const formatColorAttempt = (attempt: FormattedAttempt): string => {
     if (!attempt) return "No moves yet! 🆕";
-    let coloredAttempt = attempt.guess
+    const coloredAttempt = attempt.guess
       .map((color) => convertColorToEmoji(color))
       .join("");
-    let feedbackAttempt = attempt.result
+    const feedbackAttempt = attempt.result
       .map((feedback) => converFeedbackToEmoji(feedback))
       .join("");
     const text = `${coloredAttempt} ➔ ${feedbackAttempt} `;
@@ -84,12 +90,15 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
     try {
       console.log(gameId);
       const game: GameWithAttempts = await mutateAsync(gameId);
-            const challengeId = await createChallenge({gameId,puzzleId:game.puzzleId});
+      const challengeId = await createChallenge({
+        gameId,
+        puzzleId: game.puzzleId,
+      });
 
       const text: string = generateText(game, challengeId);
       navigator.clipboard.writeText(text);
       success("Copied to clipboard!");
-    } catch (err) {
+    } catch {
       error("An error occurred while copying to clipboard");
     }
   };

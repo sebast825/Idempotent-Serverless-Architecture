@@ -80,7 +80,6 @@ describe("Mastermind Engine - Critical Cases", () => {
     // BUT, if the guess was ["RED", "RED", "PURPLE", "PINK"], the second RED should be NONE.
 
     const result = validate(secret, guess);
-    const colorOnly = result.filter((r) => r === "COLOR_ONLY").length;
 
     expect(result[1]).toBe("COLOR_ONLY");
   });

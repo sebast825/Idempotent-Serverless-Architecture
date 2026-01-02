@@ -1,6 +1,6 @@
 "use client";
 import { engineeringDecisions } from "@/constants/engineeringDecisions";
-import { Container, Row, Col, Card, Badge } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 export const EngineeringDecisionsSection = () => {
   return (

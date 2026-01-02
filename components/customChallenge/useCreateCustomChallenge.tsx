@@ -56,7 +56,7 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
       const text: string = generateText(challengeId);
       navigator.clipboard.writeText(text);
       success("Copied to clipboard!");
-    } catch (err) {
+    } catch {
       error("An error occurred while copying to clipboard");
     }
   };

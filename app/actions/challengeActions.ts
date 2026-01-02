@@ -1,11 +1,9 @@
 "use server";
+import { createChallenge, getChallengeById } from "@/lib/challege/service";
+import { ChallengeConfig } from "@/lib/challege/types";
 import { createClient } from "@/lib/supabase/server";
 import { Challenge, ChallengeType } from "@prisma/client";
 import { GAME_ERRORS } from "../../constants/errorMessages";
-import { createChallenge, getChallengeById } from "@/lib/challege/service";
-import { ChallengeConfig } from "@/lib/challege/types";
-import { createGhostPayload } from "@/lib/challege/utils";
-import { MastermindColor } from "@/lib/game/types";
 
 // 2. Creamos un tipo que extiende el Challenge de Prisma pero sobrescribe 'config'
 export type ChallengeWithConfig = Omit<Challenge, "config"> & {

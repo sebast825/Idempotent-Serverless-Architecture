@@ -46,15 +46,16 @@ export const getGameFormated = async (
 export const findExistingGame = async (
   gameId: string
 ): Promise<GameWithAttempts> => {
-  var game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
+  const game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
   const { user } = await createClient();
   //validate only owner can use the game if in playing state
   if (game.playerUserId != user?.id && game.status === "PLAYING") {
     throw new Error(GAME_ERRORS.AUTH_REQUIRED);
   }
-  const { puzzle, ...restOfGame } = game;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { puzzle, ...gameWithoutPuzzle } = game;
 
-  return restOfGame;
+  return gameWithoutPuzzle;
 };
 
 export const createGameAction = async (
@@ -65,8 +66,11 @@ export const createGameAction = async (
   return createGame(puzzleId, challengeId, user?.id);
 };
 
-export const getGameForReview = async  (gameId: string):Promise<GameWithAttemptsAndPuzzle> => {
-  const game : GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
-  if(game.status == "PLAYING") throw new Error("This game is not finished yet.")
-    return game;
-}
+export const getGameForReview = async (
+  gameId: string
+): Promise<GameWithAttemptsAndPuzzle> => {
+  const game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
+  if (game.status == "PLAYING")
+    throw new Error("This game is not finished yet.");
+  return game;
+};

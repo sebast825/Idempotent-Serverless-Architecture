@@ -22,7 +22,7 @@ export function useMastermind(gameId: string) {
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
     const finalGuess = currentGuess as MastermindColor[];
-    let responseAttempt: AttemptResponse = await submitAttempt(
+    const responseAttempt: AttemptResponse = await submitAttempt(
       finalGuess,
       submissionId
     );

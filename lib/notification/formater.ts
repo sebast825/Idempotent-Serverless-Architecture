@@ -23,7 +23,7 @@ export const formatNotifications = (
 const formatNotifcationChallengeAccepted = (
   notification: NotifcationWithRelations
 ): NotificationFormat => {
-  let notificationResponse: NotificationFormat =
+  const notificationResponse: NotificationFormat =
     genericNotificationFormat(notification);
   notificationResponse.title = "Challenge Accepted";
   notificationResponse.message = `${
@@ -50,7 +50,7 @@ const genericNotificationFormat = (
 const formatNotifcationChallengeComplete = (
   notification: NotifcationWithRelations
 ): NotificationFormat => {
-  let notificationResponse: NotificationFormat =
+  const notificationResponse: NotificationFormat =
     genericNotificationFormat(notification);
   notificationResponse.title = "Challenge Completed";
   const messageText =

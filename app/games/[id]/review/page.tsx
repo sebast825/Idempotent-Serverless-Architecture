@@ -11,7 +11,7 @@ export default async function ReviewPage({
   try {
     const game: GameWithAttemptsAndPuzzle = await getGameForReview(id);
     return <ReviewGame game={game}></ReviewGame>;
-  } catch (err: any) {
+  } catch {
     return <FeedbackDisplay title="The game is been played!"></FeedbackDisplay>;
   }
 }

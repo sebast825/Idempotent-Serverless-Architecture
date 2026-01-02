@@ -3,7 +3,7 @@
 import { MAX_ATTEMPTS } from "@/lib/game/config";
 import { FEEDBACK_TO_EMOJI } from "@/lib/game/types";
 import React from "react";
-import { Card, Container, Row, Col, ListGroup, Badge } from "react-bootstrap";
+import { Card, Row, Col, ListGroup, Badge } from "react-bootstrap";
 
 // Componente pequeño para reutilizar el estilo de las pistas
 const ClueIcon = ({ symbol, text }: { symbol: string; text: string }) => (
@@ -75,7 +75,7 @@ export const GameRules = () => {
           </Row>
           <div className="mt-2 ms-1 text-center ">
             <small className="text-dark  fw-bold">
-              *Note: Clues are not ordered - they don't correspond to specific
+              *Note: Clues are not ordered - they {"don't"} correspond to specific
               positions.*
             </small>
           </div>

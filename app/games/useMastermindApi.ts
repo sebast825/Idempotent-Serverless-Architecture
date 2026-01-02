@@ -1,4 +1,4 @@
-import { MastermindColor, AttemptResponse } from "@/lib/game/types";
+import { MastermindColor, AttemptResponse, GameWithAttempts } from "@/lib/game/types";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { submitGuessAction } from "./actions";
 import { findExistingGame } from "../actions/gameActions";
@@ -27,7 +27,7 @@ export const useMastermindApi = (gameId: string) => {
       return await submitGuessAction(finalGuess, gameId, submissionId);
     },
     onSuccess: (_data, variables) => {
-      queryClient.setQueryData(["game", gameId], (oldData: any) => {
+      queryClient.setQueryData(["game", gameId], (oldData: GameWithAttempts | undefined) => {
         if (!oldData) return oldData;
 
         const newAttempt = {

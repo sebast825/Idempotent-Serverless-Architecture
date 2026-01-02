@@ -54,7 +54,7 @@ export type GameWithAttempts = Omit<
 };
 
 export type GameWithAttemptsAndPuzzle = GameWithAttempts & {
-  puzzle: Prisma.PuzzleGetPayload<{}>;
+  puzzle: Prisma.PuzzleGetPayload<true>;
 };
 
 export type GameWithRelations = Prisma.GameGetPayload<{

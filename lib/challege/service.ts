@@ -3,7 +3,6 @@ import { GAME_ERRORS } from "@/constants/errorMessages";
 import { Challenge, ChallengeType, Prisma } from "@prisma/client";
 import prisma from "../prisma";
 import { ERRORS_GENERIC } from "@/constants/errorGeneric";
-import { ChallengeConfig } from "./types";
 
 export async function getChallengerIdFromChallenge(
   challengeId: string
@@ -54,9 +53,9 @@ export async function createChallenge(
       },
     });
     return challenge.id;
-  } catch (err: any) {
+  } catch (err) {
     //this is the code from supabase when a unic key already exist
-    if (err.code == "P2002") {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code == "P2002") {
       const existingChallenge = await prisma.challenge.findUnique({
         where: { submissionId: idempotencyKey },
         select: { id: true },

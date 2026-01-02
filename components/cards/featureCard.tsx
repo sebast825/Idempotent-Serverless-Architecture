@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Col, Card, Button } from "react-bootstrap";
 
 interface PropsFeatureCard {

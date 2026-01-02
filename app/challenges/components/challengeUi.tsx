@@ -5,7 +5,7 @@ import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import useToastit from "@/hooks/useToastit";
 import { FEEDBACK_TO_EMOJI } from "@/lib/game/types";
 import { ROUTES } from "@/lib/routes";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
@@ -75,7 +75,7 @@ export const ChallengeUi = ({
                   onClick={() => createPuzzleAndGame()}
                   disabled={isPendingCreatePuzzleAndGame}
                 >
-                  I'm scared, just let me play a normal game
+                  {"I'm scared"}, just let me play a normal game
                 </Button>
               </div>
               <hr className="my-4 opacity-25" />

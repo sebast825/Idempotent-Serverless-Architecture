@@ -1,5 +1,4 @@
 import { useNotifications } from "@/hooks/useNotifications";
-import { NotificationFormat } from "@/lib/notification/types";
 
 export const NotificationList = () => {
   const { data: notifications } = useNotifications();

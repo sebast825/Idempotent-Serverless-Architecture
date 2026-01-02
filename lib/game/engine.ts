@@ -20,8 +20,8 @@ export function validate(
   code: MastermindColor[],
   attempt: MastermindColor[]
 ): FeedbackStatus[] {
-  var matchPosition = matchValueAndPosition(code, attempt);
-  var matchDifferentPosition =
+  const matchPosition = matchValueAndPosition(code, attempt);
+  const matchDifferentPosition =
     matchValueInOtherPositionWithouthMatch(matchPosition);
 
   return formatFeedback(matchDifferentPosition);
@@ -43,7 +43,7 @@ function matchValueAndPosition(
   code: MastermindColor[],
   attempt: MastermindColor[]
 ): responsePosition[] {
-  var rsta = attempt.map((elem, index) => {
+  const rsta = attempt.map((elem, index) => {
     return createResponsePosition(
       index,
       elem,
@@ -95,6 +95,6 @@ function createResponsePosition(
 }
 
 export function isVictory(code: FeedbackStatus[]): boolean {
-  let isVictory: boolean = code.every((e) => e == "MATCH");
+  const isVictory: boolean = code.every((e) => e == "MATCH");
   return isVictory;
 }

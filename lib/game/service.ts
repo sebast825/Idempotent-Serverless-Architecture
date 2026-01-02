@@ -128,22 +128,25 @@ export async function persistAttemptAndResponse(
 
   await prisma.$transaction(async (tx) => {
     try {
-    await tx.attempt.create({
-      data: {
-        gameId: game.id,
-        submissionId: attemptKey,
-        guess: guessAttempt,
-        result: currentFeedback,
-      },
-    });
-      } catch (e: any) {
-    // Prisma unique constraint error
-    if (e.code === "P2002") {
-      // attempt already processed, handle 
-      return;
+      await tx.attempt.create({
+        data: {
+          gameId: game.id,
+          submissionId: attemptKey,
+          guess: guessAttempt,
+          result: currentFeedback,
+        },
+      });
+    } catch (err) {
+      // Prisma unique constraint error
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code == "P2002"
+      ) {
+        // attempt already processed, handle
+        return;
+      }
+      throw err;
     }
-    throw e;
-  }
     //only update is game is finished
     if (isGameFinished) {
       await tx.game.update({
@@ -168,7 +171,7 @@ export async function persistAttemptAndResponse(
     }
   });
 
-  var rsta: AttemptResponse = {
+  const rsta: AttemptResponse = {
     feedback: currentFeedback,
     gameStatus: nextStatus,
     secretCode: isGameFinished

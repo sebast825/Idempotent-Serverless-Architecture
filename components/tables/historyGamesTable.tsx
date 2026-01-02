@@ -119,11 +119,11 @@ export function HistoryGamesTable() {
               </Table>
             </div>
 
-            <PaginationBtns
+          {historyGames?.totalPages &&   <PaginationBtns
               page={page}
-              totalPages={historyGames?.totalPages!}
+              totalPages={historyGames?.totalPages}
               goToPage={goToPage}
-            />
+            />}
           </>
         )}
       </div>

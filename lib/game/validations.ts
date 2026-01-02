@@ -2,7 +2,7 @@ import { Attempt } from "@prisma/client";
 
 export function ifAttemptNotExistThrow(attempts: Attempt[], attemptKey: string) {
   //validate attemps is not  processed for idempotency
-  var attemptAlreadyProcesed = attempts.some(
+  const attemptAlreadyProcesed = attempts.some(
     (e) => e.submissionId == attemptKey
   );
 

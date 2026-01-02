@@ -31,7 +31,7 @@ export const getStatsFromGames = (games:GameWithAttempts[]) : UserStats => {
     }
   );
 
-  var statsResponse: UserStats = {
+  const statsResponse: UserStats = {
     winRate: getWinStreak(games),
     challengesWon: sumary.challengesWon,
     challegesLost: sumary.challegesLost,
