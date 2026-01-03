@@ -25,7 +25,11 @@ body {
 }
 button {
   font-family: var(--font-michroma), Arial, Helvetica, sans-serif !important;
+  @media (min-width: 600px) {
+    letter-spacing: 2px;
+  }
 }
+
 * {
   box-sizing: border-box;
   padding: 0;
