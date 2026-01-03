@@ -18,6 +18,8 @@ export function useMastermind(gameId: string) {
     clearCurrentGuess,
   } = useColorSelection();
   const history = game?.attempts ?? [];
+  const ghostHistory = game?.ghostAttempts ?? [];
+
   const status: GameStatus = (game?.status as GameStatus) ?? "PLAYING";
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
@@ -57,5 +59,6 @@ export function useMastermind(gameId: string) {
     handleSubmitAttempt,
     isPending,
     secretCode,
+    ghostHistory,
   };
 }

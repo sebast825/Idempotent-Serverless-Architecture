@@ -1,4 +1,10 @@
-import { MastermindColor, AttemptResponse, GameWithAttempts } from "@/lib/game/types";
+import {
+  MastermindColor,
+  AttemptResponse,
+  GameWithAttempts,
+  GhostAttemptResponse,
+  GameWithGhost,
+} from "@/lib/game/types";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { submitGuessAction } from "./actions";
 import { findExistingGame } from "../actions/gameActions";
@@ -23,24 +29,32 @@ export const useMastermindApi = (gameId: string) => {
     }: {
       finalGuess: MastermindColor[];
       submissionId: string;
-    }): Promise<AttemptResponse> => {
+    }): Promise<GhostAttemptResponse> => {
       return await submitGuessAction(finalGuess, gameId, submissionId);
     },
     onSuccess: (_data, variables) => {
-      queryClient.setQueryData(["game", gameId], (oldData: GameWithAttempts | undefined) => {
-        if (!oldData) return oldData;
+      queryClient.setQueryData(
+        ["game", gameId],
+        (oldData: GameWithGhost | undefined) => {
+          if (!oldData) return oldData;
 
-        const newAttempt = {
-          guess: variables.finalGuess,
-          result: _data.feedback,
-          submissionId: variables.submissionId,
-        };
-        return {
-          ...oldData,
-          status: _data.gameStatus,
-          attempts: [...oldData.attempts, newAttempt],
-        };
-      });
+          const newAttempt = {
+            guess: variables.finalGuess,
+            result: _data.feedback,
+            submissionId: variables.submissionId,
+          };
+          const ghostAttempt = {
+            result: _data.ghostAttempt?.result,
+            guess: _data.ghostAttempt?.guess,
+          };
+          return {
+            ...oldData,
+            status: _data.gameStatus,
+            attempts: [...oldData.attempts, newAttempt],
+             ghostAttempts : [...(oldData.ghostAttempts ?? []), ghostAttempt],
+          };
+        }
+      );
     },
     onError: (err: Error) => {
       error(err.message);

@@ -3,6 +3,7 @@ import { validate } from "@/lib/game/engine";
 import {
   AttemptResponse,
   GameWithRelations,
+  GhostAttemptResponse,
   MastermindColor,
 } from "@/lib/game/types";
 import { createClient } from "@/lib/supabase/server";
@@ -17,7 +18,7 @@ export async function submitGuessAction(
   guessAttempt: MastermindColor[],
   gameId: string,
   attemptKey: string
-): Promise<AttemptResponse> {
+): Promise<GhostAttemptResponse> {
   const game: GameWithRelations = await getGameWithRelationsById(gameId);
   const { user } = await createClient();
   //validate only owner can use add attempts

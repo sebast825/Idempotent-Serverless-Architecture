@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Attempt, Prisma } from "@prisma/client";
 
 export const MASTERMIND_COLORS = [
   "RED",
@@ -72,3 +72,10 @@ export interface AttemptResponse {
 }
 
 
+
+export interface GhostAttemptResponse extends AttemptResponse{
+  ghostAttempt? : FormattedAttempt
+}
+export interface GameWithGhost extends GameWithAttempts{
+  ghostAttempts? : FormattedAttempt[]
+}

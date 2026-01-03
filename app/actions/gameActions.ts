@@ -5,6 +5,7 @@ import {
   FeedbackStatus,
   GameWithAttempts,
   GameWithAttemptsAndPuzzle,
+  GameWithGhost,
   MastermindColor,
 } from "@/lib/game/types";
 import { createClient } from "@/lib/supabase/server";
@@ -45,7 +46,7 @@ export const getGameFormated = async (
 //use this fn for in progres games to reload and remain the history
 export const findExistingGame = async (
   gameId: string
-): Promise<GameWithAttempts> => {
+): Promise<GameWithGhost> => {
   const game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
   const { user } = await createClient();
   //validate only owner can use the game if in playing state
