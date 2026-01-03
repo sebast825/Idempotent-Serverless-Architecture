@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./globals.css";
 import { NavBar } from "@/components/navBar";
 import { createClient } from "@/lib/supabase/server";
 import QueryProvider from "./providers/query-provider";
 import { ToastContainer, Flip } from "react-toastify";
 import { ModalManager } from "@/components/modals/modalManager";
+import { Michroma, Chakra_Petch} from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+export const michroma = Michroma({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-michroma",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+export const chakra = Chakra_Petch({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-chakra",
 });
+
+
 
 export const metadata: Metadata = {
   title: "Mastermind Game | Decode the Secret",
@@ -32,6 +34,8 @@ export const metadata: Metadata = {
   },
 };
 
+
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -41,7 +45,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${chakra.variable} ${michroma.variable}`}>
         <QueryProvider>
           <NavBar user={user}></NavBar>
           {children}
