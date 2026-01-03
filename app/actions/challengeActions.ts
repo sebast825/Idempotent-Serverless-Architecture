@@ -31,10 +31,11 @@ export const createCustomChallengeAction = async (
   return challengeId;
 };
 
-export const createGhostChallengeAction = async (
+export const createSystemChallengeAction = async (
   gameId: string,
   puzzleId:string,
-  idempotencyKey:string
+  idempotencyKey:string,
+  isGhost:boolean=false
 ): Promise<string> => {
  // const config = createGhostPayload(gameId);
   const { user } = await createClient();
@@ -47,7 +48,8 @@ export const createGhostChallengeAction = async (
     ChallengeType.SYSTEM,
     puzzleId,
     idempotencyKey,
-    gameId
+    gameId,
+    isGhost
   );
   return challengeId;
 };

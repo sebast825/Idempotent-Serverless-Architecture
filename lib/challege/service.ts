@@ -40,7 +40,8 @@ export async function createChallenge(
   type: ChallengeType,
   puzzleId: string,
   idempotencyKey: string,
-  gameId?: string
+  gameId?: string,
+  isGhost:boolean = false
 ): Promise<string> {
   try {
     const challenge = await prisma.challenge.create({
@@ -50,6 +51,7 @@ export async function createChallenge(
         puzzleId: puzzleId,
         challengerGameId: gameId,
         submissionId: idempotencyKey,
+        isGhost : isGhost
       },
     });
     return challenge.id;

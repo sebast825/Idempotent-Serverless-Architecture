@@ -1,4 +1,4 @@
-import { createGhostChallengeAction } from "@/app/actions/challengeActions";
+import { createSystemChallengeAction } from "@/app/actions/challengeActions";
 import { findExistingGame } from "@/app/actions/gameActions";
 import useToastit from "@/hooks/useToastit";
 import { MAX_ATTEMPTS } from "@/lib/game/config";
@@ -36,7 +36,7 @@ export const useSharePuzzle = () => {
       gameId: string;
       puzzleId: string;
     }): Promise<string> => {
-      return createGhostChallengeAction(gameId, puzzleId, idempotencyKey);
+      return createSystemChallengeAction(gameId, puzzleId, idempotencyKey);
     },
     onError: (err) => {
       console.error("Error creating ghost challenge:", err);
