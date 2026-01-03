@@ -5,18 +5,28 @@ import ColorCircle from "../../../components/game/colorCircle";
 interface propsAttemptRow {
   attemptGuess: MastermindColor[];
   results: FeedbackStatus[];
+  isGhostMode?: boolean;
 }
 
 export default function AttemptRow({ props }: { props: propsAttemptRow }) {
-  const { attemptGuess, results } = props;
+  const { attemptGuess, results, isGhostMode = false } = props;
   return (
     <>
-      <div className="d-flex align-items-center justify-content-center w-100 border-bottom bg-dark rounded-4 m-1 border-light border-opacity-50  p-1 bg-slate-800 rounded-xl shadow-inner">
+      <div
+        className={`d-flex m-1  ms-auto   align-items-center  border-bottom bg-dark ${
+          isGhostMode && "bg-opacity-75 justify-content-end px-1"
+        } ${
+          !isGhostMode && " p-1 justify-content-center"
+        }  rounded-4  border-light border-opacity-50 `}
+        style={{ maxWidth: "max-content" }}
+      >
+        {isGhostMode && "👻"}
         {attemptGuess.map((color, index) => (
           <ColorCircle
             key={index}
-            color={color.toString()}        
+            color={color.toString()}
             cursor={"pointer"}
+            isGhostMode={isGhostMode}
           ></ColorCircle>
         ))}
         <FeedbackIcons results={results} />

@@ -10,6 +10,7 @@ import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import { Card } from "react-bootstrap";
+import React from "react";
 
 export default function GameDashboard({
   params,
@@ -31,6 +32,7 @@ export default function GameDashboard({
     handleSubmitAttempt,
     secretCode,
     isPending,
+    ghostHistory,
   } = useMastermind(id);
   const onSubmit = async () => {
     if (isPending || status !== "PLAYING") return;
@@ -63,7 +65,6 @@ export default function GameDashboard({
         className="d-flex flex-column pt-5 bg-primary bg-opacity-100 bgGradient"
         style={{
           height: "100vh",
-   
         }}
       >
         <div
@@ -72,19 +73,39 @@ export default function GameDashboard({
         >
           {/* container with scroll */}
           <div
-            className="d-flex justify-content-center  w-100 mt-4 rounded-4 overflow-auto flex-1"
+            className="d-flex justify-content-center   w-100 mt-4 rounded-4 overflow-auto flex-1"
             style={{ minHeight: 0 }}
           >
             <div style={{ minHeight: "max-content" }}>
-              {history.map((attempt, index) => (
-                <AttemptRow
-                  key={history.length - index}
-                  props={{
-                    attemptGuess: attempt.guess,
-                    results: attempt.result,
-                  }}
-                />
-              ))}
+              {history.map((attempt, index) => {
+                const ghostMatch = ghostHistory && ghostHistory[index];
+
+                return (
+                  <React.Fragment
+                    key={`round-${attempt.submissionId || index}`}
+                  >
+                    {/* 1. First we show the ghost*/}
+                    {ghostMatch?.guess && (
+                      <AttemptRow
+                        props={{
+                          attemptGuess: ghostMatch.guess,
+                          results: ghostMatch.result,
+                          isGhostMode: true,
+                        }}
+                      />
+                    )}
+
+                    {/* 2. then the player attempt*/}
+                    <AttemptRow
+                      props={{
+                        attemptGuess: attempt.guess,
+                        results: attempt.result,
+                        isGhostMode: false,
+                      }}
+                    />
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </div>

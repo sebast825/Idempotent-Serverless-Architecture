@@ -7,6 +7,8 @@ interface PropsColorCircle {
   cursor: "pointer" | "default";
   customClass?: string;
   fullOpacity?: boolean;
+    isGhostMode?: boolean;
+
 }
 
 export default function ColorCircle(props: PropsColorCircle) {
@@ -17,25 +19,26 @@ export default function ColorCircle(props: PropsColorCircle) {
     cursor,
     customClass,
     fullOpacity = true,
+    isGhostMode = false
   } = props;
 
   return (
     <>
-      <Button
+      <button
         onClick={!isDisabled ? btnAction : undefined}
         disabled={isDisabled}
         className={`m-2 rounded-circle shadow-sm ${customClass}`}
         style={{
           backgroundColor: color.toLowerCase(),
-          width: "40px",
-          height: "40px",
+          width: `${isGhostMode ? "20px" :"40px"}`,
+          height: `${isGhostMode ? "20px" :"40px"}`,
           display: "inline-block",
           cursor: cursor,
           border: "2px solid #666",
           opacity: fullOpacity ? "1" : undefined,
         }}
         aria-label={`Select ${color}`}
-      ></Button>
+      ></button>
     </>
   );
 }
