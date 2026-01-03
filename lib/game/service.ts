@@ -19,7 +19,7 @@ export async function getGameById(
     where: {
       id: gameId,
     },
-    include: { attempts: true, puzzle: true },
+    include: { attempts: true, puzzle: true,challenge:true },
   });
   if (!game) {
     throw new Error(GAME_ERRORS.NOT_FOUND);

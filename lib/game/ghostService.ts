@@ -1,5 +1,5 @@
 import prisma from "../prisma";
-import { AttemptResponse, GhostAttemptResponse, FeedbackStatus, MastermindColor } from "./types";
+import { AttemptResponse, GhostAttemptResponse, FeedbackStatus, MastermindColor, FormattedAttempt } from "./types";
 
 export const addGhostAttemptIfExist = async (
   baseResponse: AttemptResponse,
@@ -21,3 +21,20 @@ export const addGhostAttemptIfExist = async (
     },
   };
 };
+
+export const getAttemptsByChallengerGameId = async (challengerGameId:string, limit:number):Promise<FormattedAttempt[]> =>{
+    var attempts = await prisma.attempt.findMany({
+    where: { gameId: challengerGameId },
+    orderBy: { createdAt: "asc" },
+    take: limit,
+  });  
+
+  const formatedAttempts: FormattedAttempt[] = attempts.map((elem) => {
+    return {
+      ...elem,
+      result: elem?.result as FeedbackStatus[],
+      guess: elem?.guess as MastermindColor[],
+    };
+  });
+  return formatedAttempts;
+}

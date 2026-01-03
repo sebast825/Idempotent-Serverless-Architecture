@@ -3,9 +3,11 @@
 import { generateSecretCode } from "@/lib/game/engine";
 import {
   FeedbackStatus,
+  FormattedAttempt,
   GameWithAttempts,
   GameWithAttemptsAndPuzzle,
   GameWithGhost,
+  GhostAttemptResponse,
   MastermindColor,
 } from "@/lib/game/types";
 import { createClient } from "@/lib/supabase/server";
@@ -16,6 +18,9 @@ import {
   createGameWithPuzzle,
   getGameById,
 } from "@/lib/game/service";
+import {
+  getAttemptsByChallengerGameId,
+} from "@/lib/game/ghostService";
 
 export async function createPuzzleGameAction(): Promise<string> {
   const { user } = await createClient();
@@ -48,6 +53,13 @@ export const findExistingGame = async (
   gameId: string
 ): Promise<GameWithGhost> => {
   const game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
+  let ghostAttempts: FormattedAttempt[] = [];
+  if (game.challenge && game.challenge.challengerGameId) {
+    ghostAttempts = await getAttemptsByChallengerGameId(
+      game.challenge.challengerGameId,
+      game.attempts.length
+    );
+  }
   const { user } = await createClient();
   //validate only owner can use the game if in playing state
   if (game.playerUserId != user?.id && game.status === "PLAYING") {
@@ -56,7 +68,7 @@ export const findExistingGame = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { puzzle, ...gameWithoutPuzzle } = game;
 
-  return gameWithoutPuzzle;
+  return { ...gameWithoutPuzzle, ghostAttempts };
 };
 
 export const createGameAction = async (
