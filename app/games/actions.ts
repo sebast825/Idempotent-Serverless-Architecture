@@ -1,7 +1,6 @@
 "use server";
 import { validate } from "@/lib/game/engine";
 import {
-  AttemptResponse,
   GameWithRelations,
   GhostAttemptResponse,
   MastermindColor,
@@ -10,9 +9,11 @@ import { createClient } from "@/lib/supabase/server";
 import { GAME_ERRORS } from "../../constants/errorMessages";
 import {
   getGameWithRelationsById,
+
   persistAttemptAndResponse,
 } from "@/lib/game/service";
 import { ifAttemptNotExistThrow } from "@/lib/game/validations";
+import { addGhostAttemptIfExist } from "@/lib/game/ghostService";
 
 export async function submitGuessAction(
   guessAttempt: MastermindColor[],
@@ -32,11 +33,20 @@ export async function submitGuessAction(
     game.puzzle.secretCode as MastermindColor[],
     guessAttempt
   );
-  return persistAttemptAndResponse(
+  var baseResponse = await persistAttemptAndResponse(
     currentFeedback,
     game,
     gameId,
     attemptKey,
     guessAttempt
   );
+
+  if(game.challenge?.isGhost && game.challenge.challengerGameId){
+    const attemptsToSkip = game.attempts.length
+    var ghostResponse =  await addGhostAttemptIfExist(baseResponse,game.challenge.challengerGameId, attemptsToSkip)  
+    return ghostResponse;
+  }
+  return baseResponse;
 }
+
+
