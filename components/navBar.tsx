@@ -88,7 +88,23 @@ export const NavBar = ({ user }: { user: User | null }) => {
                   onClick={() => handleOpenNotifications()}
                   className="dropdown-item py-1 px-3  text-dark"
                 >
-                  Notifications
+                  <span className="d-inline-flex align-items-center">
+                    Notifications
+                    {notifications &&
+                      notifications?.some((elem) => elem.readAt == null) && (
+                        <Badge
+                          pill
+                          bg="danger"
+                          className="ms-2"
+                          style={{ fontSize: "0.6rem" }}
+                        >
+                          {
+                            notifications?.filter((elem) => elem.readAt == null)
+                              .length
+                          }
+                        </Badge>
+                      )}
+                  </span>
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => openModal("HISTORYGAMES")}
