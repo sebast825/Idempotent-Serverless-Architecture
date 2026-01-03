@@ -101,7 +101,7 @@ export function HistoryGamesTable() {
                                   onClick={() => onShareClick(game.id)}
                                   disabled={processingId == game.id}
                                 >
-                                  Puzzle
+                                  Challenge
                                 </button>
                               </>
                             )}
