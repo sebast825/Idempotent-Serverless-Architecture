@@ -5,7 +5,7 @@ import ColorPicker from "@/components/game/colorPicker";
 import GameResultModal from "@/app/games/components/gameResultModal";
 import ColorSequenceRow from "@/components/game/colorSequenceRow";
 import { useMastermind } from "../useMastermind";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
@@ -49,6 +49,7 @@ export default function GameDashboard({
     await createPuzzleAndGame();
     setShowModal(false);
   };
+
   return (
     <>
       {showModal && (
@@ -79,7 +80,11 @@ export default function GameDashboard({
             <div style={{ minHeight: "max-content" }}>
               {history.map((attempt, index) => {
                 const ghostMatch = ghostHistory && ghostHistory[index];
-
+                //we validate the current position and the before becasue the ghostHistory keep pushing attempts as undefiend
+                const ghostFinishedBefore =
+                  ghostHistory &&
+                  ghostHistory[index]?.result == undefined &&
+                  ghostHistory[index - 1]?.result != undefined;
                 return (
                   <React.Fragment
                     key={`round-${attempt.submissionId || index}`}
@@ -93,6 +98,12 @@ export default function GameDashboard({
                           isGhostMode: true,
                         }}
                       />
+                    )}
+
+                    {ghostFinishedBefore && (
+                      <div className="text-xs text-center p-1 rounded-3 bg-light bg-opacity-75 italic my-1">
+                        The ghost completed the puzzle here! 🏁
+                      </div>
                     )}
 
                     {/* 2. then the player attempt*/}
