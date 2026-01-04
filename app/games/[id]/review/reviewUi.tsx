@@ -3,8 +3,9 @@
 import AttemptRow from "../../components/attemptRow";
 import ColorSequenceRow from "../../../../components/game/colorSequenceRow";
 import { GameWithGhostAndPuzzle, MastermindColor } from "@/lib/game/types";
-import { Card, Badge } from "react-bootstrap";
-import React from "react";
+import { Card, Badge, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import ShareChallengeModal from "@/components/modals/shareChallengeModal";
 
 export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
   console.log(game);
@@ -17,8 +18,16 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
   // 2. create an empty array to map, this allow us show the complete review
   //doens't matter if challenger or challenged finish first
   const rounds = Array.from({ length: totalRounds });
+  const [showChallengeModal, setShowChallengeModal] = useState<boolean>(false);
+
   return (
     <>
+      {showChallengeModal && (
+        <ShareChallengeModal
+          gameId={game.id}
+          onClose={() => setShowChallengeModal(false)}
+        ></ShareChallengeModal>
+      )}
       <div
         className="d-flex flex-column pt-5 bgGradient"
         style={{
@@ -67,7 +76,7 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                         )}
                         {isGhostWinningTurn && (
                           <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
-                            You finished the game here! 👻
+                            The rival finished here! 👻
                           </div>
                         )}
 
@@ -84,7 +93,7 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                         {isPlayerWinningTurn &&
                           (game.ghostAttempts?.length ?? 0) > 0 && (
                             <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
-                              The rival finished here! 🎯
+                              You finished the game here! 🎯
                             </div>
                           )}
                       </div>
@@ -100,16 +109,16 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
             <Card.Body className="text-center">
               {game.puzzle.secretCode && (
                 <div className="">
-                  <div className="d-flex justify-content-center flex-column bg-black bg-opacity-50 rounded-3 py-3">
-                    <div className="d-flex justify-content-center align-items-center p-2 mb-2">
+                  <div className="d-flex justify-content-center flex-column bg-black bg-opacity-50 rounded-3 py-3 gap-2 ">
+                    <div className="d-flex justify-content-center align-items-center  m-0">
                       <Badge
                         bg={game?.status === "WON" ? "success" : "danger"}
-                        className="px-3 py-2"
+                        className="px-3 py-2 "
                       >
                         {game?.status}
                       </Badge>
                     </div>
-                    <h6 className="text-slate-400 mb-3 uppercase small font-bold">
+                    <h6 className="text-slate-400  uppercase small font-bold m-0">
                       Secret Code to Crack
                     </h6>
                     <ColorSequenceRow
@@ -117,6 +126,14 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                       handleRemoveColor={() => {}}
                       btnPointer={false}
                     />
+                    <div className="">
+                      <Button
+                        variant="warning"
+                        onClick={() => setShowChallengeModal(true)}
+                      >
+                        Share as Challenge
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
