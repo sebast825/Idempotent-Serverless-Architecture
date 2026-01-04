@@ -116,7 +116,7 @@ export async function persistAttemptAndResponse(
   gameId: string,
   attemptKey: string,
   guessAttempt: MastermindColor[]
-) {
+): Promise<AttemptResponse> {
   const isVictoryState: boolean = isVictory(currentFeedback);
   const isLastAttempt: boolean = game.attempts.length + 1 >= MAX_ATTEMPTS;
   const isGameFinished: boolean = isVictoryState || isLastAttempt;

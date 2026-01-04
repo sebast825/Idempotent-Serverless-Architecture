@@ -1,6 +1,7 @@
 "use server";
 import { validate } from "@/lib/game/engine";
 import {
+  AttemptResponse,
   GameWithRelations,
   GhostAttemptResponse,
   MastermindColor,
@@ -33,7 +34,7 @@ export async function submitGuessAction(
     game.puzzle.secretCode as MastermindColor[],
     guessAttempt
   );
-  const baseResponse = await persistAttemptAndResponse(
+  const baseResponse :AttemptResponse= await persistAttemptAndResponse(
     currentFeedback,
     game,
     gameId,
