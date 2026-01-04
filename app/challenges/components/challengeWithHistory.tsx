@@ -9,7 +9,11 @@ interface ChallengeWithHistoryProps {
   challengeId: string;
 }
 
-export const ChallengeWithHistory = ({ attempts, puzzleId ,challengeId}: ChallengeWithHistoryProps) => {
+export const ChallengeWithHistory = ({
+  attempts,
+  puzzleId,
+  challengeId,
+}: ChallengeWithHistoryProps) => {
   return (
     <ChallengeUi puzzleId={puzzleId} challengeId={challengeId}>
       <Card.Text className="lead text-secondary mb-4">
@@ -18,7 +22,17 @@ export const ChallengeWithHistory = ({ attempts, puzzleId ,challengeId}: Challen
           {attempts.length} attempts
         </Badge>
         <br />
-        <strong>Can you do it in {attempts.length - 1}?</strong> ⚔️
+        <span className="mt-2 d-inline-block">
+          {attempts.length === 1 ? (
+            <strong>
+              A perfect score! Can you match this 1-attempt miracle? 😱
+            </strong>
+          ) : (
+            <strong>
+              Can you beat them and do it in {attempts.length - 1}? ⚔️
+            </strong>
+          )}
+        </span>
       </Card.Text>
     </ChallengeUi>
   );
