@@ -81,11 +81,12 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                             }}
                           />
                         )}
-                        {isPlayerWinningTurn && (
-                          <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
-                            The rival finished here! 🎯
-                          </div>
-                        )}
+                        {isPlayerWinningTurn &&
+                          (game.ghostAttempts?.length ?? 0) > 0 && (
+                            <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
+                              The rival finished here! 🎯
+                            </div>
+                          )}
                       </div>
                     </div>
                   </React.Fragment>
