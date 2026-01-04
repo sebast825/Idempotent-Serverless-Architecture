@@ -81,10 +81,10 @@ export default function GameDashboard({
               {history.map((attempt, index) => {
                 const ghostMatch = ghostHistory && ghostHistory[index];
                 //we validate the current position and the before becasue the ghostHistory keep pushing attempts as undefiend
-                const ghostFinishedBefore =
+                const isGhostWinningTurn =
                   ghostHistory &&
-                  ghostHistory[index]?.result == undefined &&
-                  ghostHistory[index - 1]?.result != undefined;
+                  ghostHistory[index]?.result !== undefined && 
+                  ghostHistory[index + 1]?.result === undefined; 
                 return (
                   <React.Fragment
                     key={`round-${attempt.submissionId || index}`}
@@ -99,10 +99,9 @@ export default function GameDashboard({
                         }}
                       />
                     )}
-
-                    {ghostFinishedBefore && (
-                      <div className="text-xs text-center p-1 rounded-3 bg-light bg-opacity-75 italic my-1">
-                        The ghost completed the puzzle here! 🏁
+                    {isGhostWinningTurn && (
+                      <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light bg-opacity-75 italic my-1">
+                        The ghost finished its game here! 👻
                       </div>
                     )}
 
