@@ -11,13 +11,14 @@ import useToastit from "@/hooks/useToastit";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
 import { Card } from "react-bootstrap";
 import React from "react";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { ROUTES } from "@/lib/routes";
 
 export default function GameDashboard({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const [showModal, setShowModal] = useState<boolean>(false);
   const { createPuzzleAndGame, isPending: isPendingNewGame } =
     useCreatePuzzleAndGame();
   const { error } = useToastit();
@@ -33,7 +34,10 @@ export default function GameDashboard({
     secretCode,
     isPending,
     ghostHistory,
+    isAnonymus,
   } = useMastermind(id);
+  const [showModal, setShowModal] = useState<boolean>(status != "PLAYING");
+
   const onSubmit = async () => {
     if (isPending || status !== "PLAYING") return;
     if (currentGuess.includes(null)) {
@@ -49,14 +53,24 @@ export default function GameDashboard({
     await createPuzzleAndGame();
     setShowModal(false);
   };
-
+  const { loginWithGoogle, isLoading } = useLogin();
+  const handleShareGame = async () => {
+    if (isAnonymus) {
+      const destination = `${ROUTES.game(id)}?claimGameId=${id}`;
+      const queryParams = `?next=${encodeURIComponent(destination)}`;
+      return await loginWithGoogle(queryParams);
+    }
+    
+  };
   return (
     <>
-      {showModal && (
+      {!showModal && (
         <GameResultModal
           code={secretCode}
           btnPrimary={() => handleNewGame()}
           btnPrimaryDisable={isPendingNewGame}
+          btnSecondaryDisable={isLoading}
+          btnSecondary={() => handleShareGame()}
           onClose={() => setShowModal(false)}
           status={status}
         />

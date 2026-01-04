@@ -19,7 +19,7 @@ export async function getGameById(
     where: {
       id: gameId,
     },
-    include: { attempts: true, puzzle: true,challenge:true },
+    include: { attempts: true, puzzle: true, challenge: true },
   });
   if (!game) {
     throw new Error(GAME_ERRORS.NOT_FOUND);
@@ -180,3 +180,10 @@ export async function persistAttemptAndResponse(
   };
   return rsta;
 }
+
+export const assignPlayerToGame = async (gameId: string, userId: string) : Promise<Game> => {
+   return await prisma.game.update({
+    where: { id: gameId },
+    data: { playerUserId: userId },
+  });
+};

@@ -1,6 +1,6 @@
 "use client";
 import { MastermindColor, GameStatus, AttemptResponse } from "@/lib/game/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import { useMastermindApi } from "./useMastermindApi";
 import { useColorSelection } from "@/components/game/useColorSelection";
@@ -19,7 +19,7 @@ export function useMastermind(gameId: string) {
   } = useColorSelection();
   const history = game?.attempts ?? [];
   const ghostHistory = game?.ghostAttempts ?? [];
-
+  const isAnonymus: boolean = !game?.playerUserId;
   const status: GameStatus = (game?.status as GameStatus) ?? "PLAYING";
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
@@ -60,5 +60,6 @@ export function useMastermind(gameId: string) {
     isPending,
     secretCode,
     ghostHistory,
+    isAnonymus,
   };
 }

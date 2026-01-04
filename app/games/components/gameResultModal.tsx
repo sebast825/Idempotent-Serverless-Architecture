@@ -6,12 +6,22 @@ export interface propsGameResultModal {
   code: (MastermindColor | null)[];
   btnPrimary: () => void;
   btnPrimaryDisable: boolean;
+  btnSecondary: () => void;
+  btnSecondaryDisable: boolean;
   onClose: () => void;
   status: GameStatus;
 }
 
 export default function GameResultModal(props: propsGameResultModal) {
-  const { code, btnPrimary, onClose, status ,btnPrimaryDisable} = props;
+  const {
+    code,
+    btnPrimary,
+    onClose,
+    status,
+    btnPrimaryDisable,
+    btnSecondary,
+    btnSecondaryDisable,
+  } = props;
   return (
     <>
       <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg-opacity-50">
@@ -22,12 +32,24 @@ export default function GameResultModal(props: propsGameResultModal) {
             <h2 className="text-danger">Game Over 💀</h2>
           )}
           <p>The secret code is:</p>
-          <ColorSequenceRow currentGuess={code} handleRemoveColor={() => {}}/>
-          <div className="d-flex gap-3 p-2">
-            <Button className="w-100" onClick={() => btnPrimary()} disabled={btnPrimaryDisable}>
+          <ColorSequenceRow currentGuess={code} handleRemoveColor={() => {}} />
+          <div className="d-flex flex-column gap-2 py-2 ">
+            <Button onClick={() => btnPrimary()} disabled={btnPrimaryDisable}>
               Play Again
             </Button>
-            <Button variant="secondary w-100" onClick={() => onClose()}>
+            <Button
+              className="w-100"
+              variant="warning"
+              onClick={() => btnSecondary()}
+              disabled={btnSecondaryDisable}
+            >
+              Share as Challenge
+            </Button>
+            <Button
+              variant="outline-secondary"
+              className="border-0"
+              onClick={() => onClose()}
+            >
               Back
             </Button>
           </div>
