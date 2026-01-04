@@ -32,11 +32,18 @@ export const useSharePuzzle = () => {
     mutationFn: async ({
       gameId,
       puzzleId,
+      isGhost,
     }: {
       gameId: string;
       puzzleId: string;
+      isGhost: boolean;
     }): Promise<string> => {
-      return createSystemChallengeAction(gameId, puzzleId, idempotencyKey);
+      return createSystemChallengeAction(
+        gameId,
+        puzzleId,
+        idempotencyKey,
+        isGhost
+      );
     },
     onError: (err) => {
       console.error("Error creating ghost challenge:", err);
@@ -47,15 +54,14 @@ export const useSharePuzzle = () => {
 
   const generateText = (
     game: GameWithAttempts,
-    challengeId: string
+    challengeId: string,
+    showFirstMove: boolean
   ): string => {
     const text = `🏆 Mastermind Puzzle! 🧠
 
 ${selectTextWinOrLose(game)}    
 
-My opening move:
-${formatColorAttempt(game.attempts[0])}
-
+${showFirstMove ? `My opening move:\n${formatColorAttempt(game.attempts[0])}\n` : ``}
 🔥 You have been Challenged! 🔥
 
 Accept the puzzle here 👇
@@ -86,16 +92,20 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
   const converFeedbackToEmoji = (feedback: string) => {
     return FEEDBACK_TO_EMOJI[feedback as keyof typeof FEEDBACK_TO_EMOJI];
   };
-  const handleSharePuzzle = async (gameId: string): Promise<string> => {
+  const handleSharePuzzle = async (
+    gameId: string,
+    isGhost: boolean,
+    showFirstMove: boolean
+  ): Promise<string> => {
     try {
-      console.log(gameId);
       const game: GameWithAttempts = await mutateAsync(gameId);
       const challengeId = await createChallenge({
         gameId,
         puzzleId: game.puzzleId,
+        isGhost,
       });
 
-      const text: string = generateText(game, challengeId);
+      const text: string = generateText(game, challengeId,showFirstMove);
       return text;
     } catch {
       error("An error occurred while copying to clipboard");

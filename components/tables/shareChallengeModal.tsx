@@ -13,13 +13,13 @@ export default function ShareChallengeModal(props: PropsShareChallengeModal) {
   const { gameId, onClose } = props;
   const { handleSharePuzzle, isPending } = useSharePuzzle();
   const { success } = useToastit();
-  
+
   const [isGhost, setIsGhost] = useState(true);
   const [showFirstMove, setShowFirstMove] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
 
   const handleGenerateChallenge = async () => {
-    const text: string = await handleSharePuzzle(gameId);
+    const text: string = await handleSharePuzzle(gameId,isGhost,showFirstMove);
     setGeneratedLink(text);
     navigator.clipboard.writeText(text);
     success("Copied to clipboard!");
@@ -30,7 +30,7 @@ export default function ShareChallengeModal(props: PropsShareChallengeModal) {
       style={{ zIndex: 1050 }}
     >
       <div className="p-4 p-md-5 m-2 rounded-xl shadow-2xl text-center bg-light border rounded-3">
-        <h2 className="text-success fw-bold">Challenge a Friend! 🏆</h2>
+        <h2 className="text-primary fw-bold">Challenge a Friend! 🏆</h2>
 
         <hr className="my-4 opacity-25" />
 
