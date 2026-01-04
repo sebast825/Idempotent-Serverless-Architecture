@@ -63,10 +63,13 @@ export const findExistingGame = async (
   if (game.playerUserId != user?.id && game.status === "PLAYING") {
     throw new Error(GAME_ERRORS.AUTH_REQUIRED);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { puzzle, ...gameWithoutPuzzle } = game;
-
-  return { ...gameWithoutPuzzle, ghostAttempts };
+  if (game.status != "PLAYING") {
+    return { ...game, ghostAttempts };
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { puzzle, ...gameWithoutPuzzle } = game;
+    return { ...gameWithoutPuzzle, ghostAttempts };
+  }
 };
 
 export const createGameAction = async (
@@ -91,5 +94,5 @@ export const getGameForReview = async (
       MAX_ATTEMPTS
     );
   }
-  return {...game,ghostAttempts};
+  return { ...game, ghostAttempts };
 };

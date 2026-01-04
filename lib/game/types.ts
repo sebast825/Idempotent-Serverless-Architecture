@@ -77,6 +77,7 @@ export interface GhostAttemptResponse extends AttemptResponse {
 }
 export interface GameWithGhost extends GameWithAttempts {
   ghostAttempts?: FormattedAttempt[];
+  puzzle?: Prisma.PuzzleGetPayload<{}>;
 }
 
 export interface GameWithGhostAndPuzzle extends GameWithAttempts {

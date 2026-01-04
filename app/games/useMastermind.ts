@@ -6,9 +6,6 @@ import { useMastermindApi } from "./useMastermindApi";
 import { useColorSelection } from "@/components/game/useColorSelection";
 
 export function useMastermind(gameId: string) {
-  const [secretCode, setSecretCode] = useState<(MastermindColor | null)[]>(
-    Array(4).fill(null)
-  );
   const { submitAttempt, isPending, game } = useMastermindApi(gameId);
   const [submissionId, setSubmissionId] = useState(v4());
   const {
@@ -21,6 +18,13 @@ export function useMastermind(gameId: string) {
   const ghostHistory = game?.ghostAttempts ?? [];
   const isAnonymus: boolean = !game?.playerUserId;
   const status: GameStatus = (game?.status as GameStatus) ?? "PLAYING";
+  const [secretCode, setSecretCode] = useState<(MastermindColor | null)[]>(
+    Array(4).fill(null)
+  );
+  useEffect(() => {
+    if (game?.puzzle?.secretCode)
+      setSecretCode(game?.puzzle?.secretCode as MastermindColor[]);
+  }, [game?.puzzle?.secretCode]);
 
   const handleSubmitAttempt = async (): Promise<AttemptResponse> => {
     const finalGuess = currentGuess as MastermindColor[];
@@ -29,7 +33,6 @@ export function useMastermind(gameId: string) {
       submissionId
     );
     setSubmissionId(v4());
-    console.log(responseAttempt);
     handleGameStatus(responseAttempt.gameStatus, responseAttempt.secretCode);
     return responseAttempt;
   };
