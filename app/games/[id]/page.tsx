@@ -14,6 +14,7 @@ import React from "react";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { ROUTES } from "@/lib/routes";
 import ShareChallengeModal from "@/components/modals/shareChallengeModal";
+import { useRouter } from "next/navigation";
 
 export default function GameDashboard({
   params,
@@ -24,7 +25,7 @@ export default function GameDashboard({
     useCreatePuzzleAndGame();
   const { error } = useToastit();
   const { id } = use(params);
-
+  const redirect = useRouter();
   const {
     status,
     history,
@@ -38,7 +39,9 @@ export default function GameDashboard({
     isAnonymus,
   } = useMastermind(id);
 
-  const [showGameResultModal, setShowGameResultModal] = useState<boolean>(status != "PLAYING");
+  const [showGameResultModal, setShowGameResultModal] = useState<boolean>(
+    status != "PLAYING"
+  );
   const [showChallengeModal, setShowChallengeModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -87,8 +90,9 @@ export default function GameDashboard({
           btnPrimaryDisable={isPendingNewGame}
           btnSecondaryDisable={isLoading}
           btnSecondary={() => handleShareGame()}
-          onClose={() => setShowGameResultModal(false)}
+          onClose={() => redirect.push(ROUTES.dashboard())}
           status={status}
+          btnReview={() => redirect.push(ROUTES.reviewGame(id))}
         />
       )}
 

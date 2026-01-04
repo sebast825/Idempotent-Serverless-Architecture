@@ -8,6 +8,7 @@ export interface propsGameResultModal {
   btnPrimaryDisable: boolean;
   btnSecondary: () => void;
   btnSecondaryDisable: boolean;
+  btnReview: () => void;
   onClose: () => void;
   status: GameStatus;
 }
@@ -20,8 +21,10 @@ export default function GameResultModal(props: propsGameResultModal) {
     status,
     btnPrimaryDisable,
     btnSecondary,
+    btnReview,
     btnSecondaryDisable,
   } = props;
+
   return (
     <>
       <div className="fixed-top w-100 h-100 d-flex align-items-center  justify-content-center bg-dark bg-opacity-50">
@@ -44,6 +47,13 @@ export default function GameResultModal(props: propsGameResultModal) {
               disabled={btnSecondaryDisable}
             >
               Share as Challenge
+            </Button>
+            <Button
+              variant="success"
+              className="border-0"
+              onClick={() => btnReview()}
+            >
+              Watch Review
             </Button>
             <Button
               variant="outline-secondary"
