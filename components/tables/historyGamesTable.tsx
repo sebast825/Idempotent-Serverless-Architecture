@@ -5,18 +5,18 @@ import { getPaginatedGamesByUser } from "@/app/actions/historyActions";
 import { useQuery } from "@tanstack/react-query";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
-import { useSharePuzzle } from "./useSharePuzzle";
 import { useState } from "react";
 import { ROUTES } from "@/lib/routes";
+import ShareChallengeModal from "./shareChallengeModal";
 
 export function HistoryGamesTable() {
+ 
   const router = useRouter();
   const { page, pageSize, goToPage } = usePagination();
   const closeModal = useModalStore((state) => state.closeModal);
-  const { handleSharePuzzle } = useSharePuzzle();
 
   //use to disable share btns while processing
-  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [shareGameId, setShareGameId] = useState<string | null>(null);
   const { data: historyGames, isLoading } = useQuery({
     queryKey: ["gameHistory", page],
     queryFn: () => getPaginatedGamesByUser(page, pageSize),
@@ -32,11 +32,7 @@ export function HistoryGamesTable() {
     closeModal();
   }
 
-  const onShareClick = async (gameId: string) => {
-    setProcessingId(gameId);
-    await handleSharePuzzle(gameId);
-    setProcessingId(null);
-  };
+
   if (historyGames?.data.length == 0) {
     return (
       <div className="w-100 text-center p-5">
@@ -44,8 +40,18 @@ export function HistoryGamesTable() {
       </div>
     );
   }
+  function modalResults (isGhost:boolean,showFirstMove:boolean){
+    console.log(isGhost,showFirstMove)
+  }
   return (
     <>
+     {(shareGameId ) && 
+            <ShareChallengeModal
+              gameId={shareGameId}
+              onClose={() => {setShareGameId(null)}}
+              
+            />
+          }
       <div style={{ minHeight: "50px" }}>
         {isLoading ? (
           <div className="w-100 text-center p-5">
@@ -98,8 +104,8 @@ export function HistoryGamesTable() {
                                 </Button>
                                 <button
                                   className="btn btn-sm btn-outline-info"
-                                  onClick={() => onShareClick(game.id)}
-                                  disabled={processingId == game.id}
+                                  onClick={() => setShareGameId(game.id)}
+                                //  disabled={shareGameId == game.id}
                                 >
                                   Challenge
                                 </button>

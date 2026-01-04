@@ -86,7 +86,7 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
   const converFeedbackToEmoji = (feedback: string) => {
     return FEEDBACK_TO_EMOJI[feedback as keyof typeof FEEDBACK_TO_EMOJI];
   };
-  const handleSharePuzzle = async (gameId: string): Promise<void> => {
+  const handleSharePuzzle = async (gameId: string): Promise<string> => {
     try {
       console.log(gameId);
       const game: GameWithAttempts = await mutateAsync(gameId);
@@ -96,10 +96,10 @@ ${window.location.origin}/challenges/${challengeId}`.trim();
       });
 
       const text: string = generateText(game, challengeId);
-      navigator.clipboard.writeText(text);
-      success("Copied to clipboard!");
+      return text;
     } catch {
       error("An error occurred while copying to clipboard");
+      throw new Error();
     }
   };
   return { handleSharePuzzle, isPending };
