@@ -83,8 +83,8 @@ export default function GameDashboard({
                 //we validate the current position and the before becasue the ghostHistory keep pushing attempts as undefiend
                 const isGhostWinningTurn =
                   ghostHistory &&
-                  ghostHistory[index]?.result !== undefined && 
-                  ghostHistory[index + 1]?.result === undefined; 
+                  ghostMatch?.result?.every((r) => r === "MATCH");
+                index === ghostHistory.length - 1;
                 return (
                   <React.Fragment
                     key={`round-${attempt.submissionId || index}`}
