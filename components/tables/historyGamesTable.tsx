@@ -7,7 +7,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ROUTES } from "@/lib/routes";
-import ShareChallengeModal from "./shareChallengeModal";
+import ShareChallengeModal from "../modals/shareChallengeModal";
 
 export function HistoryGamesTable() {
  

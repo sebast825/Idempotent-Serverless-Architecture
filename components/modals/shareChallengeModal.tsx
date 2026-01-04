@@ -1,7 +1,7 @@
 import useToastit from "@/hooks/useToastit";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
-import { useSharePuzzle } from "./useSharePuzzle";
+import { useSharePuzzle } from "../tables/useSharePuzzle";
 
 export interface PropsShareChallengeModal {
   gameId: string;

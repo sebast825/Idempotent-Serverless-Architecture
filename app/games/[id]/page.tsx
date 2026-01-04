@@ -5,7 +5,7 @@ import ColorPicker from "@/components/game/colorPicker";
 import GameResultModal from "@/app/games/components/gameResultModal";
 import ColorSequenceRow from "@/components/game/colorSequenceRow";
 import { useMastermind } from "../useMastermind";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";
@@ -13,6 +13,7 @@ import { Card } from "react-bootstrap";
 import React from "react";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { ROUTES } from "@/lib/routes";
+import ShareChallengeModal from "@/components/modals/shareChallengeModal";
 
 export default function GameDashboard({
   params,
@@ -36,7 +37,13 @@ export default function GameDashboard({
     ghostHistory,
     isAnonymus,
   } = useMastermind(id);
-  const [showModal, setShowModal] = useState<boolean>(status != "PLAYING");
+
+  const [showGameResultModal, setShowGameResultModal] = useState<boolean>(status != "PLAYING");
+  const [showChallengeModal, setShowChallengeModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    setShowGameResultModal(status != "PLAYING");
+  }, [status]);
 
   const onSubmit = async () => {
     if (isPending || status !== "PLAYING") return;
@@ -46,12 +53,12 @@ export default function GameDashboard({
     }
     const rsta: AttemptResponse = await handleSubmitAttempt();
     if (rsta.gameStatus != "PLAYING") {
-      setShowModal(true);
+      setShowGameResultModal(true);
     }
   };
   const handleNewGame = async () => {
     await createPuzzleAndGame();
-    setShowModal(false);
+    setShowGameResultModal(false);
   };
   const { loginWithGoogle, isLoading } = useLogin();
   const handleShareGame = async () => {
@@ -60,18 +67,27 @@ export default function GameDashboard({
       const queryParams = `?next=${encodeURIComponent(destination)}`;
       return await loginWithGoogle(queryParams);
     }
-    
+    setShowGameResultModal(false);
+    setShowChallengeModal(true);
   };
   return (
     <>
-      {!showModal && (
+      {showChallengeModal && (
+        <ShareChallengeModal
+          gameId={id}
+          onClose={() => {
+            setShowChallengeModal(false), setShowGameResultModal(true);
+          }}
+        ></ShareChallengeModal>
+      )}
+      {showGameResultModal && (
         <GameResultModal
           code={secretCode}
           btnPrimary={() => handleNewGame()}
           btnPrimaryDisable={isPendingNewGame}
           btnSecondaryDisable={isLoading}
           btnSecondary={() => handleShareGame()}
-          onClose={() => setShowModal(false)}
+          onClose={() => setShowGameResultModal(false)}
           status={status}
         />
       )}
