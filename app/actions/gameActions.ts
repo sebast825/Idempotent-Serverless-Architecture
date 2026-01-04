@@ -18,6 +18,7 @@ import {
   getGameById,
 } from "@/lib/game/service";
 import { getAttemptsByChallengerGameId } from "@/lib/game/ghostService";
+import { MAX_ATTEMPTS } from "@/lib/game/config";
 
 export async function createPuzzleGameAction(): Promise<string> {
   const { user } = await createClient();
@@ -87,7 +88,7 @@ export const getGameForReview = async (
   if (game.challenge && game.challenge.challengerGameId) {
     ghostAttempts = await getAttemptsByChallengerGameId(
       game.challenge.challengerGameId,
-      game.attempts.length
+      MAX_ATTEMPTS
     );
   }
   return {...game,ghostAttempts};

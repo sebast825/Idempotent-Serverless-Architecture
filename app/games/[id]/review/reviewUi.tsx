@@ -2,16 +2,21 @@
 
 import AttemptRow from "../../components/attemptRow";
 import ColorSequenceRow from "../../../../components/game/colorSequenceRow";
-import {
-  GameWithAttemptsAndPuzzle,
-  GameWithGhostAndPuzzle,
-  MastermindColor,
-} from "@/lib/game/types";
+import { GameWithGhostAndPuzzle, MastermindColor } from "@/lib/game/types";
 import { Card, Badge } from "react-bootstrap";
 import React from "react";
 
 export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
   console.log(game);
+  // 1. How many total rounds
+  const totalRounds = Math.max(
+    game.attempts.length,
+    game.ghostAttempts?.length || 0
+  );
+
+  // 2. create an empty array to map, this allow us show the complete review
+  //doens't matter if challenger or challenged finish first
+  const rounds = Array.from({ length: totalRounds });
   return (
     <>
       <div
@@ -29,19 +34,22 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
             style={{ minHeight: 0 }}
           >
             <div style={{ minHeight: "max-content" }}>
-              {game.attempts.map((attempt, index) => {
+              {rounds.map((_, index) => {
                 const ghostMatch =
                   game.ghostAttempts && game.ghostAttempts[index];
+                const playerMatch = game.attempts[index];
                 //we validate the current position and the before becasue the game.attempts.ghostAttempts keep pushing attempts as undefiend
                 const isGhostWinningTurn =
                   game.ghostAttempts &&
                   game.ghostAttempts[index]?.result !== undefined &&
                   game.ghostAttempts[index + 1]?.result === undefined;
+                const isPlayerWinningTurn =
+                  playerMatch?.result &&
+                  game.attempts[index]?.result !== undefined &&
+                  game.attempts[index + 1]?.result === undefined;
                 return (
-                  <React.Fragment
-                    key={`round-${attempt.submissionId || index}`}
-                  >
-                    <div className="text-light my-1 p-2 d-flex flex-row align-items-center justify-content-center bg-black overflow-hiden  bg-opacity-25 rounded-2  py-1 gap-3">
+                  <React.Fragment key={index}>
+                    <div className="text-light my-1 p-2 d-flex flex-row align-items-center justify-content-around bg-black overflow-hiden  bg-opacity-25 rounded-2  py-1 gap-3">
                       <h4 className="">
                         {index}
                         {"."}
@@ -51,8 +59,8 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                         {ghostMatch?.guess && (
                           <AttemptRow
                             props={{
-                              attemptGuess: ghostMatch.guess,
-                              results: ghostMatch.result,
+                              attemptGuess: ghostMatch?.guess,
+                              results: ghostMatch?.result,
                               isGhostMode: true,
                             }}
                           />
@@ -64,13 +72,20 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                         )}
 
                         {/* 2. then the player attempt*/}
-                        <AttemptRow
-                          props={{
-                            attemptGuess: attempt.guess,
-                            results: attempt.result,
-                            isGhostMode: false,
-                          }}
-                        />
+                        {playerMatch?.guess && (
+                          <AttemptRow
+                            props={{
+                              attemptGuess: playerMatch?.guess,
+                              results: playerMatch?.result,
+                              isGhostMode: false,
+                            }}
+                          />
+                        )}
+                        {isPlayerWinningTurn && (
+                          <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
+                            The rival finished here! 🎯
+                          </div>
+                        )}
                       </div>
                     </div>
                   </React.Fragment>
