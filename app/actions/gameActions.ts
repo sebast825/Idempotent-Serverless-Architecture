@@ -4,10 +4,8 @@ import { generateSecretCode } from "@/lib/game/engine";
 import {
   FeedbackStatus,
   FormattedAttempt,
-  GameWithAttempts,
   GameWithAttemptsAndPuzzle,
   GameWithGhost,
-  GhostAttemptResponse,
   MastermindColor,
 } from "@/lib/game/types";
 import { createClient } from "@/lib/supabase/server";

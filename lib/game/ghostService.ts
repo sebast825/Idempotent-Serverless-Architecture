@@ -6,7 +6,7 @@ export const addGhostAttemptIfExist = async (
   challengerGameId: string,
   turnIndex: number
 ): Promise<GhostAttemptResponse> => {
-  var attempt = await prisma.attempt.findFirst({
+  const attempt = await prisma.attempt.findFirst({
     where: { gameId: challengerGameId },
     orderBy: { createdAt: "asc" },
      skip: turnIndex,
@@ -23,7 +23,7 @@ export const addGhostAttemptIfExist = async (
 };
 
 export const getAttemptsByChallengerGameId = async (challengerGameId:string, limit:number):Promise<FormattedAttempt[]> =>{
-    var attempts = await prisma.attempt.findMany({
+    const attempts = await prisma.attempt.findMany({
     where: { gameId: challengerGameId },
     orderBy: { createdAt: "asc" },
     take: limit,

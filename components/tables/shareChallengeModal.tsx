@@ -1,5 +1,4 @@
 import useToastit from "@/hooks/useToastit";
-import { GameStatus, MastermindColor } from "@/lib/game/types";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useSharePuzzle } from "./useSharePuzzle";

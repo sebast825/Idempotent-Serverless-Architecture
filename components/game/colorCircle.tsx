@@ -1,5 +1,3 @@
-import { Button } from "react-bootstrap";
-
 interface PropsColorCircle {
   color: string;
   btnAction?: () => void;

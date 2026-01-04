@@ -5,7 +5,7 @@ import ColorPicker from "@/components/game/colorPicker";
 import GameResultModal from "@/app/games/components/gameResultModal";
 import ColorSequenceRow from "@/components/game/colorSequenceRow";
 import { useMastermind } from "../useMastermind";
-import { use, useEffect, useState } from "react";
+import { use, useState } from "react";
 import { AttemptResponse } from "@/lib/game/types";
 import useToastit from "@/hooks/useToastit";
 import { useCreatePuzzleAndGame } from "@/hooks/game/useCreatePuzzleAndGame";

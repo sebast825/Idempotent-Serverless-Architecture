@@ -13,7 +13,7 @@ import { useMemo } from "react";
 import { v4 } from "uuid";
 
 export const useSharePuzzle = () => {
-  const { success, error } = useToastit();
+  const { error } = useToastit();
   //without useMemo it generate a new key each time the fn is call
   //only will change when the component is unmounted
   const idempotencyKey = useMemo(() => v4(), []);

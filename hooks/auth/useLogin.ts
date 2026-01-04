@@ -14,8 +14,8 @@ export const useLogin = () => {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-    } catch (ex: any) {
-      console.error(ex);
+    } catch  {
+     
     } finally {
       setIsLoading(false);
     }

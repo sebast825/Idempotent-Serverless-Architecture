@@ -1,4 +1,4 @@
-import { Attempt, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export const MASTERMIND_COLORS = [
   "RED",

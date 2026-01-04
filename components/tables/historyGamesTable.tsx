@@ -40,9 +40,7 @@ export function HistoryGamesTable() {
       </div>
     );
   }
-  function modalResults (isGhost:boolean,showFirstMove:boolean){
-    console.log(isGhost,showFirstMove)
-  }
+
   return (
     <>
      {(shareGameId ) && 

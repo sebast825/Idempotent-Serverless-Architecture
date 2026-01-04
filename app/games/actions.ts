@@ -33,7 +33,7 @@ export async function submitGuessAction(
     game.puzzle.secretCode as MastermindColor[],
     guessAttempt
   );
-  var baseResponse = await persistAttemptAndResponse(
+  const baseResponse = await persistAttemptAndResponse(
     currentFeedback,
     game,
     gameId,
@@ -43,7 +43,7 @@ export async function submitGuessAction(
 
   if(game.challenge?.isGhost && game.challenge.challengerGameId){
     const attemptsToSkip = game.attempts.length
-    var ghostResponse =  await addGhostAttemptIfExist(baseResponse,game.challenge.challengerGameId, attemptsToSkip)  
+    const ghostResponse =  await addGhostAttemptIfExist(baseResponse,game.challenge.challengerGameId, attemptsToSkip)  
     return ghostResponse;
   }
   return baseResponse;

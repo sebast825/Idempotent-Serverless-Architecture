@@ -1,7 +1,6 @@
 import {
   MastermindColor,
   AttemptResponse,
-  GameWithAttempts,
   GhostAttemptResponse,
   GameWithGhost,
 } from "@/lib/game/types";
