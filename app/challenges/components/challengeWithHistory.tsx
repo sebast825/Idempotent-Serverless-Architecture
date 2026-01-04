@@ -3,13 +3,13 @@ import { FormattedAttempt } from "@/lib/game/types";
 import { Card, Badge } from "react-bootstrap";
 import { ChallengeUi } from "./challengeUi";
 
-interface propsChallengeGhost {
+interface ChallengeWithHistoryProps {
   attempts: FormattedAttempt[];
   puzzleId: string;
   challengeId: string;
 }
 
-export const ChallengeGhost = ({ attempts, puzzleId ,challengeId}: propsChallengeGhost) => {
+export const ChallengeWithHistory = ({ attempts, puzzleId ,challengeId}: ChallengeWithHistoryProps) => {
   return (
     <ChallengeUi puzzleId={puzzleId} challengeId={challengeId}>
       <Card.Text className="lead text-secondary mb-4">

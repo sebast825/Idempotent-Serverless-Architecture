@@ -1,6 +1,6 @@
 import { findExistingGame } from "@/app/actions/gameActions";
 
-import { ChallengeGhost } from "../components/challengeGhost";
+import { ChallengeWithHistory } from "../components/challengeWithHistory";
 import {
   ChallengeWithConfig,
   getChallenge,
@@ -32,7 +32,7 @@ const PuzzlePage = async ({ params }: { params: Promise<{ id: string }> }) => {
     if (!game) redirect(ROUTES.not_found());
 
     return (
-      <ChallengeGhost
+      <ChallengeWithHistory
         attempts={game.attempts}
         puzzleId={game.puzzleId}
         challengeId={challenge.id}
