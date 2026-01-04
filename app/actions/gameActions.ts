@@ -6,6 +6,7 @@ import {
   FormattedAttempt,
   GameWithAttemptsAndPuzzle,
   GameWithGhost,
+  GameWithGhostAndPuzzle,
   MastermindColor,
 } from "@/lib/game/types";
 import { createClient } from "@/lib/supabase/server";
@@ -16,9 +17,7 @@ import {
   createGameWithPuzzle,
   getGameById,
 } from "@/lib/game/service";
-import {
-  getAttemptsByChallengerGameId,
-} from "@/lib/game/ghostService";
+import { getAttemptsByChallengerGameId } from "@/lib/game/ghostService";
 
 export async function createPuzzleGameAction(): Promise<string> {
   const { user } = await createClient();
@@ -79,9 +78,17 @@ export const createGameAction = async (
 
 export const getGameForReview = async (
   gameId: string
-): Promise<GameWithAttemptsAndPuzzle> => {
+): Promise<GameWithGhostAndPuzzle> => {
   const game: GameWithAttemptsAndPuzzle = await getGameFormated(gameId);
   if (game.status == "PLAYING")
     throw new Error("This game is not finished yet.");
-  return game;
+
+  let ghostAttempts: FormattedAttempt[] = [];
+  if (game.challenge && game.challenge.challengerGameId) {
+    ghostAttempts = await getAttemptsByChallengerGameId(
+      game.challenge.challengerGameId,
+      game.attempts.length
+    );
+  }
+  return {...game,ghostAttempts};
 };

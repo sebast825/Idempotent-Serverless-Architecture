@@ -1,5 +1,5 @@
 import { getGameForReview } from "@/app/actions/gameActions";
-import { GameWithAttemptsAndPuzzle } from "@/lib/game/types";
+import { GameWithGhostAndPuzzle } from "@/lib/game/types";
 import ReviewGame from "./reviewUi";
 import { FeedbackDisplay } from "@/components/cards/feedbackDisplay";
 export default async function ReviewPage({
@@ -9,7 +9,7 @@ export default async function ReviewPage({
 }) {
   const { id } = await params;
   try {
-    const game: GameWithAttemptsAndPuzzle = await getGameForReview(id);
+    const game: GameWithGhostAndPuzzle = await getGameForReview(id);
     return <ReviewGame game={game}></ReviewGame>;
   } catch {
     return <FeedbackDisplay title="The game is been played!"></FeedbackDisplay>;

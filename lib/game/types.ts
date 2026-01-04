@@ -55,8 +55,7 @@ export type GameWithAttempts = Omit<
 
 export type GameWithAttemptsAndPuzzle = GameWithAttempts & {
   puzzle: Prisma.PuzzleGetPayload<true>;
-    challenge: Prisma.ChallengeGetPayload<true>;
-
+  challenge: Prisma.ChallengeGetPayload<true>;
 };
 
 export type GameWithRelations = Prisma.GameGetPayload<{
@@ -73,11 +72,14 @@ export interface AttemptResponse {
   secretCode?: MastermindColor[];
 }
 
-
-
-export interface GhostAttemptResponse extends AttemptResponse{
-  ghostAttempt? : FormattedAttempt
+export interface GhostAttemptResponse extends AttemptResponse {
+  ghostAttempt?: FormattedAttempt;
 }
-export interface GameWithGhost extends GameWithAttempts{
-  ghostAttempts? : FormattedAttempt[]
+export interface GameWithGhost extends GameWithAttempts {
+  ghostAttempts?: FormattedAttempt[];
+}
+
+export interface GameWithGhostAndPuzzle extends GameWithAttempts {
+  ghostAttempts?: FormattedAttempt[];
+  puzzle: Prisma.PuzzleGetPayload<{}>;
 }

@@ -2,18 +2,22 @@
 
 import AttemptRow from "../../components/attemptRow";
 import ColorSequenceRow from "../../../../components/game/colorSequenceRow";
-import { GameWithAttemptsAndPuzzle, MastermindColor } from "@/lib/game/types";
+import {
+  GameWithAttemptsAndPuzzle,
+  GameWithGhostAndPuzzle,
+  MastermindColor,
+} from "@/lib/game/types";
 import { Card, Badge } from "react-bootstrap";
+import React from "react";
 
-export default function ReviewGame({game} : {game: GameWithAttemptsAndPuzzle}) {
-    console.log(game)
+export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
+  console.log(game);
   return (
     <>
       <div
         className="d-flex flex-column pt-5 bgGradient"
         style={{
           height: "100vh",
-
         }}
       >
         <div
@@ -25,21 +29,53 @@ export default function ReviewGame({game} : {game: GameWithAttemptsAndPuzzle}) {
             style={{ minHeight: 0 }}
           >
             <div style={{ minHeight: "max-content" }}>
-              {game.attempts.map((attempt, index) => (
-                <div
-                  className="text-light d-flex flex-row align-items-center bg-black  bg-opacity-25 rounded-2 px-3 py-1 gap-3"
-                  key={index}
-                >
-                  <h4 className=" ">{index}|</h4>
+              {game.attempts.map((attempt, index) => {
+                const ghostMatch =
+                  game.ghostAttempts && game.ghostAttempts[index];
+                //we validate the current position and the before becasue the game.attempts.ghostAttempts keep pushing attempts as undefiend
+                const isGhostWinningTurn =
+                  game.ghostAttempts &&
+                  game.ghostAttempts[index]?.result !== undefined &&
+                  game.ghostAttempts[index + 1]?.result === undefined;
+                return (
+                  <React.Fragment
+                    key={`round-${attempt.submissionId || index}`}
+                  >
+                    <div className="text-light my-1 p-2 d-flex flex-row align-items-center justify-content-center bg-black overflow-hiden  bg-opacity-25 rounded-2  py-1 gap-3">
+                      <h4 className="">
+                        {index}
+                        {"."}
+                      </h4>
+                      <div style={{ maxWidth: "max-content" }}>
+                        {/* 1. First we show the ghost*/}
+                        {ghostMatch?.guess && (
+                          <AttemptRow
+                            props={{
+                              attemptGuess: ghostMatch.guess,
+                              results: ghostMatch.result,
+                              isGhostMode: true,
+                            }}
+                          />
+                        )}
+                        {isGhostWinningTurn && (
+                          <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
+                            You finished the game here! 👻
+                          </div>
+                        )}
 
-                  <AttemptRow
-                    props={{
-                      attemptGuess: attempt.guess,
-                      results: attempt.result,
-                    }}
-                  />
-                </div>
-              ))}
+                        {/* 2. then the player attempt*/}
+                        <AttemptRow
+                          props={{
+                            attemptGuess: attempt.guess,
+                            results: attempt.result,
+                            isGhostMode: false,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </div>

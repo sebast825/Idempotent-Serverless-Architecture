@@ -28,8 +28,8 @@ export default function ColorCircle(props: PropsColorCircle) {
         className={`m-2 rounded-circle shadow-sm ${customClass}`}
         style={{
           backgroundColor: color.toLowerCase(),
-          width: `${isGhostMode ? "20px" :"40px"}`,
-          height: `${isGhostMode ? "20px" :"40px"}`,
+          width: `${isGhostMode ? "20px" :"35px"}`,
+          height: `${isGhostMode ? "20px" :"35px"}`,
           display: "inline-block",
           cursor: cursor,
           border: "2px solid #666",
