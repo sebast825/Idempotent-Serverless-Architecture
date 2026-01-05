@@ -55,7 +55,7 @@ export const NavBar = ({ user }: { user: User | null }) => {
             {!user ? (
               <NavDropdown.Item
                 className="text-light"
-                onClick={loginWithGoogle}
+                onClick={()=>loginWithGoogle()}
                 disabled={isLoading}
               >
                 {isLoading ? "Cargando..." : "Login"}

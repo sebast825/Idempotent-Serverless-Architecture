@@ -5,7 +5,7 @@ import { useState } from "react";
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const loginWithGoogle = async (queryParams: string) => {
+  const loginWithGoogle = async (queryParams: string = "") => {
     setIsLoading(true);
     try {
       await supabase.auth.signInWithOAuth({
