@@ -38,8 +38,9 @@ export async function GET(request: Request) {
       if (claimGameId) {
         await assignPlayerToGame(claimGameId, data.user.id);
         finalUrl.searchParams.delete("claimGameId");
-        finalUrl.searchParams.delete("code");
       }
+      finalUrl.searchParams.delete("code");
+
       const response = NextResponse.redirect(finalUrl);
       response.headers.set("Cache-Control", "no-store, max-age=0");
       return response;
