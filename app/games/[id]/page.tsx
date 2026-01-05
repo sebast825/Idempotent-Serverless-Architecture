@@ -79,7 +79,7 @@ export default function GameDashboard({
         <ShareChallengeModal
           gameId={id}
           onClose={() => {
-            setShowChallengeModal(false), setShowGameResultModal(true);
+            setShowChallengeModal(false); setShowGameResultModal(true);
           }}
         ></ShareChallengeModal>
       )}
@@ -118,7 +118,6 @@ export default function GameDashboard({
                 const isGhostWinningTurn =
                   ghostHistory &&
                   ghostMatch?.result?.every((r) => r === "MATCH");
-                index === ghostHistory.length - 1;
                 return (
                   <React.Fragment
                     key={`round-${attempt.submissionId || index}`}
