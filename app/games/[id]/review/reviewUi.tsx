@@ -134,14 +134,14 @@ export default function ReviewGame({ game ,currentUserId}: { game: GameWithGhost
                       handleRemoveColor={() => {}}
                       btnPointer={false}
                     />
-                    <div className="">
+                  {isOwner &&   <div >
                       <Button
                         variant="warning"
                         onClick={() => setShowChallengeModal(true)}
                       >
                         Share as Challenge
                       </Button>
-                    </div>
+                    </div>}
                   </div>
                 </div>
               )}
