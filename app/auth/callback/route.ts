@@ -1,5 +1,4 @@
 import { assignPlayerToGame } from "@/lib/game/service";
-import { createClient } from "@/lib/supabase/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -11,17 +10,6 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   const finalUrl = new URL(next, origin);
-
-  //if a player is not login and play a game when he finish can login and add his id to the game
-  const claimGameId = finalUrl.searchParams.get("claimGameId");
-  if (claimGameId) {
-    const { user } = await createClient();
-    if (user) {
-      await assignPlayerToGame(claimGameId, user?.id);
-      finalUrl.searchParams.delete("claimGameId");
-      finalUrl.searchParams.delete("code");
-    }
-  }
 
   if (code) {
     const cookieStore = await cookies();
@@ -42,9 +30,16 @@ export async function GET(request: Request) {
       }
     );
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-    if (!error) {
+    if (!error && data.user) {
+      //if a player is not login and play a game when he finish can login and add his id to the game
+      const claimGameId = finalUrl.searchParams.get("claimGameId");
+      if (claimGameId) {
+        await assignPlayerToGame(claimGameId, data.user.id);
+        finalUrl.searchParams.delete("claimGameId");
+        finalUrl.searchParams.delete("code");
+      }
       const response = NextResponse.redirect(finalUrl);
       response.headers.set("Cache-Control", "no-store, max-age=0");
       return response;
