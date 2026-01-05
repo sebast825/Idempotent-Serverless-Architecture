@@ -7,7 +7,7 @@ import { Card, Badge, Button } from "react-bootstrap";
 import React, { useState } from "react";
 import ShareChallengeModal from "@/components/modals/shareChallengeModal";
 
-export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
+export default function ReviewGame({ game ,currentUserId}: { game: GameWithGhostAndPuzzle,currentUserId :string | undefined }) {
   console.log(game);
   // 1. How many total rounds
   const totalRounds = Math.max(
@@ -20,6 +20,14 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
   const rounds = Array.from({ length: totalRounds });
   const [showChallengeModal, setShowChallengeModal] = useState<boolean>(false);
 
+  const isOwner = game.playerUserId === currentUserId;
+  console.log(isOwner)
+  const ghostLabel = isOwner
+    ? "The rival finished here! 👻"
+    : "You finished here! ⚔️";
+  const playerLabel = isOwner
+    ? "You finished here! 🎯"
+    : "The rival finished here! 🎯";
   return (
     <>
       {showChallengeModal && (
@@ -76,7 +84,7 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                         )}
                         {isGhostWinningTurn && (
                           <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
-                            The rival finished here! 👻
+                           {ghostLabel}
                           </div>
                         )}
 
@@ -93,7 +101,7 @@ export default function ReviewGame({ game }: { game: GameWithGhostAndPuzzle }) {
                         {isPlayerWinningTurn &&
                           (game.ghostAttempts?.length ?? 0) > 0 && (
                             <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light text-dark bg-opacity-75 italic my-1">
-                              You finished the game here! 🎯
+                              {playerLabel}
                             </div>
                           )}
                       </div>
