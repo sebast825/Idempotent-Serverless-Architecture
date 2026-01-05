@@ -19,6 +19,7 @@ export async function GET(request: Request) {
     if (user) {
       await assignPlayerToGame(claimGameId, user?.id);
       finalUrl.searchParams.delete("claimGameId");
+      finalUrl.searchParams.delete("code");
     }
   }
 
