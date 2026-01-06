@@ -14,7 +14,7 @@ export const DashboardActions = () => {
           color={"#3b82f6"}
           svgChildren={<polygon points="7 4 21 12 7 20 7 4"></polygon>}
           btnVariant={"outline-primary"}
-          btnText={"PLAY NOW"}
+          btnText={isPending ? "STARTING..." :"PLAY NOW"}
           btnAction={() => createPuzzleAndGame()}
           btndisable={isPending}
           text="Quick Play"
