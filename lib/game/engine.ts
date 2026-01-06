@@ -37,6 +37,20 @@ function formatFeedback(response: responsePosition[]): FeedbackStatus[] {
     }
     return "NONE";
   });
+  // Mix the values (Fisher-Yates Shuffle)
+  for (let i = formatResponse.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [formatResponse[i], formatResponse[j]] = [
+      formatResponse[j],
+      formatResponse[i],
+    ];
+  }
+  //move none to the end
+  return formatResponse.sort((a, b) => {
+    if (a === "NONE" && b !== "NONE") return 1;
+    if (a !== "NONE" && b === "NONE") return -1;
+    return 0;
+  });
   return formatResponse;
 }
 function matchValueAndPosition(
@@ -53,7 +67,6 @@ function matchValueAndPosition(
   });
   return rsta;
 }
-
 
 function matchValueInOtherPositionWithouthMatch(
   response: responsePosition[]
