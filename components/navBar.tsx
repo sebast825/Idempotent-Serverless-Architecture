@@ -15,7 +15,7 @@ import Link from "next/link";
 
 export const NavBar = ({ user }: { user: User | null }) => {
   const openModal = useModalStore((state) => state.openModal);
-  const { loginWithGoogle, isLoading } = useLogin();
+  const { loginWithGoogle} = useLogin();
   useEffect(() => {
     console.log(user);
   }, [user]);
@@ -56,9 +56,8 @@ export const NavBar = ({ user }: { user: User | null }) => {
               <NavDropdown.Item
                 className="text-light"
                 onClick={()=>loginWithGoogle()}
-                disabled={isLoading}
               >
-                {isLoading ? "Cargando..." : "Login"}
+                Login
               </NavDropdown.Item>
             ) : (
               <NavDropdown
@@ -142,7 +141,7 @@ export const NavBar = ({ user }: { user: User | null }) => {
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => signOut()}
-                  disabled={isLoading}
+             
                   className="dropdown-item py-1 px-3 text-danger"
                 >
                   Logout
