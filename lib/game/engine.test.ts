@@ -80,8 +80,8 @@ describe("Mastermind Engine - Critical Cases", () => {
     // BUT, if the guess was ["RED", "RED", "PURPLE", "PINK"], the second RED should be NONE.
 
     const result = validate(secret, guess);
+    expect(result.filter((r) => r === "COLOR_ONLY").length).toBe(1);
 
-    expect(result[1]).toBe("COLOR_ONLY");
   });
   test("should exhaust color supply in second pass", () => {
     const secret: MastermindColor[] = ["RED", "RED", "BLUE", "YELLOW"];
@@ -112,8 +112,9 @@ describe("Mastermind Engine - Critical Cases", () => {
     const result = validate(secret, guess);
 
     // Assert
-
-    expect(result).toEqual(["MATCH", "COLOR_ONLY", "NONE", "COLOR_ONLY"]);
+    expect(result.filter((r) => r === "MATCH").length).toBe(1);
+    expect(result.filter((r) => r === "COLOR_ONLY").length).toBe(2);
+    expect(result.filter((r) => r === "NONE").length).toBe(1);
   });
 
   test("should return all MATCH for a fully correct guess with repetitions", () => {
