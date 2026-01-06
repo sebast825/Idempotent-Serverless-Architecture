@@ -31,7 +31,7 @@ export const CreateCustomChallenge = () => {
           currentGuess={currentGuess}
           submit={() => hadnleSubmit()}
           disableBtn={currentGuess.indexOf(null) !== -1 || isProcessing}
-          btnText="Create Challenge"
+          btnText={isProcessing ? "Creating... ":"Create Challenge"}
         ></ColorPicker>
       </div>
     </div>
