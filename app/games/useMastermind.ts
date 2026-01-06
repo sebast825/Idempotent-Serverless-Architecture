@@ -6,7 +6,7 @@ import { useMastermindApi } from "./useMastermindApi";
 import { useColorSelection } from "@/components/game/useColorSelection";
 
 export function useMastermind(gameId: string) {
-  const { submitAttempt, isPending, game } = useMastermindApi(gameId);
+  const { submitAttempt, isPending, game ,isPendingGame} = useMastermindApi(gameId);
   const [submissionId, setSubmissionId] = useState(v4());
   const {
     handleRemoveColor,
@@ -64,5 +64,6 @@ export function useMastermind(gameId: string) {
     secretCode,
     ghostHistory,
     isAnonymus,
+    isPendingGame
   };
 }

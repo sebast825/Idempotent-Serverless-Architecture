@@ -37,6 +37,7 @@ export default function GameDashboard({
     isPending,
     ghostHistory,
     isAnonymus,
+    isPendingGame,
   } = useMastermind(id);
 
   const [showGameResultModal, setShowGameResultModal] = useState<boolean>(
@@ -79,7 +80,8 @@ export default function GameDashboard({
         <ShareChallengeModal
           gameId={id}
           onClose={() => {
-            setShowChallengeModal(false); setShowGameResultModal(true);
+            setShowChallengeModal(false);
+            setShowGameResultModal(true);
           }}
         ></ShareChallengeModal>
       )}
@@ -106,51 +108,65 @@ export default function GameDashboard({
           className="d-flex mt-auto flex-column  justify-content-center  items-center gap-10 py-2 flex-1"
           style={{ minHeight: 0 }}
         >
-          {/* container with scroll */}
-          <div
-            className="d-flex justify-content-center   w-100 mt-4 rounded-4 overflow-auto flex-1"
-            style={{ minHeight: 0 }}
-          >
-            <div style={{ minHeight: "max-content" }}>
-              {history.map((attempt, index) => {
-                const ghostMatch = ghostHistory && ghostHistory[index];
-                //we validate the current position and the before becasue the ghostHistory keep pushing attempts as undefiend
-                const isGhostWinningTurn =
-                  ghostHistory &&
-                  ghostMatch?.result?.every((r) => r === "MATCH");
-                return (
-                  <React.Fragment
-                    key={`round-${attempt.submissionId || index}`}
-                  >
-                    {/* 1. First we show the ghost*/}
-                    {ghostMatch?.guess && (
-                      <AttemptRow
-                        props={{
-                          attemptGuess: ghostMatch.guess,
-                          results: ghostMatch.result,
-                          isGhostMode: true,
-                        }}
-                      />
-                    )}
-                    {isGhostWinningTurn && (
-                      <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light bg-opacity-75 italic my-1">
-                        The ghost finished its game here! 👻
-                      </div>
-                    )}
-
-                    {/* 2. then the player attempt*/}
-                    <AttemptRow
-                      props={{
-                        attemptGuess: attempt.guess,
-                        results: attempt.result,
-                        isGhostMode: false,
-                      }}
-                    />
-                  </React.Fragment>
-                );
-              })}
+          {isPendingGame ? (
+            <div className="m-auto ">
+              <h6
+                className="text-center bg-dark p-3 bg-opacity-75 rounded-3 text-light"
+                style={{ maxWidth: "max-content" }}
+              >
+                Loading previous attempts...
+              </h6>
             </div>
-          </div>
+          ) : (
+            <>
+              {" "}
+              {/* container with scroll */}
+              <div
+                className="d-flex justify-content-center   w-100 mt-4 rounded-4 overflow-auto flex-1"
+                style={{ minHeight: 0 }}
+              >
+                <div style={{ minHeight: "max-content" }}>
+                  {history.map((attempt, index) => {
+                    const ghostMatch = ghostHistory && ghostHistory[index];
+                    //we validate the current position and the before becasue the ghostHistory keep pushing attempts as undefiend
+                    const isGhostWinningTurn =
+                      ghostHistory &&
+                      ghostMatch?.result?.every((r) => r === "MATCH");
+                    return (
+                      <React.Fragment
+                        key={`round-${attempt.submissionId || index}`}
+                      >
+                        {/* 1. First we show the ghost*/}
+                        {ghostMatch?.guess && (
+                          <AttemptRow
+                            props={{
+                              attemptGuess: ghostMatch.guess,
+                              results: ghostMatch.result,
+                              isGhostMode: true,
+                            }}
+                          />
+                        )}
+                        {isGhostWinningTurn && (
+                          <div className="text-xs mx-2 text-center p-1 rounded-3 bg-light bg-opacity-75 italic my-1">
+                            The ghost finished its game here! 👻
+                          </div>
+                        )}
+
+                        {/* 2. then the player attempt*/}
+                        <AttemptRow
+                          props={{
+                            attemptGuess: attempt.guess,
+                            results: attempt.result,
+                            isGhostMode: false,
+                          }}
+                        />
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* 1. Active Guess Display */}

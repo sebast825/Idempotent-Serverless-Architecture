@@ -12,7 +12,7 @@ import useToastit from "@/hooks/useToastit";
 export const useMastermindApi = (gameId: string) => {
   const { error } = useToastit();
   const queryClient = useQueryClient();
-  const { data: game } = useQuery({
+  const { data: game, isPending: isPendingGame } = useQuery({
     queryKey: ["game", gameId],
     queryFn: () => findExistingGame(gameId),
     //avoid unnecesary refetchs
@@ -50,7 +50,7 @@ export const useMastermindApi = (gameId: string) => {
             ...oldData,
             status: _data.gameStatus,
             attempts: [...oldData.attempts, newAttempt],
-             ghostAttempts : [...(oldData.ghostAttempts ?? []), ghostAttempt],
+            ghostAttempts: [...(oldData.ghostAttempts ?? []), ghostAttempt],
           };
         }
       );
@@ -65,5 +65,5 @@ export const useMastermindApi = (gameId: string) => {
   ): Promise<AttemptResponse> => {
     return mutateAsync({ finalGuess, submissionId });
   };
-  return { submitAttempt, isPending, game };
+  return { submitAttempt, isPending, game, isPendingGame };
 };
