@@ -1,1 +1,1 @@
-export const MAX_ATTEMPTS = 2;
+export const MAX_ATTEMPTS = 12;
