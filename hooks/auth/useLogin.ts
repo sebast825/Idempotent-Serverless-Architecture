@@ -11,7 +11,7 @@ export const useLogin = () => {
       await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback${queryParams}`,
+          redirectTo: `${window.location.origin}/api/auth/callback${queryParams}`,
           queryParams: {
             prompt: "select_account",
           },
