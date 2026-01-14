@@ -1,18 +1,26 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../prisma";
-import { AttemptResponse, GhostAttemptResponse, FeedbackStatus, MastermindColor, FormattedAttempt } from "./types";
+import {
+  AttemptResponse,
+  GhostAttemptResponse,
+  FeedbackStatus,
+  MastermindColor,
+  FormattedAttempt,
+} from "./types";
 
 export const addGhostAttemptIfExist = async (
   baseResponse: AttemptResponse,
   challengerGameId: string,
-  turnIndex: number
+  turnIndex: number,
+  tx: Prisma.TransactionClient
 ): Promise<GhostAttemptResponse> => {
-  const attempt = await prisma.attempt.findFirst({
+  const attempt = await tx.attempt.findFirst({
     where: { gameId: challengerGameId },
     orderBy: { createdAt: "asc" },
-     skip: turnIndex,
+    skip: turnIndex,
   });
   if (!attempt) return baseResponse;
-    return {
+  return {
     ...baseResponse,
     ghostAttempt: {
       ...attempt,
@@ -22,12 +30,15 @@ export const addGhostAttemptIfExist = async (
   };
 };
 
-export const getAttemptsByChallengerGameId = async (challengerGameId:string, limit:number):Promise<FormattedAttempt[]> =>{
-    const attempts = await prisma.attempt.findMany({
+export const getAttemptsByChallengerGameId = async (
+  challengerGameId: string,
+  limit: number
+): Promise<FormattedAttempt[]> => {
+  const attempts = await prisma.attempt.findMany({
     where: { gameId: challengerGameId },
     orderBy: { createdAt: "asc" },
     take: limit,
-  });  
+  });
 
   const formatedAttempts: FormattedAttempt[] = attempts.map((elem) => {
     return {
@@ -37,4 +48,4 @@ export const getAttemptsByChallengerGameId = async (challengerGameId:string, lim
     };
   });
   return formatedAttempts;
-}
+};

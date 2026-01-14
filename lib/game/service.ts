@@ -27,9 +27,10 @@ export async function getGameById(
   return game as unknown as GameWithAttemptsAndPuzzle;
 }
 export async function getGameWithRelationsById(
-  gameId: string
+  gameId: string,
+  tx: Prisma.TransactionClient
 ): Promise<GameWithRelations> {
-  const game = await prisma.game.findUnique({
+  const game = await tx.game.findUnique({
     where: {
       id: gameId,
     },
@@ -115,7 +116,8 @@ export async function persistAttemptAndResponse(
   game: GameWithRelations,
   gameId: string,
   attemptKey: string,
-  guessAttempt: MastermindColor[]
+  guessAttempt: MastermindColor[],
+  tx: Prisma.TransactionClient
 ): Promise<AttemptResponse> {
   const isVictoryState: boolean = isVictory(currentFeedback);
   const isLastAttempt: boolean = game.attempts.length + 1 >= MAX_ATTEMPTS;
@@ -126,37 +128,25 @@ export async function persistAttemptAndResponse(
     ? "LOST"
     : "PLAYING";
 
-  await prisma.$transaction(async (tx) => {
-    try {
-      await tx.attempt.create({
-        data: {
-          gameId: game.id,
-          submissionId: attemptKey,
-          guess: guessAttempt,
-          result: currentFeedback,
-        },
-      });
-    } catch (err) {
-      // Prisma unique constraint error
-      if (
-        err instanceof Prisma.PrismaClientKnownRequestError &&
-        err.code == "P2002"
-      ) {
-        // attempt already processed, handle
-        return;
-      }
-      throw err;
-    }
-    //only update is game is finished
-    if (isGameFinished) {
-      await tx.game.update({
-        where: { id: gameId },
-        data: {
-          status: nextStatus,
-          completedAt: new Date(),
-        },
-      });
-    }
+  await tx.attempt.create({
+    data: {
+      gameId: game.id,
+      submissionId: attemptKey,
+      guess: guessAttempt,
+      result: currentFeedback,
+    },
+  });
+
+  //only update is game is finished
+  if (isGameFinished) {
+    await tx.game.update({
+      where: { id: gameId },
+      data: {
+        status: nextStatus,
+        completedAt: new Date(),
+      },
+    });
+
     //if game finished notifye challenger of challenge if exists
     if (nextStatus != "PLAYING" && game.challenge) {
       await tx.notification.create({
@@ -169,7 +159,7 @@ export async function persistAttemptAndResponse(
         },
       });
     }
-  });
+  }
 
   const rsta: AttemptResponse = {
     feedback: currentFeedback,
@@ -181,8 +171,11 @@ export async function persistAttemptAndResponse(
   return rsta;
 }
 
-export const assignPlayerToGame = async (gameId: string, userId: string) : Promise<Game> => {
-   return await prisma.game.update({
+export const assignPlayerToGame = async (
+  gameId: string,
+  userId: string
+): Promise<Game> => {
+  return await prisma.game.update({
     where: { id: gameId },
     data: { playerUserId: userId },
   });
