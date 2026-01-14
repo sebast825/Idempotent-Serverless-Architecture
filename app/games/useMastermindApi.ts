@@ -37,6 +37,10 @@ export const useMastermindApi = (gameId: string) => {
         (oldData: GameWithGhost | undefined) => {
           if (!oldData) return oldData;
 
+          //this allows us handle idempotency, becasuse the BE will return the duplicate response withotuh saving it in db
+          const attemptAlreadyExist = oldData.attempts.some(elem => elem.submissionId == variables.submissionId)
+          if(attemptAlreadyExist) return oldData;  
+
           const newAttempt = {
             guess: variables.finalGuess,
             result: _data.feedback,
